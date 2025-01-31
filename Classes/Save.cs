@@ -14,7 +14,7 @@ namespace Project_Easy_Save.Classes
         public string SourcePath { get; set; }
         public string DestinationPath { get; set; }
         public SaveType Type { get; set; }
-        public DateTime LastExecuteDate { get; set; }
+        public DateTime? LastExecuteDate { get; set; }
 
         public void Execute()
         {
