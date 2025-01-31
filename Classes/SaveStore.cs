@@ -15,14 +15,15 @@ namespace Project_Easy_Save.Classes
         private int CurrentAvailableID { get; set; } = 1; 
         private int MaximumNumberOfSave { get; } = 5;
 
-        public int CreateNewSave(string name, SaveType type, string sourcePath, string destinationPath, DateTime date)
+        public int CreateNewSave(string name, SaveType type, string sourcePath, string destinationPath)
         {
-            Saves.Add(new Save { Id = CurrentAvailableID, 
+            Saves.Add(new Save { 
+                Id = CurrentAvailableID, 
                 Name = name, 
                 Type = type, 
                 SourcePath = sourcePath, 
                 DestinationPath = destinationPath, 
-                LastExecuteDate = date 
+                LastExecuteDate = null
             });
             return CurrentAvailableID++;
         }
