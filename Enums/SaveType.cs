@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Project_Easy_Save.Enums
 {
-    internal class SaveType
+    public enum SaveType
     {
+        full,
+        credentials,
     }
 }

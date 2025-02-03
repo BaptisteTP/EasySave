@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Project_Easy_Save.Classes
 {
-    internal class Save
+    public class Save
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Project_Easy_Save.Classes
 {
-    internal class SaveStore
+    public class SaveStore
     {
         private List<Save> Saves = [];
         public bool CanAddSave { get; set; }
@@ -37,7 +37,7 @@ namespace Project_Easy_Save.Classes
 
         public Save GetSave(int id) => Saves.Find(s => s.Id == id);
         public List<Save> GetAllSaves() => Saves;
-        public object DisplayAllSaves()
+        public void DisplayAllSaves()
         {
             foreach (var save in Saves)
             {
@@ -48,24 +48,7 @@ namespace Project_Easy_Save.Classes
                 Console.WriteLine("Chemin destination : " + save.DestinationPath);
                 Console.WriteLine("Dernière date d'exécution : " + save.LastExecuteDate);
             }
-            return null;
-        }
-        public void SetSaveInfo()
-        {
-            Console.Write("Choisissez un nom pour la sauvegarde : ");
-            string Name = Console.ReadLine();
-            Console.Write("Choisissez un type pour la sauvegarde : ");
-            SaveType Type = (SaveType)Enum.Parse(typeof(SaveType), Console.ReadLine());
-            Console.Write("Choisissez un chemin source pour la sauvegarde : ");
-            string SourcePath = Console.ReadLine();
-            Console.Write("Choisissez un chemin destination pour la sauvegarde : ");
-            string DestinationPath = Console.ReadLine();
-            CreateNewSave(Name, Type, SourcePath, DestinationPath);
-            foreach (var save in Saves)
-            {
-                Console.WriteLine(save.Id);
-                Console.WriteLine(save.Name);
-            }
+
         }
     }
 }
