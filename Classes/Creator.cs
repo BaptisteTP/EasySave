@@ -12,6 +12,8 @@ namespace Project_Easy_Save.Classes
 	{
 		private static ResourceManager _resourceMangerInstance;
 
+		private static Paster _pasterInstance;
+
 		public static ResourceManager GetResourceManagerInstance()
 		{
 			if( _resourceMangerInstance == null)
@@ -32,9 +34,13 @@ namespace Project_Easy_Save.Classes
 
         }
 
-		public static void GetPasterInstance()
+		public static Paster GetPasterInstance()
 		{
-
+			if(_pasterInstance == null)
+			{
+				_pasterInstance = new Paster();
+			}
+			return _pasterInstance;
 		}
 
 		public static void GetLoggerInstance()
