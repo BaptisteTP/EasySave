@@ -31,17 +31,16 @@ namespace Project_Easy_Save.Classes
 						break;
 
 					case '2':
-						_saveStore.DisplayAllSaves();
-						AfficherSauvegarde();
-						break;
+						DisplaySave();
+                        break;
 
 					case '3':
 						EditerSauvegarde();
 						break;
 
 					case '4':
-						SupprimerSauvegarde();
-						break;
+						DeleteSave();
+                        break;
 
 					case '5':
 						Quitter();
@@ -77,11 +76,11 @@ namespace Project_Easy_Save.Classes
             _saveStore.CreateNewSave(Name, Type, SourcePath, DestinationPath);
         }
 
-		private void AfficherSauvegarde()
+		private void DisplaySave()
 		{
 			_saveStore.DisplayAllSaves();
             Console.WriteLine("Choisissez une savegarde à afficher : ");
-			_saveStore.GetSave(int.Parse(Console.ReadLine()));
+			_saveStore.DisplaySave(int.Parse(Console.ReadLine()));
         }
 
 		private void EditerSauvegarde()
@@ -90,11 +89,12 @@ namespace Project_Easy_Save.Classes
 			Console.WriteLine("Édition d'une sauvegarde");
 		}
 
-		private void SupprimerSauvegarde()
+		private void DeleteSave()
 		{
-			Console.Clear();
-			Console.WriteLine("Suppression d'une sauvegarde");
-		}
+			_saveStore.DisplayAllSaves();
+            Console.WriteLine("Choisissez une sauvegarde à supprimer : ");
+            _saveStore.DeleteSave(int.Parse(Console.ReadLine()));
+        }
 
 		private void Quitter()
 		{

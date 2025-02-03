@@ -39,16 +39,27 @@ namespace Project_Easy_Save.Classes
         public List<Save> GetAllSaves() => Saves;
         public void DisplayAllSaves()
         {
+            Console.Clear();
             foreach (var save in Saves)
             {
-                Console.WriteLine("ID : " + save.Id);
+                Console.WriteLine("===== Save Number : " + save.Id + " =====");
                 Console.WriteLine("Nom : " + save.Name);
                 Console.WriteLine("Type : " + save.Type);
                 Console.WriteLine("Chemin source : " + save.SourcePath);
                 Console.WriteLine("Chemin destination : " + save.DestinationPath);
-                Console.WriteLine("Dernière date d'exécution : " + save.LastExecuteDate);
+                Console.WriteLine("Dernière date d'exécution : " + save.LastExecuteDate + "\n");
             }
-
+        }
+        public void DisplaySave(int id)
+        {
+            Console.Clear();
+            Save save = GetSave(id);
+            Console.WriteLine("ID : " + save.Id);
+            Console.WriteLine("Nom : " + save.Name);
+            Console.WriteLine("Type : " + save.Type);
+            Console.WriteLine("Chemin source : " + save.SourcePath);
+            Console.WriteLine("Chemin destination : " + save.DestinationPath);
+            Console.WriteLine("Dernière date d'exécution : " + save.LastExecuteDate + "\n");
         }
     }
 }
