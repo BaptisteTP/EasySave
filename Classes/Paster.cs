@@ -36,23 +36,5 @@ namespace Project_Easy_Save.Classes
             }
             return allFiles;
         }
-        public bool BeginCopyPasteFull(Save save, String allfile)
-        {
-            try
-            {
-                List<string> allFiles = SearchAllPathFiles(save.SourcePath, save.SourcePath);
-                foreach (string file in allFiles)
-                {
-                    File.Copy(save.SourcePath + file, save.DestinationPath + file);
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-
-            }
-        }
     }
 }
