@@ -1,4 +1,5 @@
-﻿using Project_Easy_Save.Classes;
+﻿using LogsLib;
+using Project_Easy_Save.Classes;
 using System.Linq.Expressions;
 
 class Program
