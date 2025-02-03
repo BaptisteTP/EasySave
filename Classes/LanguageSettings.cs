@@ -9,7 +9,7 @@ namespace Project_Easy_Save.Classes
 {
 	public class LanguageSettings
 	{
-		public void AskUserToChooseLanguage()
+		public static void AskUserToChooseLanguage()
 		{
 			bool isSelectedLangageValid = false;
 			Console.Clear();
