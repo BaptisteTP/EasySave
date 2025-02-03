@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project_Easy_Save.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -26,20 +27,20 @@ namespace Project_Easy_Save.Classes
 				switch (choix.KeyChar)
 				{
 					case '1':
-						CreerSauvegarde();
+						CreateSave();
 						break;
 
 					case '2':
-						AfficherSauvegarde();
-						break;
+						DisplaySave();
+                        break;
 
 					case '3':
 						EditerSauvegarde();
 						break;
 
 					case '4':
-						SupprimerSauvegarde();
-						break;
+						DeleteSave();
+                        break;
 
 					case '5':
 						Quitter();
@@ -50,7 +51,7 @@ namespace Project_Easy_Save.Classes
 
 		private void AfficherMenu()
 		{
-			Console.Clear();
+			
 			Console.WriteLine("==========================================================\n");
 			Console.WriteLine("Que voulez-vous faire ?\n");
 			Console.WriteLine("1. Créer une sauvegarde");
@@ -62,17 +63,25 @@ namespace Project_Easy_Save.Classes
 			Console.WriteLine("Appuyez sur une touche pour continuer\n\n");
 		}
 
-		private void CreerSauvegarde()
+		private void CreateSave()
 		{
-			Console.Clear();
-			Console.WriteLine("Création d'une sauvegarde");
-		}
+            Console.Write("Choisissez un nom pour la sauvegarde : ");
+            string Name = Console.ReadLine();
+            Console.Write("Choisissez un type pour la sauvegarde : ");
+            SaveType Type = (SaveType)Enum.Parse(typeof(SaveType), Console.ReadLine());
+            Console.Write("Choisissez un chemin source pour la sauvegarde : ");
+            string SourcePath = Console.ReadLine();
+            Console.Write("Choisissez un chemin destination pour la sauvegarde : ");
+            string DestinationPath = Console.ReadLine();
+            _saveStore.CreateNewSave(Name, Type, SourcePath, DestinationPath);
+        }
 
-		private void AfficherSauvegarde()
+		private void DisplaySave()
 		{
-			Console.Clear();
-			Console.WriteLine("Affichage d'une sauvegarde");
-		}
+			_saveStore.DisplayAllSaves();
+            Console.WriteLine("Choisissez une savegarde à afficher : ");
+			_saveStore.DisplaySave(int.Parse(Console.ReadLine()));
+        }
 
 		private void EditerSauvegarde()
 		{
@@ -80,11 +89,12 @@ namespace Project_Easy_Save.Classes
 			Console.WriteLine("Édition d'une sauvegarde");
 		}
 
-		private void SupprimerSauvegarde()
+		private void DeleteSave()
 		{
-			Console.Clear();
-			Console.WriteLine("Suppression d'une sauvegarde");
-		}
+			_saveStore.DisplayAllSaves();
+            Console.WriteLine("Choisissez une sauvegarde à supprimer : ");
+            _saveStore.DeleteSave(int.Parse(Console.ReadLine()));
+        }
 
 		private void Quitter()
 		{

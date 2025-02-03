@@ -21,10 +21,16 @@ namespace Project_Easy_Save.Classes
 			return _resourceMangerInstance;
 		}
 
-		public static void GetSaveStoreInstance()
+		private static SaveStore _saveStoreInstance;
+        public static SaveStore GetSaveStoreInstance()
 		{
+            if (_saveStoreInstance == null)
+            {
+                _saveStoreInstance = new SaveStore();
+            }
+			return _saveStoreInstance;
 
-		}
+        }
 
 		public static void GetPasterInstance()
 		{
