@@ -9,11 +9,11 @@ namespace Project_Easy_Save.Classes
 {
 	public class EditSavesPrompt : PromptBase
 	{
-		private static bool IsInteracting;
+		private bool IsInteracting;
 
 		public EditSavesPrompt() : base() { }
 
-		public static void Interact()
+		public void Interact()
 		{
 			IsInteracting = true;
 
@@ -48,7 +48,7 @@ namespace Project_Easy_Save.Classes
 			}
 		}
 
-		private static void AfficherMenu()
+		private void AfficherMenu()
 		{
 			Console.Clear();
 			Console.WriteLine("==========================================================\n");
@@ -62,31 +62,31 @@ namespace Project_Easy_Save.Classes
 			Console.WriteLine("Appuyez sur une touche pour continuer\n\n");
 		}
 
-		private static void CreerSauvegarde()
+		private void CreerSauvegarde()
 		{
 			Console.Clear();
 			Console.WriteLine("Création d'une sauvegarde");
 		}
 
-		private static void AfficherSauvegarde()
+		private void AfficherSauvegarde()
 		{
 			Console.Clear();
 			Console.WriteLine("Affichage d'une sauvegarde");
 		}
 
-		private static void EditerSauvegarde()
+		private void EditerSauvegarde()
 		{
 			Console.Clear();
 			Console.WriteLine("Édition d'une sauvegarde");
 		}
 
-		private static void SupprimerSauvegarde()
+		private void SupprimerSauvegarde()
 		{
 			Console.Clear();
 			Console.WriteLine("Suppression d'une sauvegarde");
 		}
 
-		private static void Quitter()
+		private void Quitter()
 		{
 			IsInteracting = false;
 			Console.Clear();

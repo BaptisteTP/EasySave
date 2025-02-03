@@ -8,12 +8,14 @@ namespace Project_Easy_Save.Classes
 {
 	public class MainMenuPrompt : PromptBase
 	{
-		private static bool isInteracting;
+		private bool isInteracting;
 
 		public MainMenuPrompt() : base() { }
 
-		public static void Interact()
+		public void Interact()
 		{
+			EditSavesPrompt editSavesPrompt = new EditSavesPrompt();
+			ExecuteSavePrompt executeSavePrompt = new ExecuteSavePrompt();
 			isInteracting = true;
 
 			Console.Clear();
@@ -31,12 +33,12 @@ namespace Project_Easy_Save.Classes
 				{
 					//Show edit prompt
 					case '1':
-						EditSavesPrompt.Interact();
+						editSavesPrompt.Interact();
 						break;
 
 					//Show execute prompt
 					case '2':
-						ExecuteSavePrompt.Interact();
+						executeSavePrompt.Interact();
 						break;
 
 					//Show language settings
