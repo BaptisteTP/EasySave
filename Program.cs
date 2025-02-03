@@ -5,6 +5,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        MainMenuPrompt.Interact();
+        MainMenuPrompt mainMenuPrompt = new MainMenuPrompt();
+		mainMenuPrompt.Interact();
     }
 }

@@ -8,10 +8,10 @@ namespace Project_Easy_Save.Classes
 {
 	public class ExecuteSavePrompt : PromptBase
 	{
-		private static bool IsInteracting;
+		private bool IsInteracting;
 		public ExecuteSavePrompt() : base() { }
 
-		public static void Interact()
+		public void Interact()
 		{
 			IsInteracting = true;
 			while (IsInteracting)
