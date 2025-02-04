@@ -20,7 +20,8 @@ namespace Project_Easy_Save.Classes
 
 		public void Interact()
 		{
-			IsInteracting = true;
+			Console.Clear();
+            IsInteracting = true;
 
 			while (IsInteracting)
 			{
@@ -67,58 +68,66 @@ namespace Project_Easy_Save.Classes
 			Console.WriteLine("Appuyez sur une touche pour continuer\n\n");
 		}
 
-        private void CreateSave()
-        {
-            Console.Write("Choisissez un nom pour la sauvegarde : ");
-            string Name = Console.ReadLine();
+		private void CreateSave()
+		{
+			Console.Clear();
+            if (_saveStore.CanAddSave == true)
+			{
+				Console.Write("Choisissez un nom pour la sauvegarde : ");
+				string Name = Console.ReadLine();
 
-            SaveType Type;
-            while (true)
-            {
-                Console.Write("Choisissez un type pour la sauvegarde (1: Full, 2: Differential) : ");
-                string typeInput = Console.ReadLine();
-                if (typeInput == "1")
-                {
-                    Type = SaveType.Full;
-                    break;
-                }
-                else if (typeInput == "2")
-                {
-                    Type = SaveType.Differential;
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Type de sauvegarde invalide. Veuillez entrer 1 pour Full ou 2 pour Differential.");
-                }
-            }
+				SaveType Type;
+				while (true)
+				{
+					Console.Write("Choisissez un type pour la sauvegarde (1: Full, 2: Differential) : ");
+					string typeInput = Console.ReadLine();
+					if (typeInput == "1")
+					{
+						Type = SaveType.Full;
+						break;
+					}
+					else if (typeInput == "2")
+					{
+						Type = SaveType.Differential;
+						break;
+					}
+					else
+					{
+						Console.WriteLine("Type de sauvegarde invalide. Veuillez entrer 1 pour Full ou 2 pour Differential.");
+					}
+				}
 
-            string SourcePath;
-            do
-            {
-                Console.Write("Choisissez un chemin source pour la sauvegarde : ");
-                SourcePath = Console.ReadLine();
-                if (!Directory.Exists(SourcePath))
-                {
-                    Console.WriteLine("Le chemin source n'existe pas. Veuillez entrer un chemin valide.");
-                }
-            } while (!Directory.Exists(SourcePath));
+				string SourcePath;
+				do
+				{
+					Console.Write("Choisissez un chemin source pour la sauvegarde : ");
+					SourcePath = Console.ReadLine();
+					if (!Directory.Exists(SourcePath))
+					{
+						Console.WriteLine("Le chemin source n'existe pas. Veuillez entrer un chemin valide.");
+					}
+				} while (!Directory.Exists(SourcePath));
 
-            string DestinationPath;
-            do
-            {
-                Console.Write("Choisissez un chemin destination pour la sauvegarde : ");
-                DestinationPath = Console.ReadLine();
-                if (!Directory.Exists(DestinationPath))
-                {
-                    Console.WriteLine("Le chemin destination n'existe pas. Veuillez entrer un chemin valide.");
-                }
-            } while (!Directory.Exists(DestinationPath));
+				string DestinationPath;
+				do
+				{
+					Console.Write("Choisissez un chemin destination pour la sauvegarde : ");
+					DestinationPath = Console.ReadLine();
+					if (!Directory.Exists(DestinationPath))
+					{
+						Console.WriteLine("Le chemin destination n'existe pas. Veuillez entrer un chemin valide.");
+					}
+				} while (!Directory.Exists(DestinationPath));
 
-            _saveStore.CreateNewSave(Name, Type, SourcePath, DestinationPath);
-            Console.Clear();
-            Console.WriteLine("La sauvegarde a été créée.");
-        }
+				_saveStore.CreateNewSave(Name, Type, SourcePath, DestinationPath);
+				Console.Clear();
+				Console.WriteLine("La sauvegarde a été créée.");
+			}
+			else
+			{
+				Console.WriteLine("Vous avez atteint le nombre maximum de sauvegardes.");
+			}
+		}
 
 
 
