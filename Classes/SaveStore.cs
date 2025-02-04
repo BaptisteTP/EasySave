@@ -11,9 +11,11 @@ namespace Project_Easy_Save.Classes
     {
         private List<Save> Saves = [];
         public bool CanAddSave { get; set; }
-        public int NumberOfSaves { get; set; }
+        public int NumberOfSaves => Saves.Count;
         private int CurrentAvailableID { get; set; } = 1; 
         private int MaximumNumberOfSave { get; } = 5;
+
+        public Save? SaveToEdit { get; set; }
 
         public int CreateNewSave(string name, SaveType type, string sourcePath, string destinationPath)
         {
@@ -25,10 +27,26 @@ namespace Project_Easy_Save.Classes
                 type));
             return CurrentAvailableID++;
         }
-        public void EditSave(int ID, string property, object newValue)
+        public void EditSave(int id, int property, object newValue)
         {
-
-        }
+			switch (property)
+			{
+				case 1:
+					Saves.FirstOrDefault(save => save.Id == id)!.Name = (string)newValue;
+					break;
+				case 2:
+					Saves.FirstOrDefault(save => save.Id == id)!.SourcePath = (string)newValue;
+					break;
+				case 3:
+					Saves.FirstOrDefault(save => save.Id == id)!.DestinationPath = (string)newValue;
+					break;
+				case 4:
+					Saves.FirstOrDefault(save => save.Id == id)!.Type = (SaveType)newValue;
+					break;
+				default:
+					return;
+			}
+		}
         public void DeleteSave(int id) { Saves.Remove(Saves.Find(s => s.Id == id)); }
         public void ExecuteSave(int id) { Saves.Find(s => s.Id == id).Execute(); }
         public void ExecuteAllSaves() { Saves.ForEach(s => s.Execute()); }
@@ -59,5 +77,18 @@ namespace Project_Easy_Save.Classes
             Console.WriteLine("Chemin destination : " + save.DestinationPath);
             Console.WriteLine("Dernière date d'exécution : " + save.LastExecuteDate + "\n");
         }
+
+        public void SaveEdit_SelectionChanged(object sender, ConsoleKey e)
+        {
+			int currentIndexOfSelectedInList = Saves.IndexOf(SaveToEdit!);
+			if (e == ConsoleKey.UpArrow)
+			{
+				SaveToEdit = Saves[(--currentIndexOfSelectedInList % NumberOfSaves + NumberOfSaves) % NumberOfSaves];
+			}
+			else if (e == ConsoleKey.DownArrow)
+			{
+				SaveToEdit = Saves[++currentIndexOfSelectedInList % NumberOfSaves];
+			}
+		}
     }
 }
