@@ -17,14 +17,12 @@ namespace Project_Easy_Save.Classes
 
         public int CreateNewSave(string name, SaveType type, string sourcePath, string destinationPath)
         {
-            Saves.Add(new Save { 
-                Id = CurrentAvailableID, 
-                Name = name, 
-                Type = type, 
-                SourcePath = sourcePath, 
-                DestinationPath = destinationPath, 
-                LastExecuteDate = null
-            });
+            Saves.Add(new Save(
+                CurrentAvailableID, 
+                name, 
+                sourcePath, 
+                destinationPath,
+                type));
             return CurrentAvailableID++;
         }
         public void EditSave(int ID, string property, object newValue)

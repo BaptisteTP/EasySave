@@ -14,10 +14,10 @@ namespace Project_Easy_Save.Classes
 		public void Interact()
 		{
 			IsInteracting = true;
-			while (IsInteracting)
-			{
 
-			}
+			Console.Clear();
+			Console.WriteLine("Exécution de toutes les sauvegardes.");
+			_saveStore.GetAllSaves().ForEach(save => save.Execute());
 		}
 	}
 }

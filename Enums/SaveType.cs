@@ -8,7 +8,7 @@ namespace Project_Easy_Save.Enums
 {
     public enum SaveType
     {
-        full,
-        credentials,
+        Full,
+        Differential,
     }
 }

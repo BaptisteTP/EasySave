@@ -1,58 +1,168 @@
-﻿using System;
+﻿using Project_Easy_Save.CustomEventArgs;
+using Project_Easy_Save.Enums;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Tracing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Project_Easy_Save.Classes
 {
-    internal class Paster
+    public class Paster
     {
-        public event EventHandler OnExecute;
-        public event EventHandler OnDirectoryCopy;
-        public event EventHandler OnFileCopy;
+        public event EventHandler<CopyDirectoryEventArgs>? OnDirectoryCopied;
+        public event EventHandler<FileCopyPreviewEventArgs>? OnFileCopyPreview;
+        public event EventHandler<FileCopyEventArgs>? OnFileCopied;
 
-        public List<string> SearchAllPathFiles(string sourcePath, string basePath)
+		public bool BeginCopyPaste(Save executedSave)
         {
-            List<string> allFiles = new List<string>();
-            if (!Directory.Exists(sourcePath))
-            {
-                Console.WriteLine($"The directory '{sourcePath}' does not exist.");
-                return null;
-            }
+			if (!Directory.Exists(executedSave.SourcePath)) { return false; }
 
-            string[] files = Directory.GetFiles(sourcePath);
-            string[] directories = Directory.GetDirectories(sourcePath);
-
-            foreach (string file in files)
+			switch (executedSave.Type)
             {
-                string relativePath = Path.GetRelativePath(basePath, file);
-                allFiles.Add(relativePath);
-            }
+                case SaveType.Full:
+					return BeginFullSave(executedSave);
 
-            foreach (string directory in directories)
-            {
-                SearchAllPathFiles(directory, basePath); // Recursively search in subdirectories
+                case SaveType.Differential:
+					return BeginDifferentialSave(executedSave);
+
+                default:
+                    return false;
             }
-            return allFiles;
         }
-        public bool BeginCopyPasteFull(Save save, String allfile)
-        {
-            try
-            {
-                List<string> allFiles = SearchAllPathFiles(save.SourcePath, save.SourcePath);
-                foreach (string file in allFiles)
-                {
-                    File.Copy(save.SourcePath + file, save.DestinationPath + file);
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
 
+		private bool BeginDifferentialSave(Save executedSave)
+		{
+            List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
+
+            if(eligibleFiles.Count == 0)
+			{
+				OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Inactive"));
+				return false;
+			}
+
+			List<string> remainingFiles = new List<string>(eligibleFiles);
+			foreach (string fileFullName in Directory.GetFiles(executedSave.SourcePath))
+			{
+				if (eligibleFiles.Contains(fileFullName))
+				{
+					string destinationPath = fileFullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+
+					OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, fileFullName, destinationPath));
+					CopyFile(fileFullName, executedSave, destinationPath);
+					remainingFiles.Remove(fileFullName);
+				}
+			}
+
+			foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
+			{
+				DirectoryInfo directoryInfo = new DirectoryInfo(directorySourcePath);
+
+				foreach (FileInfo file in directoryInfo.GetFiles())
+                {
+                    string destPath = directorySourcePath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+					if (eligibleFiles.Contains(file.FullName))
+                    {
+						if (!Directory.Exists(destPath))
+						{
+							CopyDirectory(executedSave, destPath);
+						}
+
+						string destinationPath = file.FullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+
+						OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, file.FullName, destinationPath));
+						CopyFile(file.FullName, executedSave, destinationPath);
+						remainingFiles.Remove(file.FullName);
+					}
+				}
+			}
+            return true;
+		}
+
+        private List<string> GetNameOfFilesModifiedAfterLastExecution(Save executedSave)
+        {
+			List<string> result = new List<string>();
+
+			foreach (string filePath in Directory.GetFiles(executedSave.SourcePath, "*.*", SearchOption.AllDirectories))
+			{
+				FileInfo fileInfo = new FileInfo(filePath);
+                if (executedSave.LastExecuteDate == null || fileInfo.LastWriteTime > executedSave.LastExecuteDate)
+                {
+                    result.Add(fileInfo.FullName);
+                }
+			}
+
+            return result;
+		}
+
+		private bool BeginFullSave(Save executedSave)
+		{
+			List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
+
+			if(eligibleFiles.Count == 0)
+			{
+				OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Inactive"));
+				return false;
+			}
+
+			List<string> remainingFiles = new List<string>(eligibleFiles);
+			foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
+            {
+                CopyDirectory(executedSave, directorySourcePath.Replace(executedSave.SourcePath, executedSave.DestinationPath));
             }
+
+			foreach (string newPath in Directory.GetFiles(executedSave.SourcePath, "*.*", SearchOption.AllDirectories))
+			{
+				string destinationPath = newPath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+
+				OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, newPath, destinationPath));
+				CopyFile(newPath, executedSave, destinationPath);
+				remainingFiles.Remove(newPath);
+			}
+
+			return true;
+		}
+
+		private List<string> GetEligibleFilesFullSave(string sourcePath)
+		{
+			List<string> result = new List<string>();
+
+			foreach(string filePath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))
+			{
+				result.Add(filePath);
+			}
+
+			return result;
+		}
+
+		private double GetPathSize()
+        {
+            return 0;
+        }
+
+        private void CopyDirectory(Save executedSave, string destPath)
+        {
+            var StopWatch = new Stopwatch();
+
+            StopWatch.Start();
+			Directory.CreateDirectory(destPath);
+            StopWatch.Stop();
+
+            OnDirectoryCopied?.Invoke(this, new CopyDirectoryEventArgs(DateTime.Now, executedSave, destPath, StopWatch.Elapsed));
+		}
+
+        private void CopyFile(string fileFullName, Save executedSave, string destinationPath)
+        {
+			var stopWatch = new Stopwatch();
+
+            stopWatch.Start();
+			File.Copy(fileFullName, destinationPath, true);
+            stopWatch.Stop();
+
+            OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, stopWatch.Elapsed));
         }
     }
 }
