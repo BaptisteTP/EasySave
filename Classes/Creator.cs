@@ -18,7 +18,7 @@ namespace Project_Easy_Save.Classes
 		{
 			if( _resourceMangerInstance == null)
 			{
-				_resourceMangerInstance = new ResourceManager("Projet_Easy_Save.Resources.Strings", Assembly.GetExecutingAssembly());
+				_resourceMangerInstance = new ResourceManager("Project_Easy_Save.Resources.Strings", Assembly.GetExecutingAssembly());
 			}
 			return _resourceMangerInstance;
 		}
