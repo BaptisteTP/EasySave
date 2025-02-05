@@ -123,7 +123,8 @@
     1- List all current saves operations ({0})
     2- Create a new save operation
     3- Edit an existing save operation
-    4- Exit (to main menu)
+    4- Delete an existing save operation 
+    5- Exit (to main menu)
 </value>
   </data>
   <data name="AskForOperationDestinationPath" xml:space="preserve">
@@ -145,9 +146,11 @@ Please choose a save type:
   </data>
   <data name="AskForUserActionInMainMenu" xml:space="preserve">
     <value>What to do next ?
+
     1- Edit saves
     2- Execute saves
-    3- Set application language</value>
+    3- Set application language
+    4- Exit the application</value>
   </data>
   <data name="AskForUserAction_ChooseSaveOperationFromList" xml:space="preserve">
     <value>Please choose an operation to edit from the above list. (type 'exit' to cancel)</value>
@@ -173,8 +176,21 @@ Please choose a save type:
   <data name="AskToUser_NewSourcePathForOperation" xml:space="preserve">
     <value>What is the new operation source path ?</value>
   </data>
+  <data name="InformUser_ChooseSave" xml:space="preserve">
+    <value>Please choose a save to execute the operation.
+Otherwise, hit the “esc” key to go back.</value>
+  </data>
+  <data name="InformUser_DeleteSave" xml:space="preserve">
+    <value>The save has been deleted!</value>
+  </data>
   <data name="InformUser_OperationToModifMessage" xml:space="preserve">
     <value>Operation to edit :</value>
+  </data>
+  <data name="InformUser_return" xml:space="preserve">
+    <value>Press "esc" to go back. </value>
+  </data>
+  <data name="InformUser_SaveCreate" xml:space="preserve">
+    <value>The save has been created!</value>
   </data>
   <data name="InformUser_SaveOperationFormBegan" xml:space="preserve">
     <value>Welcome in the operations modification wizard.</value>
@@ -190,6 +206,13 @@ Please choose a save type:
   </data>
   <data name="MaximumNumberOfOperationsReached" xml:space="preserve">
     <value>The maximum number of running saving operations has been reached : {0}</value>
+  </data>
+  <data name="MessageBeforeExSaves" xml:space="preserve">
+    <value>Do you want to run one or more saves? 
+
+    1- Run all saves
+    2- Run a defined number of saves
+    3- Exit to the main menu</value>
   </data>
   <data name="MessageBeforeShowingAllSaveOperations" xml:space="preserve">
     <value>Following is the list of all the save operations</value>

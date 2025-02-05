@@ -11,13 +11,59 @@ namespace Project_Easy_Save.Classes
 		private bool IsInteracting;
 		public ExecuteSavePrompt() : base() { }
 
-		public void Interact()
-		{
-			IsInteracting = true;
+        public void Interact()
+        {
+            IsInteracting = true;
+            _saveStore.GetAllSaves().ForEach(save => save.Execute());
+            while (IsInteracting)
+            {
+                Console.Clear();
+                Console.WriteLine(_resourceManager.GetString("MessageBeforeExSaves"));
+                ConsoleKeyInfo choix = Console.ReadKey(true);
+                _saveStore.DisplayAllSaves();
 
-			Console.Clear();
-			Console.WriteLine("Exécution de toutes les sauvegardes.");
-			_saveStore.GetAllSaves().ForEach(save => save.Execute());
-		}
-	}
+                switch (choix.KeyChar)
+                {
+                    case '1':
+                        ExAllSaves();
+                        break;
+                    case '2':
+                        ExSaves();
+                        break;
+                    case '3':
+                        Quit();
+                        break;
+                }
+            }
+        }
+
+        private void ExAllSaves()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
+            _saveStore.DisplayAllSaves();
+            _saveStore.GetSave(int.Parse(Console.ReadLine()));
+            Console.WriteLine();
+            Console.WriteLine(_resourceManager.GetString("Quit"));
+        }
+        private void ExSaves()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingExSaves"));
+            _saveStore.DisplayAllSaves();
+            _saveStore.GetSave(int.Parse(Console.ReadLine()));
+            Console.WriteLine();
+            Console.WriteLine(_resourceManager.GetString("Quit"));
+        }
+
+        private void Quit()
+        {
+            IsInteracting = false;
+            Console.Clear();
+            Console.WriteLine(_resourceManager.GetString("InformUser_SaveOperationFormQuit"));
+        }
+    }
 }
+
