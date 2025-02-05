@@ -25,18 +25,17 @@ namespace Project_Easy_Save.Classes
 
 			while (IsInteracting)
 			{
-				AfficherMenu();
-				Console.Write("Votre choix : ");
+				DisplayMenu();
 				ConsoleKeyInfo choix = Console.ReadKey(true);
 
 				switch (choix.KeyChar)
 				{
 					case '1':
-						CreateSave();
+                        DisplaySave();
 						break;
 
 					case '2':
-						DisplaySave();
+						CreateSave();
                         break;
 
 					case '3':
@@ -54,88 +53,77 @@ namespace Project_Easy_Save.Classes
 			}
 		}
 
-		private void AfficherMenu()
+		private void DisplayMenu()
 		{
-			
-			Console.WriteLine("==========================================================\n");
-			Console.WriteLine("Que voulez-vous faire ?\n");
-			Console.WriteLine("1. Créer une sauvegarde");
-			Console.WriteLine("2. Afficher une sauvegarde");
-			Console.WriteLine("3. Éditer une sauvegarde");
-			Console.WriteLine("4. Supprimer une sauvegarde");
-			Console.WriteLine("5. Revenir au menu principal\n");
-			Console.WriteLine("==========================================================\n");
-			Console.WriteLine("Appuyez sur une touche pour continuer\n\n");
-		}
 
-		private void CreateSave()
-		{
-			Console.Clear();
-            if (_saveStore.CanAddSave == true)
-			{
-				Console.Write("Choisissez un nom pour la sauvegarde : ");
-				string Name = Console.ReadLine();
+            Console.Clear();
+            Console.WriteLine(_resourceManager.GetString("AskForEditActionMessage"));
+        }
 
-				SaveType Type;
-				while (true)
-				{
-					Console.Write("Choisissez un type pour la sauvegarde (1: Full, 2: Differential) : ");
-					string typeInput = Console.ReadLine();
-					if (typeInput == "1")
-					{
-						Type = SaveType.Full;
-						break;
-					}
-					else if (typeInput == "2")
-					{
-						Type = SaveType.Differential;
-						break;
-					}
-					else
-					{
-						Console.WriteLine("Type de sauvegarde invalide. Veuillez entrer 1 pour Full ou 2 pour Differential.");
-					}
-				}
+        private void CreateSave()
+        {
+            Console.Clear();
+            Console.WriteLine(_resourceManager.GetString("AskForOperationName"));
+            string Name = Console.ReadLine();
 
-				string SourcePath;
-				do
-				{
-					Console.Write("Choisissez un chemin source pour la sauvegarde : ");
-					SourcePath = Console.ReadLine();
-					if (!Directory.Exists(SourcePath))
-					{
-						Console.WriteLine("Le chemin source n'existe pas. Veuillez entrer un chemin valide.");
-					}
-				} while (!Directory.Exists(SourcePath));
+            SaveType Type;
+            while (true)
+            {
+                Console.Write(_resourceManager.GetString("AskForOperationType"));
+				Console.WriteLine("");
+                string typeInput = Console.ReadLine();
+                if (typeInput == "1")
+                {
+                    Type = SaveType.Full;
+                    break;
+                }
+                else if (typeInput == "2")
+                {
+                    Type = SaveType.Differential;
+                    break;
+                }
+                else
+                {
+					Console.WriteLine(_resourceManager.GetString("WrongOperationType"));
+                    Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewSaveType"));
+                }
+            }
 
-				string DestinationPath;
-				do
-				{
-					Console.Write("Choisissez un chemin destination pour la sauvegarde : ");
-					DestinationPath = Console.ReadLine();
-					if (!Directory.Exists(DestinationPath))
-					{
-						Console.WriteLine("Le chemin destination n'existe pas. Veuillez entrer un chemin valide.");
-					}
-				} while (!Directory.Exists(DestinationPath));
+            string SourcePath;
+            do
+            {
+                Console.Write(_resourceManager.GetString("AskForOperationSourcePath"));
+                Console.WriteLine("");
+                SourcePath = Console.ReadLine();
+                if (!Directory.Exists(SourcePath))
+                {
+                    Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewPath"));
+                }
+            } while (!Directory.Exists(SourcePath));
 
-				_saveStore.CreateNewSave(Name, Type, SourcePath, DestinationPath);
-				Console.Clear();
-				Console.WriteLine("La sauvegarde a été créée.");
-			}
-			else
-			{
-				Console.WriteLine("Vous avez atteint le nombre maximum de sauvegardes.");
-			}
-		}
+            string DestinationPath;
+            do
+            {
+                Console.Write(_resourceManager.GetString("AskForOperationDestinationPath"));
+                Console.WriteLine("");
+                DestinationPath = Console.ReadLine();
+                if (!Directory.Exists(DestinationPath))
+                {
+                    Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewPath"));
+                }
+            } while (!Directory.Exists(DestinationPath));
 
-
+            _saveStore.CreateNewSave(Name, Type, SourcePath, DestinationPath);
+            Console.Clear();
+            Console.WriteLine(_resourceManager.GetString("InformUser_SaveCreate"));
+        }
 
         private void DisplaySave()
 		{
-			_saveStore.DisplayAllSaves();
-            Console.WriteLine("Choisissez une savegarde à afficher : ");
-			_saveStore.DisplaySave(int.Parse(Console.ReadLine()));
+            Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
+            _saveStore.DisplayAllSaves();
+			Console.WriteLine(_resourceManager.GetString("InformUser_return"));
+            _saveStore.DisplaySave(int.Parse(Console.ReadLine()));
         }
 
 		private void HandleSaveEdit()
@@ -359,17 +347,18 @@ namespace Project_Easy_Save.Classes
 		private void DeleteSave()
 		{
 			_saveStore.DisplayAllSaves();
-            Console.WriteLine("Choisissez une sauvegarde à supprimer : ");
+            Console.WriteLine(_resourceManager.GetString("InformUser_SaveOperationFormSuppr"));
+            Console.WriteLine(_resourceManager.GetString("InformUser_ChooseSave"));
             _saveStore.DeleteSave(int.Parse(Console.ReadLine()));
-			Console.Clear();
-            Console.WriteLine("La sauvegarde a été supprimée.");
+            Console.Clear();
+            Console.WriteLine(_resourceManager.GetString("InformUser_DeleteSave"));
         }
 
-		private void Exit()
+        private void Exit()
 		{
-			IsInteracting = false;
+            IsInteracting = false;
 			Console.Clear();
-			Console.WriteLine("Vous avez quitté le menu d'édtion des sauvegardes.");
-		}
+            Console.WriteLine(_resourceManager.GetString("InformUser_SaveOperationFormQuit"));
+        }
 	}
 }

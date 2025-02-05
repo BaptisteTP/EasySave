@@ -123,7 +123,8 @@
     1- Voir toutes les opérations de sauvegardes ({0})
     2- Créer une opération de sauvegardes
     3- Modifier une opération de sauvegardes
-    4- Quitter (vers menu principal)</value>
+    4- Supprimer une opération de sauvegardes 
+    5- Quitter (vers menu principal)</value>
   </data>
   <data name="AskForOperationDestinationPath" xml:space="preserve">
     <value>
@@ -144,9 +145,11 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
   </data>
   <data name="AskForUserActionInMainMenu" xml:space="preserve">
     <value>Que voulez-vous faire ?
+
     1- Gérer les sauvegardes
     2- Exécuter une sauvegarde
-    3- Redéfinir le langage de l'application</value>
+    3- Redéfinir le langage de l'application
+    4- Quitter l'application</value>
   </data>
   <data name="AskForUserAction_ChooseSaveOperationFromList" xml:space="preserve">
     <value>Veuillez choisir l'opération à modifier parmis celles spécifiées dans la liste ci-dessus. (taper  'exit' pour annuler)</value>
@@ -172,8 +175,21 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
   <data name="AskToUser_NewSourcePathForOperation" xml:space="preserve">
     <value>Quel est le nouveau répertoire source de l'opération ?</value>
   </data>
+  <data name="InformUser_ChooseSave" xml:space="preserve">
+    <value>Veuillez choisir la sauvegarde pour exécuter l'operation.
+Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
+  </data>
+  <data name="InformUser_DeleteSave" xml:space="preserve">
+    <value>La sauvegarde a été supprimée !</value>
+  </data>
   <data name="InformUser_OperationToModifMessage" xml:space="preserve">
     <value>Opération à modifier :</value>
+  </data>
+  <data name="InformUser_return" xml:space="preserve">
+    <value>Taper sur "échap" pour revenir en arrière. </value>
+  </data>
+  <data name="InformUser_SaveCreate" xml:space="preserve">
+    <value>La sauvegarde a été créée !</value>
   </data>
   <data name="InformUser_SaveOperationFormBegan" xml:space="preserve">
     <value>Bienvenue dans l'utilitaire de modification d'opérations de sauvegarde.</value>
@@ -189,6 +205,13 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
   </data>
   <data name="MaximumNumberOfOperationsReached" xml:space="preserve">
     <value>Le nombre maximal d'opérations a été atteint : {0}</value>
+  </data>
+  <data name="MessageBeforeExSaves" xml:space="preserve">
+    <value>Voulez-vous exécuter une ou plusieurs sauvegarde ? 
+
+    1- Exécuter toutes les sauvegardes
+    2- Exécuter un nombre défini de sauvegardes 
+    3- Retour vers le menu principal</value>
   </data>
   <data name="MessageBeforeShowingAllSaveOperations" xml:space="preserve">
     <value>Voici la liste de toutes les opérations de sauvegardes :</value>
