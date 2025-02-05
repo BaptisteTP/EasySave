@@ -10,13 +10,10 @@ namespace Project_Easy_Save.CustomEventArgs
 	public class CopyDirectoryEventArgs : EventArgs
 	{
 
-		public DateTime CopyDate { get; set; }
-
 		public Save ExecutedSave { get; set; }
-
 		public string DestinationPath { get; set; }
-
 		public TimeSpan CreationTimeSpan { get; set; }
+		public DateTime CopyDate { get; set; }
 		public CopyDirectoryEventArgs(DateTime copyDate, Save executedSave, string destinationPath, TimeSpan creationTimeSpan)
 		{
 			CopyDate = copyDate;

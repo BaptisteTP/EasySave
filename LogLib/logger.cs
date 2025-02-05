@@ -14,7 +14,7 @@ namespace LogLib
         static Logger()
         {
             logDirectory = Path.Combine(@"C:\temp", "logs-save");
-            logFile = $"{DateTime.Now:yyyy-MM-dd}.json";
+            logFile = $"{DateTime.Now:yyyy-MM-dd}.json";    
             logPath = Path.Combine(logDirectory, logFile);
 
             try
