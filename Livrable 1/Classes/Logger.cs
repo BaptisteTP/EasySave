@@ -5,12 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using LogLib;
 
 namespace Project_Easy_Save.Classes
 {
 	public class Logger
 	{
-		public Logger() { }
+        private LogLib.Logger LogLibLogger;
+        public Logger()
+		{
+			LogLibLogger = new LogLib.Logger();
+		}
 
 		public void OnCopyDirectory(object sender, CopyDirectoryEventArgs eventArgs)
 		{
@@ -22,6 +27,7 @@ namespace Project_Easy_Save.Classes
 			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
 
 			//Log with logger lib
+			LogLibLogger.WriteLog(log, pathToWriteTo);
 		}
 
 		public void OnCopyFile(object sender, FileCopyEventArgs eventArgs)
@@ -37,7 +43,8 @@ namespace Project_Easy_Save.Classes
 			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
 
 			//Log with logger lib
-		}
+			LogLibLogger.WriteLog(log, pathToWriteTo);
+        }
 
 		public void OnCopyFilePreview(object sender, FileCopyPreviewEventArgs eventArgs)
 		{
@@ -52,8 +59,8 @@ namespace Project_Easy_Save.Classes
 			string jsonToLog = SerializeObjectToJson(log);
 			string pathToWriteTo = Creator.GetSettingsInstance().RealTimeLogPath;
 
-			//Log with logger lib
-		}
+            //Log with logger lib
+        }
 
 		private string SerializeObjectToJson(object log)
 		{
