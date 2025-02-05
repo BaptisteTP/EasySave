@@ -54,8 +54,14 @@ namespace Project_Easy_Save.Classes
 			if( _settingsInstance == null)
 			{
 				string appsettings = "appsettings.json";
-				string jsonAppSettings = File.ReadAllText(appsettings);
-				_settingsInstance = JsonSerializer.Deserialize<Settings>(jsonAppSettings);
+				if (!File.Exists(appsettings))
+				{
+					_settingsInstance = Settings.CreateBaseSettings();
+				}
+				else
+				{
+					_settingsInstance = Settings.GetBaseSettings();
+				}
 			}
 			return _settingsInstance;
 		}
