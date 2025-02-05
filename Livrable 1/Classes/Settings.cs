@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -55,6 +56,14 @@ namespace Project_Easy_Save.Classes
 				case "ActiveLanguage":
 					currentSettings.ActiveLanguage = newValue;
 					break;
+				case "DailyLogPath":
+					currentSettings.DailyLogPath = newValue;
+					break;
+
+				case "RealTimeLogPath":
+					currentSettings.RealTimeLogPath = newValue;
+					break;
+
 				default:
 					return;
 			}
@@ -81,13 +90,13 @@ namespace Project_Easy_Save.Classes
 				if (keyChosen.KeyChar == '1')
 				{
 					ChangeSetting("ActiveLanguage", "en-US");
-					ApplySettings();
+					ApplyLanguageSettings();
 					break;
 				}
 				else if (keyChosen.KeyChar == '2')
 				{
 					ChangeSetting("ActiveLanguage", "fr-FR");
-					ApplySettings();
+					ApplyLanguageSettings();
 					break;
 				}
 				else
@@ -97,7 +106,7 @@ namespace Project_Easy_Save.Classes
 			}
 		}
 
-		public static void ApplySettings()
+		public static void ApplyLanguageSettings()
 		{
 			Settings settings = Creator.GetSettingsInstance();
 			if(settings.ActiveLanguage == "")
@@ -108,6 +117,54 @@ namespace Project_Easy_Save.Classes
 			{
 				Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(settings.ActiveLanguage!);
 			}
+		}
+
+		public static void AskUserToChangeDailyLogsFolder()
+		{
+			Console.Clear();
+			string currentFolderForDailyLog = GetBaseSettings().DailyLogPath!;
+
+			Console.WriteLine($"Les logs journalières sont actuellement stockées dans le dossier suivant :");
+			Console.WriteLine(currentFolderForDailyLog);
+
+			string? newDailyLogFolderPath = string.Empty;
+			while (string.IsNullOrEmpty(newDailyLogFolderPath))
+			{
+				Console.WriteLine("Quel est le nouveau dossier ?");
+				newDailyLogFolderPath = Console.ReadLine();
+
+				if (string.IsNullOrEmpty(newDailyLogFolderPath) || !Directory.Exists(newDailyLogFolderPath))
+				{
+					Console.WriteLine("Le chemin rentré est invalide. Veuillez recommencer");
+				}
+			}
+
+			GetBaseSettings().DailyLogPath = newDailyLogFolderPath;
+			ChangeSetting("DailyLogPath", newDailyLogFolderPath!);
+		}
+
+		public static void AskUserToChangeRealTimeLogsFolder()
+		{
+			Console.Clear();
+			string currentRealTimeLogPath = GetBaseSettings().RealTimeLogPath!;
+
+			Console.WriteLine($"Les logs en temps réel sont actuellement stockées dans le dossier suivant :");
+			Console.WriteLine(currentRealTimeLogPath);
+
+			string? newRealTimeLogPath = string.Empty;
+			while (string.IsNullOrEmpty(newRealTimeLogPath))
+			{
+				Console.WriteLine("Quel est le nouveau dossier ?");
+				newRealTimeLogPath = Console.ReadLine();
+
+				if (string.IsNullOrEmpty(newRealTimeLogPath) || !Directory.Exists(newRealTimeLogPath))
+				{
+					Console.WriteLine("Le chemin rentré est invalide. Veuillez recommencer");
+				}
+			}
+
+			GetBaseSettings().RealTimeLogPath = newRealTimeLogPath;
+			ChangeSetting("RealTimeLogPath", newRealTimeLogPath!);
 		}
 	}
 }
