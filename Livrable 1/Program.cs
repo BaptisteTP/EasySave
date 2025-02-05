@@ -5,6 +5,17 @@ class Program
 {
     static void Main(string[] args)
     {
+        Settings settings = Creator.GetSettingsInstance();
+
+        if(settings.ActiveLanguage == "")
+        {
+            Settings.AskUserToChooseLanguage();
+        }
+        else
+        {
+            Settings.ApplySettings();
+        }
+
         MainMenuPrompt mainMenuPrompt = new MainMenuPrompt();
         mainMenuPrompt.Interact();
 

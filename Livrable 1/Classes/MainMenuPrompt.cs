@@ -15,7 +15,6 @@ namespace Project_Easy_Save.Classes
 
         public void Interact()
         {
-            LanguageSettings.AskUserToChooseLanguage();
             EditSavesPrompt editSavesPrompt = new EditSavesPrompt();
             ExecuteSavePrompt executeSavePrompt = new ExecuteSavePrompt();
             isInteracting = true;
@@ -41,7 +40,7 @@ namespace Project_Easy_Save.Classes
 
                     //Show language settings
                     case '3':
-                        LanguageSettings.AskUserToChooseLanguage();
+                        Settings.AskUserToChooseLanguage();
                         break;
 
                     //Leave app
