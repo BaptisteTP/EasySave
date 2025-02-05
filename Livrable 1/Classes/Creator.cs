@@ -15,6 +15,7 @@ namespace Project_Easy_Save.Classes
 		private static SaveStore _saveStoreInstance;
 		private static Paster _pasterInstance;
 		private static Settings _settingsInstance;
+		private static Logger _loggerInstance;
 
 		public static ResourceManager GetResourceManagerInstance()
 		{
@@ -30,7 +31,15 @@ namespace Project_Easy_Save.Classes
             if (_saveStoreInstance == null)
             {
                 _saveStoreInstance = new SaveStore();
-            }
+
+				_pasterInstance = new Paster();
+				_loggerInstance = new Logger();
+
+				_pasterInstance.OnFileCopyPreview += _loggerInstance.OnCopyFilePreview;
+				_pasterInstance.OnFileCopied += _loggerInstance.OnCopyFile;
+				_pasterInstance.OnDirectoryCopied += _loggerInstance.OnCopyDirectory;
+				_saveStoreInstance.SaveCreated += _loggerInstance.OnSaveCreated;
+			}
 			return _saveStoreInstance;
 
         }
@@ -39,14 +48,9 @@ namespace Project_Easy_Save.Classes
 		{
 			if(_pasterInstance == null)
 			{
-				_pasterInstance = new Paster();
+				throw new Exception("Error");
 			}
 			return _pasterInstance;
-		}
-
-		public static void GetLoggerInstance()
-		{
-
 		}
 
 		public static Settings GetSettingsInstance()

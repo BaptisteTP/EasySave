@@ -39,13 +39,8 @@ namespace Project_Easy_Save.Classes
 
         private void ExAllSaves()
         {
-            Console.Clear();
-            Console.WriteLine();
-            Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
-            _saveStore.DisplayAllSaves();
-            _saveStore.GetSave(int.Parse(Console.ReadLine()));
-            Console.WriteLine();
-            Console.WriteLine(_resourceManager.GetString("Quit"));
+            Console.WriteLine("Execution de toutes les sauvegardes");
+            _saveStore.GetAllSaves().ForEach(save => save.Execute());
         }
         private void ExSaves()
         {

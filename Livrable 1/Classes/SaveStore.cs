@@ -10,6 +10,7 @@ namespace Project_Easy_Save.Classes
     public class SaveStore
     {
         private List<Save> Saves = [];
+        public event EventHandler<Save>? SaveCreated;
         public bool CanAddSave => NumberOfSaves < MaximumNumberOfSave;
         public int NumberOfSaves => Saves.Count;
         private int CurrentAvailableID { get; set; } = 1; 
@@ -19,12 +20,16 @@ namespace Project_Easy_Save.Classes
 
         public int CreateNewSave(string name, SaveType type, string sourcePath, string destinationPath)
         {
-            Saves.Add(new Save(
-                CurrentAvailableID, 
-                name, 
-                sourcePath, 
+            Save newSave = new Save(
+                CurrentAvailableID,
+                name,
+                sourcePath,
                 destinationPath,
-                type));
+                type);
+
+			Saves.Add(newSave);
+            SaveCreated?.Invoke(this, newSave);
+
             return CurrentAvailableID++;
         }
         public void EditSave(int id, int property, object newValue)
