@@ -13,7 +13,7 @@ class Program
         }
         else
         {
-            Settings.ApplySettings();
+            Settings.ApplyLanguageSettings();
         }
 
         MainMenuPrompt mainMenuPrompt = new MainMenuPrompt();

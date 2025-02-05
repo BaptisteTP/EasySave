@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Resources;
 using System.Text;
@@ -17,6 +18,7 @@ namespace Project_Easy_Save.Classes
         {
             EditSavesPrompt editSavesPrompt = new EditSavesPrompt();
             ExecuteSavePrompt executeSavePrompt = new ExecuteSavePrompt();
+            SettingsPrompt settingsPrompt = new SettingsPrompt();
             isInteracting = true;
 
             Console.Clear();
@@ -38,9 +40,9 @@ namespace Project_Easy_Save.Classes
                         executeSavePrompt.Interact();
                         break;
 
-                    //Show language settings
+                    //Show settings prompt
                     case '3':
-                        Settings.AskUserToChooseLanguage();
+                        settingsPrompt.Interact();
                         break;
 
                     //Leave app
