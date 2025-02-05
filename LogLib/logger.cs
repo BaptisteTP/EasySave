@@ -7,7 +7,7 @@ namespace LogLib
 {
     public class Logger
     {
-        public void WriteLog(object logEntry, string logDirectory)
+        public void WriteDailyLog(object logEntry, string logDirectory)
         {
         
             string saveLogDirectory = Path.Combine(logDirectory, "save-log");
@@ -31,5 +31,12 @@ namespace LogLib
             var options = new JsonSerializerOptions { WriteIndented = true };
             File.WriteAllText(logFilePath, JsonSerializer.Serialize(logList, options));
         }
-    }
+
+        public void WriteLog(string logMessage, string logDirectory)
+        {
+			string saveLogFile = Path.Combine(logDirectory, "realTimeLog.json");
+
+            File.WriteAllText(saveLogFile, logMessage);
+		}
+	}
 }

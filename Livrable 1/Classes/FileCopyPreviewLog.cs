@@ -8,7 +8,7 @@ namespace Project_Easy_Save.Classes
 {
 	public class FileCopyPreviewLog
 	{
-
+		public int Id { get; set; }
 		public string Name { get; set; }
 		public string SourceFilePath { get; set; }
 		public string TargetFilePath { get; set; }
@@ -16,8 +16,10 @@ namespace Project_Easy_Save.Classes
 		public int TotalFileToCopy { get; set; }
 		public int TotalFileSize { get; set; }
 		public int NbFilesLeftToDo { get; set; }
-		public FileCopyPreviewLog(string name, string sourceFilePath, string targetFilePath, string state, int totalFileToCopy, int totalFileSize, int nbFilesLeftToDo)
+		public string Progression { get; set; }
+		public FileCopyPreviewLog(int id, string name, string sourceFilePath, string targetFilePath, string state, int totalFileToCopy, int totalFileSize, int nbFilesLeftToDo, string progression)
 		{
+			Id = id;
 			Name = name;
 			SourceFilePath = sourceFilePath;
 			TargetFilePath = targetFilePath;
@@ -25,6 +27,7 @@ namespace Project_Easy_Save.Classes
 			TotalFileToCopy = totalFileToCopy;
 			TotalFileSize = totalFileSize;
 			NbFilesLeftToDo = nbFilesLeftToDo;
+			Progression = progression;
 		}
 	}
 }

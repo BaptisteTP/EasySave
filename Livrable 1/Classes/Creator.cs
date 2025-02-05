@@ -31,7 +31,15 @@ namespace Project_Easy_Save.Classes
             if (_saveStoreInstance == null)
             {
                 _saveStoreInstance = new SaveStore();
-            }
+
+				_pasterInstance = new Paster();
+				_loggerInstance = new Logger();
+
+				_pasterInstance.OnFileCopyPreview += _loggerInstance.OnCopyFilePreview;
+				_pasterInstance.OnFileCopied += _loggerInstance.OnCopyFile;
+				_pasterInstance.OnDirectoryCopied += _loggerInstance.OnCopyDirectory;
+				_saveStoreInstance.SaveCreated += _loggerInstance.OnSaveCreated;
+			}
 			return _saveStoreInstance;
 
         }
@@ -40,12 +48,7 @@ namespace Project_Easy_Save.Classes
 		{
 			if(_pasterInstance == null)
 			{
-				_pasterInstance = new Paster();
-
-				_loggerInstance = new Logger();
-				_pasterInstance.OnFileCopyPreview += _loggerInstance.OnCopyFilePreview;
-				_pasterInstance.OnFileCopied += _loggerInstance.OnCopyFile;
-				_pasterInstance.OnDirectoryCopied += _loggerInstance.OnCopyDirectory;
+				throw new Exception("Error");
 			}
 			return _pasterInstance;
 		}

@@ -27,7 +27,7 @@ namespace Project_Easy_Save.Classes
 			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
 
 			//Log with logger lib
-			LogLibLogger.WriteLog(log, pathToWriteTo);
+			LogLibLogger.WriteDailyLog(log, pathToWriteTo);
 		}
 
 		public void OnCopyFile(object sender, FileCopyEventArgs eventArgs)
@@ -43,29 +43,67 @@ namespace Project_Easy_Save.Classes
 			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
 
 			//Log with logger lib
-			LogLibLogger.WriteLog(log, pathToWriteTo);
+			LogLibLogger.WriteDailyLog(log, pathToWriteTo);
         }
 
 		public void OnCopyFilePreview(object sender, FileCopyPreviewEventArgs eventArgs)
 		{
-			FileCopyPreviewLog log = new FileCopyPreviewLog(name: eventArgs.ExecutedSave.Name,
+			string pathToRealTimeLog = Path.Combine(Creator.GetSettingsInstance().RealTimeLogPath, "realTimeLog.json");
+			string jsonString = File.ReadAllText(pathToRealTimeLog);
+			List<FileCopyPreviewLog> logList = JsonSerializer.Deserialize<List<FileCopyPreviewLog>>(jsonString);
+
+			FileCopyPreviewLog? logToUpdate = logList.FirstOrDefault(log => log.Id == eventArgs.ExecutedSave.Id);
+
+			if(logToUpdate == null) { return; }
+
+			int index = logList.IndexOf(logToUpdate);
+
+			double progression = Math.Round((1 - (double)(eventArgs.RemainingFiles.Count - 1) / (double)(eventArgs.EligibleFiles.Count - 1)) * 100, 2);
+			logList[index] = new FileCopyPreviewLog(id : eventArgs.ExecutedSave.Id,
+															name: eventArgs.ExecutedSave.Name,
 															sourceFilePath: eventArgs.CurrentFileSourcePath,
 															targetFilePath: eventArgs.CurrentFileDestinationPath,
 															state: eventArgs.State,
 															totalFileToCopy: eventArgs.EligibleFiles.Count,
 															totalFileSize: 19,
-															nbFilesLeftToDo: eventArgs.RemainingFiles.Count);
+															nbFilesLeftToDo: eventArgs.RemainingFiles.Count-1,
+															progression: progression.ToString() + "%");
 
-			string jsonToLog = SerializeObjectToJson(log);
+			string jsonToLog = SerializeObjectToJson(logList);
 			string pathToWriteTo = Creator.GetSettingsInstance().RealTimeLogPath;
 
             //Log with logger lib
+			LogLibLogger.WriteLog(jsonToLog, pathToWriteTo);
         }
 
 		private string SerializeObjectToJson(object log)
 		{
 			var options = new JsonSerializerOptions { WriteIndented = true };
 			return JsonSerializer.Serialize(log, options);
+		}
+
+		public void OnSaveCreated(object sender, Save eventArgs)
+		{
+			List<FileCopyPreviewLog> logList = new List<FileCopyPreviewLog>();
+
+			foreach(Save save in Creator.GetSaveStoreInstance().GetAllSaves())
+			{
+				logList.Add(new FileCopyPreviewLog(id: save.Id,
+													name: save.Name,
+													sourceFilePath: "",
+													targetFilePath: "",
+													state: "INACTIVE",
+													totalFileToCopy: 0,
+													totalFileSize: 0,
+													nbFilesLeftToDo: 0,
+													progression: "0"));
+			}
+
+			string jsonToLog = SerializeObjectToJson(logList);
+			string pathToWriteTo = Creator.GetSettingsInstance().RealTimeLogPath;
+
+			//Log to real time
+			LogLibLogger.WriteLog(jsonToLog, pathToWriteTo);
 		}
 	}
 }
