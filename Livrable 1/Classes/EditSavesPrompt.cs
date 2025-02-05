@@ -20,7 +20,8 @@ namespace Project_Easy_Save.Classes
 
 		public void Interact()
 		{
-			IsInteracting = true;
+			Console.Clear();
+            IsInteracting = true;
 
 			while (IsInteracting)
 			{
@@ -116,8 +117,6 @@ namespace Project_Easy_Save.Classes
             Console.Clear();
             Console.WriteLine(_resourceManager.GetString("InformUser_SaveCreate"));
         }
-
-
 
         private void DisplaySave()
 		{

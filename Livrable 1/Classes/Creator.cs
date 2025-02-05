@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Project_Easy_Save.Classes
@@ -11,8 +12,9 @@ namespace Project_Easy_Save.Classes
 	public static class Creator
 	{
 		private static ResourceManager _resourceMangerInstance;
-
+		private static SaveStore _saveStoreInstance;
 		private static Paster _pasterInstance;
+		private static Settings _settingsInstance;
 
 		public static ResourceManager GetResourceManagerInstance()
 		{
@@ -23,7 +25,6 @@ namespace Project_Easy_Save.Classes
 			return _resourceMangerInstance;
 		}
 
-		private static SaveStore _saveStoreInstance;
         public static SaveStore GetSaveStoreInstance()
 		{
             if (_saveStoreInstance == null)
@@ -46,6 +47,23 @@ namespace Project_Easy_Save.Classes
 		public static void GetLoggerInstance()
 		{
 
+		}
+
+		public static Settings GetSettingsInstance()
+		{
+			if( _settingsInstance == null)
+			{
+				string appsettings = "appsettings.json";
+				if (!File.Exists(appsettings))
+				{
+					_settingsInstance = Settings.CreateBaseSettings();
+				}
+				else
+				{
+					_settingsInstance = Settings.GetBaseSettings();
+				}
+			}
+			return _settingsInstance;
 		}
 	}
 }

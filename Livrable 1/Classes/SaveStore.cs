@@ -10,7 +10,7 @@ namespace Project_Easy_Save.Classes
     public class SaveStore
     {
         private List<Save> Saves = [];
-        public bool CanAddSave { get; set; }
+        public bool CanAddSave => NumberOfSaves < MaximumNumberOfSave;
         public int NumberOfSaves => Saves.Count;
         private int CurrentAvailableID { get; set; } = 1; 
         private int MaximumNumberOfSave { get; } = 5;
