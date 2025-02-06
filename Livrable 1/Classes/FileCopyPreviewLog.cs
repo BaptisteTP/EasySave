@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Project_Easy_Save.Classes
 {
-	public class FileCopyPreviewLog
+    // Class that stores the log of the file copy preview
+    public class FileCopyPreviewLog
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }

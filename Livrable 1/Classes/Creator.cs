@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace Project_Easy_Save.Classes
 {
-	public static class Creator
+    // Class that creates instances of the classes in the project
+    public static class Creator
 	{
 		private static ResourceManager _resourceMangerInstance;
 		private static SaveStore _saveStoreInstance;
@@ -17,7 +18,8 @@ namespace Project_Easy_Save.Classes
 		private static Settings _settingsInstance;
 		private static Logger _loggerInstance;
 
-		public static ResourceManager GetResourceManagerInstance()
+        // Returns a resource manager instance
+        public static ResourceManager GetResourceManagerInstance()
 		{
 			if( _resourceMangerInstance == null)
 			{
@@ -26,6 +28,7 @@ namespace Project_Easy_Save.Classes
 			return _resourceMangerInstance;
 		}
 
+        // Returns a save store instance
         public static SaveStore GetSaveStoreInstance()
 		{
             if (_saveStoreInstance == null)
@@ -45,7 +48,8 @@ namespace Project_Easy_Save.Classes
 
         }
 
-		public static Paster GetPasterInstance()
+        // Returns a paster instance
+        public static Paster GetPasterInstance()
 		{
 			if(_pasterInstance == null)
 			{
@@ -54,7 +58,8 @@ namespace Project_Easy_Save.Classes
 			return _pasterInstance;
 		}
 
-		public static Settings GetSettingsInstance()
+        // Returns a logger instance
+        public static Settings GetSettingsInstance()
 		{
 			if( _settingsInstance == null)
 			{

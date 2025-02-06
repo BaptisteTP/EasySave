@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Project_Easy_Save.Classes
 {
-	public class ExecuteSavePrompt : PromptBase
+    // Class that prompts the user to execute the saves
+    public class ExecuteSavePrompt : PromptBase
 	{
 		private bool IsInteracting;
 		public ExecuteSavePrompt() : base() { }
@@ -47,6 +48,7 @@ namespace Project_Easy_Save.Classes
             }
         }
 
+        // Method that executes all the saves
         private void ExAllSaves()
         {
             Console.Clear();
@@ -62,6 +64,8 @@ namespace Project_Easy_Save.Classes
                 return;
             }
         }
+
+        // Method that executes the saves
         private void ExSaves()
         {
             Console.Clear();
@@ -79,6 +83,7 @@ namespace Project_Easy_Save.Classes
             }
         }
 
+        // Method that quits the execution
         private void Quit()
         {
             IsInteracting = false;
