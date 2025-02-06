@@ -188,6 +188,9 @@ Please choose a save type:
   <data name="InformUserOutSettingInterface" xml:space="preserve">
     <value>Exiting the parameter changes interface</value>
   </data>
+  <data name="InformUserReturnExit" xml:space="preserve">
+    <value>Type "exit" to go back.</value>
+  </data>
   <data name="InformUser_ChooseSave" xml:space="preserve">
     <value>Please choose a save to execute the operation.
 Otherwise, hit the “esc” key to go back.</value>

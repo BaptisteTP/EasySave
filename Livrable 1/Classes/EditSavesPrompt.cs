@@ -29,9 +29,14 @@ namespace Project_Easy_Save.Classes
 			while (IsInteracting)
 			{
 				DisplayMenu();
-				ConsoleKeyInfo choice = Console.ReadKey(true);
+				ConsoleKeyInfo choix = Console.ReadKey(true);
+                if (choix.Key == ConsoleKey.Escape)
+                {
+                    Console.Clear();
+                    IsInteracting = false;
+                }
 
-				switch (choice.KeyChar)
+                switch (choix.KeyChar)
 				{
 					case '1':
 						DisplaySave();
@@ -58,22 +63,18 @@ namespace Project_Easy_Save.Classes
 
 		private void DisplayMenu()
 		{
-
-            Console.Clear();
-            Console.WriteLine(_resourceManager.GetString("AskForEditActionMessage"));
+            Console.WriteLine(string.Format(_resourceManager.GetString($"AskForEditActionMessage"),  _saveStore.NumberOfSaves));
         }
 
         private void CreateSave()
         {
             Console.Clear();
             Console.WriteLine(_resourceManager.GetString("AskForOperationName"));
-			string Name;
-			Name = Console.ReadLine();
-			if (Name == "exit") 
-			{
-				return;
-			}
-			while (string.IsNullOrEmpty(Name)) ;
+            string Name = Console.ReadLine();
+            if (Name == "exit")
+            {
+                return;
+            }
 
 
             SaveType Type;
@@ -82,7 +83,11 @@ namespace Project_Easy_Save.Classes
                 Console.Write(_resourceManager.GetString("AskForOperationType"));
 				Console.WriteLine("");
                 string typeInput = Console.ReadLine();
-                if (typeInput == "1")
+                if (typeInput == "exit")
+                {
+                    return;
+                }
+                else if (typeInput == "1")
                 {
                     Type = SaveType.Full;
                     break;
@@ -109,11 +114,11 @@ namespace Project_Easy_Save.Classes
                 Console.Write(_resourceManager.GetString("AskForOperationSourcePath"));
                 Console.WriteLine("");
                 SourcePath = Console.ReadLine();
-                if (SourcePath?.ToLower() == "exit")
+                if (SourcePath == "exit")
                 {
                     return;
-                }
-                if (!Directory.Exists(SourcePath))
+                } 
+				else if (!Directory.Exists(SourcePath))
                 {
                     Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewPath"));
                 }
@@ -125,11 +130,11 @@ namespace Project_Easy_Save.Classes
                 Console.Write(_resourceManager.GetString("AskForOperationDestinationPath"));
                 Console.WriteLine("");
                 DestinationPath = Console.ReadLine();
-                if (DestinationPath?.ToLower() == "exit")
-                {
+                if (DestinationPath == "exit")
+				{
                     return;
                 }
-                if (!Directory.Exists(DestinationPath))
+                else if (!Directory.Exists(DestinationPath))
                 {
                     Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewPath"));
                 }
@@ -142,21 +147,32 @@ namespace Project_Easy_Save.Classes
 
         private void DisplaySave()
 		{
-            Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
-            _saveStore.DisplayAllSaves();
-			Console.WriteLine(_resourceManager.GetString("InformUser_return"));
-            ConsoleKey hitKey = Console.ReadKey(true).Key;
-
-            if (hitKey == ConsoleKey.Escape)
+            if (_saveStore.NumberOfSaves == 0)
             {
-				Console.Clear();
+                Console.Clear();
+                Console.WriteLine(_resourceManager.GetString("NoOperationInStoreMessage"));
+                return;
+            }
+            _saveStore.DisplayAllSaves();
+            Console.WriteLine(_resourceManager.GetString($"MessageBeforeShowingAllSaveOperations"));
+            Console.WriteLine(_resourceManager.GetString("InformUser_return"));
+            ConsoleKeyInfo choix = Console.ReadKey(true);
+            if (choix.Key == ConsoleKey.Escape)
+            {
+                Console.Clear();
 				return;
             }
         }
 
 		private void HandleSaveEdit()
 		{
-			Save? saveToEdit = AskUserToSelectSaveToEdit();
+            if (_saveStore.NumberOfSaves == 0)
+            {
+                Console.Clear();
+                Console.WriteLine(_resourceManager.GetString("NoOperationInStoreMessage"));
+                return;
+            }
+            Save? saveToEdit = AskUserToSelectSaveToEdit();
 			if(saveToEdit == null) { Console.Clear(); return; }
 
 			int propertyToEdit = AskUserWhichPropertyToEdit(saveToEdit);
@@ -173,9 +189,8 @@ namespace Project_Easy_Save.Classes
 		{
 			Console.Clear();
 			List<Save> saves = _saveStore.GetAllSaves();
-			_saveStore.SaveToEdit = saves[0];
-
-			DisplayPossibleSavesToEdit(saves);
+            _saveStore.SaveToEdit = saves[0];
+            DisplayPossibleSavesToEdit(saves);
 			while (true)
 			{
 				ConsoleKey hitKey = Console.ReadKey(true).Key;
@@ -353,7 +368,6 @@ namespace Project_Easy_Save.Classes
             Console.Clear();
             List<Save> saves = _saveStore.GetAllSaves();
             _saveStore.SaveToDelete = saves[0];
-
             DisplayPossibleSavesToDelete(saves);
             while (true)
             {
@@ -416,6 +430,12 @@ namespace Project_Easy_Save.Classes
 
 		private void DeleteSave()
 		{
+			if (_saveStore.NumberOfSaves == 0)
+			{
+				Console.Clear();
+				Console.WriteLine(_resourceManager.GetString("NoOperationInStoreMessage"));
+				return;
+			}
             Save? SaveToDelete = AskUserToSelectSaveToDelete();
             if (SaveToDelete == null) { Console.Clear(); return; }
 
@@ -451,8 +471,8 @@ namespace Project_Easy_Save.Classes
         private void Exit()
 		{
             IsInteracting = false;
-			Console.Clear();
-            Console.WriteLine(_resourceManager.GetString("InformUser_SaveOperationFormQuit"));
+            Console.Clear();
+			Console.WriteLine(_resourceManager.GetString("InformUser_SaveOperationFormQuit"));
         }
 	}
 }
