@@ -27,7 +27,7 @@ namespace Project_Easy_Save.Classes
 			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
 
 			//Log with logger lib
-			LogLibLogger.WriteDailyLog(log, pathToWriteTo);
+			LogLibLogger.WriteDailyLog(jsonToLog, pathToWriteTo);
 		}
 
 		public void OnCopyFile(object sender, FileCopyEventArgs eventArgs)
@@ -43,7 +43,7 @@ namespace Project_Easy_Save.Classes
 			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
 
 			//Log with logger lib
-			LogLibLogger.WriteDailyLog(log, pathToWriteTo);
+			LogLibLogger.WriteDailyLog(jsonToLog, pathToWriteTo);
         }
 
 		public void OnCopyFilePreview(object sender, FileCopyPreviewEventArgs eventArgs)
@@ -74,6 +74,8 @@ namespace Project_Easy_Save.Classes
 
             //Log with logger lib
 			LogLibLogger.WriteLog(jsonToLog, pathToWriteTo);
+
+			Thread.Sleep(500);
         }
 
 		private string SerializeObjectToJson(object log)
@@ -98,6 +100,35 @@ namespace Project_Easy_Save.Classes
 													nbFilesLeftToDo: 0,
 													progression: "0"));
 			}
+
+			string jsonToLog = SerializeObjectToJson(logList);
+			string pathToWriteTo = Creator.GetSettingsInstance().RealTimeLogPath;
+
+			//Log to real time
+			LogLibLogger.WriteLog(jsonToLog, pathToWriteTo);
+		}
+
+		public void OnSaveFinished(object sender, Save save)
+		{
+			string pathToRealTimeLog = Path.Combine(Creator.GetSettingsInstance().RealTimeLogPath, "realTimeLog.json");
+			string jsonString = File.ReadAllText(pathToRealTimeLog);
+			List<FileCopyPreviewLog> logList = JsonSerializer.Deserialize<List<FileCopyPreviewLog>>(jsonString);
+
+			FileCopyPreviewLog? logToUpdate = logList.FirstOrDefault(log => log.Id == save.Id);
+
+			if (logToUpdate == null) { return; }
+
+			int index = logList.IndexOf(logToUpdate);
+
+			logList[index] = new FileCopyPreviewLog(id: save.Id,
+													name: save.Name,
+													sourceFilePath: "",
+													targetFilePath: "",
+													state: "INACTIVE",
+													totalFileToCopy: 0,
+													totalFileSize: 0,
+													nbFilesLeftToDo: 0,
+													progression: "0");
 
 			string jsonToLog = SerializeObjectToJson(logList);
 			string pathToWriteTo = Creator.GetSettingsInstance().RealTimeLogPath;
