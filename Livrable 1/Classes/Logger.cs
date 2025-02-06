@@ -27,7 +27,7 @@ namespace Project_Easy_Save.Classes
 			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
 
 			//Log with logger lib
-			LogLibLogger.WriteDailyLog(log, pathToWriteTo);
+			LogLibLogger.WriteDailyLog(jsonToLog, pathToWriteTo);
 		}
 
 		public void OnCopyFile(object sender, FileCopyEventArgs eventArgs)
@@ -43,7 +43,7 @@ namespace Project_Easy_Save.Classes
 			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
 
 			//Log with logger lib
-			LogLibLogger.WriteDailyLog(log, pathToWriteTo);
+			LogLibLogger.WriteDailyLog(jsonToLog, pathToWriteTo);
         }
 
 		public void OnCopyFilePreview(object sender, FileCopyPreviewEventArgs eventArgs)
