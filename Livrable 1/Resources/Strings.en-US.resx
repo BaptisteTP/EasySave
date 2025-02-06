@@ -195,6 +195,9 @@ Otherwise, hit the “esc” key to go back.</value>
   <data name="InformUser_DeleteSave" xml:space="preserve">
     <value>The save has been deleted!</value>
   </data>
+  <data name="InformUser_LeftExecutionPrompt" xml:space="preserve">
+    <value>Leaving save execution prompt...</value>
+  </data>
   <data name="InformUser_OperationToModifMessage" xml:space="preserve">
     <value>Operation to edit :</value>
   </data>

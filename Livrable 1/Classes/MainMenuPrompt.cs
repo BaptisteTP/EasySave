@@ -17,7 +17,6 @@ namespace Project_Easy_Save.Classes
         public void Interact()
         {
             EditSavesPrompt editSavesPrompt = new EditSavesPrompt();
-            ExecuteSavePrompt executeSavePrompt = new ExecuteSavePrompt();
             SettingsPrompt settingsPrompt = new SettingsPrompt();
             isInteracting = true;
 
@@ -35,13 +34,13 @@ namespace Project_Easy_Save.Classes
                         editSavesPrompt.Interact();
                         break;
 
-                    //Show execute prompt
-                    case '2':
-                        executeSavePrompt.Interact();
-                        break;
+					//Show execute prompt
+					case '2':
+						HandleSaveExecution();
+						break;
 
-                    //Show settings prompt
-                    case '3':
+					//Show settings prompt
+					case '3':
                         settingsPrompt.Interact();
                         break;
 
@@ -57,5 +56,19 @@ namespace Project_Easy_Save.Classes
                 }
             }
         }
-    }
+
+		private void HandleSaveExecution()
+		{
+			if (_saveStore.CanExecuteSave)
+			{
+				ExecuteSavePrompt executeSavePrompt = new ExecuteSavePrompt();
+				executeSavePrompt.Interact();
+			}
+			else
+			{
+				Console.Clear();
+				Console.WriteLine(_resourceManager.GetString("NoOperationInStoreMessage"));
+			}
+		}
+	}
 }

@@ -13,24 +13,35 @@ namespace Project_Easy_Save.Classes
 
         public void Interact()
         {
+            Console.Clear();
             IsInteracting = true;
             while (IsInteracting)
             {
-                Console.Clear();
                 Console.WriteLine(_resourceManager.GetString("MessageBeforeExSaves"));
                 ConsoleKeyInfo choice = Console.ReadKey(true);
                 _saveStore.DisplayAllSaves();
 
-                switch (choice.KeyChar)
+                switch (choice.Key)
                 {
-                    case '1':
+                    case ConsoleKey.NumPad1:
                         ExAllSaves();
                         break;
-                    case '2':
+
+                    case ConsoleKey.NumPad2:
                         ExSaves();
                         break;
-                    case '3':
+
+                    case ConsoleKey.NumPad3:
                         Quit();
+                        break;
+
+                    case ConsoleKey.Escape:
+                        Quit();
+                        break;
+
+                    default:
+                        Console.Clear();
+                        Console.WriteLine(_resourceManager.GetString("WrongCommandMessage"));
                         break;
                 }
             }
@@ -72,7 +83,7 @@ namespace Project_Easy_Save.Classes
         {
             IsInteracting = false;
             Console.Clear();
-            Console.WriteLine(_resourceManager.GetString("InformUser_SaveOperationFormQuit"));
+            Console.WriteLine(_resourceManager.GetString("InformUser_LeftExecutionPrompt"));
         }
     }
 }
