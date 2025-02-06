@@ -217,6 +217,9 @@ Otherwise, hit the “esc” key to go back.</value>
   <data name="MessageBeforeShowingAllSaveOperations" xml:space="preserve">
     <value>Following is the list of all the save operations</value>
   </data>
+  <data name="MessageBeforeShowingExSaves" xml:space="preserve">
+    <value>Choose saves numbers to execute :</value>
+  </data>
   <data name="NoOperationInStoreMessage" xml:space="preserve">
     <value>No save operation are currently active.</value>
   </data>

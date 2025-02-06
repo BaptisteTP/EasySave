@@ -13,10 +13,13 @@ namespace Project_Easy_Save.Classes
 	{
 		private bool IsInteracting;
 		public event EventHandler<ConsoleKey>? OnSaveEditSelectionChanged;
+		public event EventHandler<ConsoleKey>? OnSaveDeleteSelectionChanged;
 		public EditSavesPrompt() : base()
 		{
 			OnSaveEditSelectionChanged += _saveStore.SaveEdit_SelectionChanged;
-		}
+            OnSaveDeleteSelectionChanged += _saveStore.SaveDelete_SelectionChanged;
+
+        }
 
 		public void Interact()
 		{
@@ -26,13 +29,13 @@ namespace Project_Easy_Save.Classes
 			while (IsInteracting)
 			{
 				DisplayMenu();
-				ConsoleKeyInfo choix = Console.ReadKey(true);
+				ConsoleKeyInfo choice = Console.ReadKey(true);
 
-				switch (choix.KeyChar)
+				switch (choice.KeyChar)
 				{
 					case '1':
-                        DisplaySave();
-						break;
+						DisplaySave();
+                        break;
 
 					case '2':
 						CreateSave();
@@ -64,7 +67,14 @@ namespace Project_Easy_Save.Classes
         {
             Console.Clear();
             Console.WriteLine(_resourceManager.GetString("AskForOperationName"));
-            string Name = Console.ReadLine();
+			string Name;
+			Name = Console.ReadLine();
+			if (Name == "exit") 
+			{
+				return;
+			}
+			while (string.IsNullOrEmpty(Name)) ;
+
 
             SaveType Type;
             while (true)
@@ -82,6 +92,10 @@ namespace Project_Easy_Save.Classes
                     Type = SaveType.Differential;
                     break;
                 }
+				else if (typeInput == "exit")
+				{
+					   return;
+				}
                 else
                 {
 					Console.WriteLine(_resourceManager.GetString("WrongOperationType"));
@@ -95,6 +109,10 @@ namespace Project_Easy_Save.Classes
                 Console.Write(_resourceManager.GetString("AskForOperationSourcePath"));
                 Console.WriteLine("");
                 SourcePath = Console.ReadLine();
+                if (SourcePath?.ToLower() == "exit")
+                {
+                    return;
+                }
                 if (!Directory.Exists(SourcePath))
                 {
                     Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewPath"));
@@ -107,6 +125,10 @@ namespace Project_Easy_Save.Classes
                 Console.Write(_resourceManager.GetString("AskForOperationDestinationPath"));
                 Console.WriteLine("");
                 DestinationPath = Console.ReadLine();
+                if (DestinationPath?.ToLower() == "exit")
+                {
+                    return;
+                }
                 if (!Directory.Exists(DestinationPath))
                 {
                     Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewPath"));
@@ -123,7 +145,13 @@ namespace Project_Easy_Save.Classes
             Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
             _saveStore.DisplayAllSaves();
 			Console.WriteLine(_resourceManager.GetString("InformUser_return"));
-            _saveStore.DisplaySave(int.Parse(Console.ReadLine()));
+            ConsoleKey hitKey = Console.ReadKey(true).Key;
+
+            if (hitKey == ConsoleKey.Escape)
+            {
+				Console.Clear();
+				return;
+            }
         }
 
 		private void HandleSaveEdit()
@@ -320,7 +348,48 @@ namespace Project_Easy_Save.Classes
 			}
 		}
 
-		private void DisplayPossibleSavesToEdit(List<Save> saves)
+        private Save? AskUserToSelectSaveToDelete()
+        {
+            Console.Clear();
+            List<Save> saves = _saveStore.GetAllSaves();
+            _saveStore.SaveToDelete = saves[0];
+
+            DisplayPossibleSavesToDelete(saves);
+            while (true)
+            {
+                ConsoleKey hitKey = Console.ReadKey(true).Key;
+
+                switch (hitKey)
+                {
+                    case ConsoleKey.UpArrow:
+                        Console.Clear();
+                        OnSaveDeleteSelectionChanged?.Invoke(this, ConsoleKey.UpArrow);
+                        break;
+
+                    case ConsoleKey.DownArrow:
+                        Console.Clear();
+                        OnSaveDeleteSelectionChanged?.Invoke(this, ConsoleKey.DownArrow);
+                        break;
+
+                    case ConsoleKey.Escape:
+                        Console.Clear();
+                        return null;
+
+                    case ConsoleKey.Enter:
+                        Console.Clear();
+                        return _saveStore.SaveToDelete;
+
+                    default:
+                        Console.Clear();
+                        Console.WriteLine(_resourceManager.GetString("WrongCommandMessage"));
+                        break;
+
+                }
+                DisplayPossibleSavesToDelete(saves);
+            }
+        }
+
+        private void DisplayPossibleSavesToEdit(List<Save> saves)
 		{
 			int saveIndex = 1;
 			foreach (Save save in saves)
@@ -342,16 +411,41 @@ namespace Project_Easy_Save.Classes
 				Console.WriteLine();
 				saveIndex++;
 			}
-		}
+            Console.WriteLine(_resourceManager.GetString("InformUser_ChooseSave"));
+        }
 
 		private void DeleteSave()
 		{
-			_saveStore.DisplayAllSaves();
-            Console.WriteLine(_resourceManager.GetString("InformUser_SaveOperationFormSuppr"));
+            Save? SaveToDelete = AskUserToSelectSaveToDelete();
+            if (SaveToDelete == null) { Console.Clear(); return; }
+
+			_saveStore.DeleteSave(SaveToDelete.Id);
+
+        }
+
+        private void DisplayPossibleSavesToDelete(List<Save> saves)
+        {
+            int saveIndex = 1;
+            foreach (Save save in saves)
+            {
+                if (save == _saveStore.SaveToDelete)
+                {
+                    Console.WriteLine($"[*] Sauvegarde numéro {saveIndex}");
+                }
+                else
+                {
+                    Console.WriteLine($"[] Sauvegarde numéro {saveIndex}");
+                }
+
+                Console.WriteLine();
+                Console.WriteLine($"Nom : {save.Name}");
+                Console.WriteLine($"Répertoire source : {save.SourcePath}");
+                Console.WriteLine($"Répertoire de destination : {save.DestinationPath}");
+                Console.WriteLine($"Type : {save.Type}");
+                Console.WriteLine();
+                saveIndex++;
+            }
             Console.WriteLine(_resourceManager.GetString("InformUser_ChooseSave"));
-            _saveStore.DeleteSave(int.Parse(Console.ReadLine()));
-            Console.Clear();
-            Console.WriteLine(_resourceManager.GetString("InformUser_DeleteSave"));
         }
 
         private void Exit()

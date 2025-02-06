@@ -18,6 +18,8 @@ namespace Project_Easy_Save.Classes
 
         public Save? SaveToEdit { get; set; }
 
+        public Save? SaveToDelete { get; set; }
+
         public int CreateNewSave(string name, SaveType type, string sourcePath, string destinationPath)
         {
             Save newSave = new Save(
@@ -95,5 +97,18 @@ namespace Project_Easy_Save.Classes
 				SaveToEdit = Saves[++currentIndexOfSelectedInList % NumberOfSaves];
 			}
 		}
+
+        public void SaveDelete_SelectionChanged(object sender, ConsoleKey e)
+        {
+            int currentIndexOfSelectedInList = Saves.IndexOf(SaveToDelete!);
+            if (e == ConsoleKey.UpArrow) 
+            {
+                SaveToDelete = Saves[(--currentIndexOfSelectedInList % NumberOfSaves + NumberOfSaves) % NumberOfSaves];
+            }
+            else if (e == ConsoleKey.DownArrow)
+            {
+                SaveToDelete = Saves[++currentIndexOfSelectedInList % NumberOfSaves];
+            }   
+        }
     }
 }

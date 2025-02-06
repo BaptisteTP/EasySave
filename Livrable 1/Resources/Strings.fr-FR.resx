@@ -216,6 +216,9 @@ Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
   <data name="MessageBeforeShowingAllSaveOperations" xml:space="preserve">
     <value>Voici la liste de toutes les opérations de sauvegardes :</value>
   </data>
+  <data name="MessageBeforeShowingExSaves" xml:space="preserve">
+    <value>Rentrez les numéros des sauvegardes que vous voulez exécuter : </value>
+  </data>
   <data name="NoOperationInStoreMessage" xml:space="preserve">
     <value>Aucune opération de sauvegarde n'est active.</value>
   </data>
