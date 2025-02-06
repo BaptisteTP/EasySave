@@ -42,7 +42,6 @@ namespace Project_Easy_Save.Classes
 
             if(eligibleFiles.Count == 0)
 			{
-				OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Inactive"));
 				return false;
 			}
 
@@ -81,8 +80,8 @@ namespace Project_Easy_Save.Classes
 					}
 				}
 			}
+			executedSave.LastExecuteDate = DateTime.Now;
 			SaveFinished?.Invoke(this, executedSave);
-
 			return true;
 		}
 
@@ -109,7 +108,6 @@ namespace Project_Easy_Save.Classes
 
 			if(eligibleFiles.Count == 0)
 			{
-				OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Inactive"));
 				return false;
 			}
 
@@ -127,6 +125,8 @@ namespace Project_Easy_Save.Classes
 				CopyFile(newPath, executedSave, destinationPath);
 				remainingFiles.Remove(newPath);
 			}
+			
+			executedSave.LastExecuteDate = DateTime.Now;
 			SaveFinished?.Invoke(this, executedSave);
 			return true;
 		}
