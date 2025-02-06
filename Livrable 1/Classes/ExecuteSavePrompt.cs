@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Project_Easy_Save.Classes
 {
@@ -20,7 +22,6 @@ namespace Project_Easy_Save.Classes
             {
                 Console.WriteLine(_resourceManager.GetString("MessageBeforeExSaves"));
                 ConsoleKeyInfo choice = Console.ReadKey(true);
-                _saveStore.DisplayAllSaves();
 
                 switch (choice.Key)
                 {
@@ -61,11 +62,31 @@ namespace Project_Easy_Save.Classes
         // Method that executes the saves
         private void ExSaves()
         {
+            int choice;
+            bool isimputvalid = false;
+            Save save = null;
             Console.Clear();
-            _saveStore.DisplayAllSaves();
-            Console.WriteLine();
-            Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingExSaves"));
-            _saveStore.GetAllSaves().ForEach(save => save.Execute());
+            while (isimputvalid == false || save == null) 
+            {
+                _saveStore.DisplayAllSaves();
+                Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingExSaves"));
+                string input = Console.ReadLine();
+                if (input == "exit")
+                {
+                    Console.Clear();
+                    return;
+                }
+                isimputvalid = int.TryParse(input, out choice);
+                save = _saveStore.GetSave(choice);
+                Console.Clear();
+                if (isimputvalid == false || save == null)
+                {
+                    Console.WriteLine(_resourceManager.GetString("WrongCommandMessage"));
+                }
+            }
+            Console.Clear();
+            Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingSaveOperations"));
+            save.Execute();
             Console.WriteLine(_resourceManager.GetString("MessageAfterShowingAllSaveOperations"));
         }
 

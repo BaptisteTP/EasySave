@@ -254,7 +254,10 @@ Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
     <value>Exécution des sauvegardes... </value>
   </data>
   <data name="MessageBeforeShowingExSaves" xml:space="preserve">
-    <value>Rentrez les numéros des sauvegardes que vous voulez exécuter : </value>
+    <value>Rentrez les numéros de la sauvegarde que vous voulez exécuter : (tapez 'exit' pour annuler)</value>
+  </data>
+  <data name="MessageBeforeShowingSaveOperations" xml:space="preserve">
+    <value>Exécution de la sauvegarde...</value>
   </data>
   <data name="NoFolder" xml:space="preserve">
     <value>Aucun</value>
