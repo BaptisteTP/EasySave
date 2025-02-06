@@ -1,5 +1,6 @@
 ﻿using Project_Easy_Save.Classes;
 using System.Linq.Expressions;
+using System.Transactions;
 
 class Program
 {
@@ -24,12 +25,12 @@ class Program
 			Settings.ApplyLanguageSettings();
 		}
 
-		if(settings.DailyLogPath == "" || !Directory.Exists(settings.DailyLogPath))
+		if(settings.DailyLogPath == "" || !Directory.Exists(settings.DailyLogPath) || !Settings.UserHasRightPermissionInFolder(settings.DailyLogPath))
 		{
 			Settings.AskUserToChangeDailyLogsFolder();
 		}
 
-		if(settings.RealTimeLogPath == "" || !Directory.Exists(settings.RealTimeLogPath))
+		if(settings.RealTimeLogPath == "" || !Directory.Exists(settings.RealTimeLogPath) || !Settings.UserHasRightPermissionInFolder(settings.RealTimeLogPath))
 		{
 			Settings.AskUserToChangeRealTimeLogsFolder();
 		}
