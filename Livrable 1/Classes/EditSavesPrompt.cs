@@ -67,7 +67,6 @@ namespace Project_Easy_Save.Classes
 		private void DisplayMenu()
 		{
             // Display the menu to the user
-            Console.Clear();
             Console.WriteLine(string.Format(_resourceManager.GetString($"AskForEditActionMessage"),  _saveStore.NumberOfSaves));
         }
 
@@ -75,26 +74,32 @@ namespace Project_Easy_Save.Classes
         {
             // Ask the user for the information to create a new save
             Console.Clear();
-            Console.WriteLine(_resourceManager.GetString("AskForOperationName"));
-            string Name = Console.ReadLine();
-            if (Name == "exit")
-            {
-                return;
-            }
+			string Name = string.Empty;
+			do
+			{
+				Console.WriteLine(_resourceManager.GetString("AskForOperationName"));
+				Name = Console.ReadLine();
+				if (Name == "exit")
+				{
+					Console.Clear();
+					return;
+				}
+				else if (string.IsNullOrEmpty(Name))
+				{
+					Console.Clear();
+					Console.WriteLine(_resourceManager.GetString("WrongOperationName"));
+				}
+			} while (string.IsNullOrEmpty(Name));
 
-
-            SaveType Type;
+			SaveType Type;
             while (true)
             {
                 // Ask the user for the type of save between full and differential
                 Console.Write(_resourceManager.GetString("AskForOperationType"));
 				Console.WriteLine("");
                 string typeInput = Console.ReadLine();
-                if (typeInput == "exit")
-                {
-                    return;
-                }
-                else if (typeInput == "1")
+
+                if (typeInput == "1")
                 {
                     Type = SaveType.Full;
                     break;
@@ -106,10 +111,12 @@ namespace Project_Easy_Save.Classes
                 }
 				else if (typeInput == "exit")
 				{
-					   return;
+					Console.Clear();
+					return;
 				}
                 else
                 {
+					Console.Clear();
 					Console.WriteLine(_resourceManager.GetString("WrongOperationType"));
                     Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewSaveType"));
                 }
@@ -124,14 +131,15 @@ namespace Project_Easy_Save.Classes
                 SourcePath = Console.ReadLine();
                 if (SourcePath == "exit")
                 {
-                    return;
+					Console.Clear();
+					return;
                 } 
-				else if (!Directory.Exists(SourcePath))
+				else if (!Directory.Exists(SourcePath) || !Settings.UserHasRightPermissionInFolder(SourcePath))
                 {
 					Console.Clear();
                     Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewPath"));
                 }
-            } while (!Directory.Exists(SourcePath));
+            } while (!Directory.Exists(SourcePath) || !Settings.UserHasRightPermissionInFolder(SourcePath));
 
             string DestinationPath;
             do
@@ -142,6 +150,7 @@ namespace Project_Easy_Save.Classes
                 DestinationPath = Console.ReadLine();
                 if (DestinationPath == "exit")
 				{
+					Console.Clear();
                     return;
                 }
                 if (!Directory.Exists(DestinationPath) || DestinationPath == SourcePath || !Settings.UserHasRightPermissionInFolder(DestinationPath))
@@ -168,10 +177,11 @@ namespace Project_Easy_Save.Classes
                 Console.WriteLine(_resourceManager.GetString("NoOperationInStoreMessage"));
                 return;
             }
+
 			Console.Clear();
             _saveStore.DisplayAllSaves();
-            Console.WriteLine(_resourceManager.GetString($"MessageBeforeShowingAllSaveOperations"));
             Console.WriteLine(_resourceManager.GetString("InformUser_return"));
+
             ConsoleKeyInfo choix = Console.ReadKey(true);
             Console.Clear();
             if (choix.Key == ConsoleKey.Escape)
