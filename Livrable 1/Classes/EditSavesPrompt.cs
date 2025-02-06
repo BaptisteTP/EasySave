@@ -1,6 +1,7 @@
 ﻿using Project_Easy_Save.Enums;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Resources;
 using System.Runtime.CompilerServices;
@@ -211,6 +212,7 @@ namespace Project_Easy_Save.Classes
 			if (newValue == null) { Console.Clear(); return; }
 
 			_saveStore.EditSave(saveToEdit.Id, propertyToEdit, newValue);
+			Console.Clear();
 
 		}
 
@@ -219,6 +221,8 @@ namespace Project_Easy_Save.Classes
             // Ask the user to select a save to edit
             Console.Clear();
 			List<Save> saves = _saveStore.GetAllSaves();
+
+			if( saves.Count == 1 ) { return saves[0]; }
 
 			_saveStore.SaveToEdit = saves[0];
 			// Display all saves 
@@ -403,6 +407,7 @@ namespace Project_Easy_Save.Classes
         {
             Console.Clear();
             List<Save> saves = _saveStore.GetAllSaves();
+
             _saveStore.SaveToDelete = saves[0];
             DisplayPossibleSavesToDelete(saves);
             while (true)
