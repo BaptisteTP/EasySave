@@ -37,6 +37,7 @@ namespace Project_Easy_Save.Classes
 
 		private bool BeginDifferentialSave(Save executedSave)
 		{
+            // Get all files that have been modified since the last execution
             List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
 
             if(eligibleFiles.Count == 0)
@@ -61,8 +62,8 @@ namespace Project_Easy_Save.Classes
 			foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
 			{
 				DirectoryInfo directoryInfo = new DirectoryInfo(directorySourcePath);
-
-				foreach (FileInfo file in directoryInfo.GetFiles())
+                // Create the directory in the destination path and copy the files
+                foreach (FileInfo file in directoryInfo.GetFiles())
                 {
                     string destPath = directorySourcePath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
 					if (eligibleFiles.Contains(file.FullName))
@@ -88,8 +89,8 @@ namespace Project_Easy_Save.Classes
         private List<string> GetNameOfFilesModifiedAfterLastExecution(Save executedSave)
         {
 			List<string> result = new List<string>();
-
-			foreach (string filePath in Directory.GetFiles(executedSave.SourcePath, "*.*", SearchOption.AllDirectories))
+            // Get all files that have been modified since the last execution
+            foreach (string filePath in Directory.GetFiles(executedSave.SourcePath, "*.*", SearchOption.AllDirectories))
 			{
 				FileInfo fileInfo = new FileInfo(filePath);
                 if (executedSave.LastExecuteDate == null || fileInfo.LastWriteTime > executedSave.LastExecuteDate)
@@ -103,7 +104,8 @@ namespace Project_Easy_Save.Classes
 
 		private bool BeginFullSave(Save executedSave)
 		{
-			List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
+            // Get all files in the source path
+            List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
 
 			if(eligibleFiles.Count == 0)
 			{
@@ -116,8 +118,8 @@ namespace Project_Easy_Save.Classes
             {
                 CopyDirectory(executedSave, directorySourcePath.Replace(executedSave.SourcePath, executedSave.DestinationPath));
             }
-
-			foreach (string newPath in Directory.GetFiles(executedSave.SourcePath, "*.*", SearchOption.AllDirectories))
+            // Copy all files
+            foreach (string newPath in Directory.GetFiles(executedSave.SourcePath, "*.*", SearchOption.AllDirectories))
 			{
 				string destinationPath = newPath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
 
@@ -131,7 +133,8 @@ namespace Project_Easy_Save.Classes
 
 		private List<string> GetEligibleFilesFullSave(string sourcePath)
 		{
-			List<string> result = new List<string>();
+            // Get all files in the source path
+            List<string> result = new List<string>();
 
 			foreach(string filePath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))
 			{
@@ -148,6 +151,7 @@ namespace Project_Easy_Save.Classes
 
         private void CopyDirectory(Save executedSave, string destPath)
         {
+            // Create the directory in the destination path
             var StopWatch = new Stopwatch();
 
             StopWatch.Start();
@@ -159,7 +163,8 @@ namespace Project_Easy_Save.Classes
 
         private void CopyFile(string fileFullName, Save executedSave, string destinationPath)
         {
-			var stopWatch = new Stopwatch();
+            // Copy the file to the destination path
+            var stopWatch = new Stopwatch();
 
             stopWatch.Start();
 			File.Copy(fileFullName, destinationPath, true);
