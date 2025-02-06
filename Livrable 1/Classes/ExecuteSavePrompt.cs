@@ -54,7 +54,7 @@ namespace Project_Easy_Save.Classes
             Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
             _saveStore.GetAllSaves().ForEach(save => save.Execute());
             Console.WriteLine(_resourceManager.GetString("InformUser_return"));
-            ConsoleKey hitKey = Console.ReadKey(true).Key;
+            string hitKey = Console.ReadLine();
 
             if (hitKey == "exit")
             {
