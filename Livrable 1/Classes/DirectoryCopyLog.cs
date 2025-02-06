@@ -11,10 +11,10 @@ namespace Project_Easy_Save.Classes
 	{
 
 		public string Name { get; set; }
-		public TimeSpan DirectoryTransferTime { get; set; }
+		public string DirectoryTransferTime { get; set; }
 		public DateTime Time { get; set; }
         // Constructor for the DirectoryCopyLog class
-        public DirectoryCopyLog(string name, TimeSpan directoryTransferTime, DateTime time)
+        public DirectoryCopyLog(string name, string directoryTransferTime, DateTime time)
 		{
 			Name = name;
 			DirectoryTransferTime = directoryTransferTime;

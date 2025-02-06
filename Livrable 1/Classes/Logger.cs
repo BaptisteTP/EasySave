@@ -22,7 +22,7 @@ namespace Project_Easy_Save.Classes
 		{
             // Create a new DirectoryCopyLog object
             DirectoryCopyLog log = new DirectoryCopyLog(name: eventArgs.ExecutedSave.Name,
-														directoryTransferTime: eventArgs.CreationTimeSpan,
+														directoryTransferTime: eventArgs.CreationTimeSpan.ToString() ?? "-1",
 														time: eventArgs.CopyDate);
 
 			string jsonToLog = SerializeObjectToJson(log);
@@ -39,7 +39,7 @@ namespace Project_Easy_Save.Classes
 											  fileSource: eventArgs.SourceFile.FullName,
 											  fileTarget: eventArgs.DestinationPath,
 											  fileSize: eventArgs.FileSize,
-											  fileTransferTime: eventArgs.TransferTime,
+											  fileTransferTime: eventArgs.TransferTime.ToString() ?? "-1",
 											  time: eventArgs.CopyDate);
 
 			string jsonToLog = SerializeObjectToJson(log);
