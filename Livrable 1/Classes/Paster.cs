@@ -16,6 +16,7 @@ namespace Project_Easy_Save.Classes
         public event EventHandler<CopyDirectoryEventArgs>? OnDirectoryCopied;
         public event EventHandler<FileCopyPreviewEventArgs>? OnFileCopyPreview;
         public event EventHandler<FileCopyEventArgs>? OnFileCopied;
+		public event EventHandler<Save>? SaveFinished;
 
 		public bool BeginCopyPaste(Save executedSave)
         {
@@ -79,7 +80,9 @@ namespace Project_Easy_Save.Classes
 					}
 				}
 			}
-            return true;
+			SaveFinished?.Invoke(this, executedSave);
+
+			return true;
 		}
 
         private List<string> GetNameOfFilesModifiedAfterLastExecution(Save executedSave)
@@ -122,7 +125,7 @@ namespace Project_Easy_Save.Classes
 				CopyFile(newPath, executedSave, destinationPath);
 				remainingFiles.Remove(newPath);
 			}
-
+			SaveFinished?.Invoke(this, executedSave);
 			return true;
 		}
 

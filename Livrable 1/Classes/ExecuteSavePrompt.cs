@@ -14,7 +14,7 @@ namespace Project_Easy_Save.Classes
         public void Interact()
         {
             IsInteracting = true;
-            _saveStore.GetAllSaves().ForEach(save => save.Execute());
+            //_saveStore.GetAllSaves().ForEach(save => save.Execute());
             while (IsInteracting)
             {
                 Console.Clear();
