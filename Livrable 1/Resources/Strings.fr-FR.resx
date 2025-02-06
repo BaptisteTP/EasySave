@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AskForEditActionMessage" xml:space="preserve">
+    <value>Quelle action voulez-vous faire :
+
+    1- Voir toutes les opérations de sauvegardes ({0})
+    2- Créer une opération de sauvegardes
+    3- Modifier une opération de sauvegardes
+    4- Supprimer une opération de sauvegardes 
+    5- Quitter (vers menu principal)</value>
+  </data>
+  <data name="AskForOperationDestinationPath" xml:space="preserve">
+    <value>
+Chemin de destination de la sauvegarde : (taper 'exit' pour annuler)</value>
+  </data>
+  <data name="AskForOperationName" xml:space="preserve">
+    <value>Nom de l'opération de sauvegarde : (taper 'exit' pour annuler)</value>
+  </data>
+  <data name="AskForOperationSourcePath" xml:space="preserve">
+    <value>
+Chemin source de la sauvegarde : (taper 'exit' pour annuler)</value>
+  </data>
+  <data name="AskForOperationType" xml:space="preserve">
+    <value>
+Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
+    1- Sauvegarde totale
+    2- Sauvegarde différentielle</value>
+  </data>
+  <data name="AskForUserActionInMainMenu" xml:space="preserve">
+    <value>Que voulez-vous faire ?
+
+    1- Gérer les sauvegardes
+    2- Exécuter une sauvegarde
+    3- Redéfinir les paramètres de l'application
+    4- Quitter l'application</value>
+  </data>
+  <data name="AskForUserAction_ChooseSaveOperationFromList" xml:space="preserve">
+    <value>Veuillez choisir l'opération à modifier parmis celles spécifiées dans la liste ci-dessus. (taper  'exit' pour annuler)</value>
+  </data>
+  <data name="AskForUserAction_SaveOperationModification" xml:space="preserve">
+    <value>Que voulez-vous modifier ?
+    1- Nom de l'opération
+    2- Répertoire source de l'opération
+    3- Répertoire de destination de l'opération
+    4- Type de sauvegarde</value>
+  </data>
+  <data name="AskToUser_NewDestinationPathForOperation" xml:space="preserve">
+    <value>Quel est le nouveau répertoire de destination de l'opération ?</value>
+  </data>
+  <data name="AskToUser_NewNameForOperation" xml:space="preserve">
+    <value>Quel est le nouveau nom de l'opération ?</value>
+  </data>
+  <data name="AskToUser_NewSaveTypeForOperation" xml:space="preserve">
+    <value>Quel le nouveau type de sauvegarde ?
+    1- Sauvegarde totale
+    2- Sauvegarde différentielle</value>
+  </data>
+  <data name="AskToUser_NewSourcePathForOperation" xml:space="preserve">
+    <value>Quel est le nouveau répertoire source de l'opération ?</value>
+  </data>
+  <data name="AskUserChangeSetting" xml:space="preserve">
+    <value>Quel paramètre souhaitez-vous modifier ?
+    1- Langue 
+    2- Répertoire des logs journaliers
+    3- Répertoire des logs temps réels </value>
+    <comment>l</comment>
+  </data>
+  <data name="AskUserNewFile" xml:space="preserve">
+    <value>Quel est le nouveau dossier ? (taper  'exit' pour annuler)</value>
+  </data>
+  <data name="AskUser_NewDailyLogFolder" xml:space="preserve">
+    <value>Quel est le nouveau dossier de stockage des logs journalières ?</value>
+  </data>
+  <data name="AskUser_NewRealtimeLogFolder" xml:space="preserve">
+    <value>Quel est le nouveau dossier de stockage des logs en temps réel ?</value>
+  </data>
+  <data name="InformUserOutSettingInterface" xml:space="preserve">
+    <value>Sortie de l'interface de modifications des paramètres</value>
+  </data>
+  <data name="InformUserReturnExit" xml:space="preserve">
+    <value>Taper "exit" pour revenir en arrière</value>
+  </data>
+  <data name="InformUser_ChooseSave" xml:space="preserve">
+    <value>Veuillez choisir la sauvegarde pour exécuter l'operation.
+Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
+  </data>
+  <data name="InformUser_DeleteSave" xml:space="preserve">
+    <value>La sauvegarde a été supprimée !</value>
+  </data>
+  <data name="InformUser_LeftExecutionPrompt" xml:space="preserve">
+    <value>Sortie de l'interface d'éxécution des sauvegardes...</value>
+  </data>
+  <data name="InformUser_OperationToModifMessage" xml:space="preserve">
+    <value>Opération à modifier :</value>
+  </data>
+  <data name="InformUser_return" xml:space="preserve">
+    <value>Taper sur "échap" pour revenir en arrière. </value>
+  </data>
+  <data name="InformUser_SaveCreate" xml:space="preserve">
+    <value>La sauvegarde a été créée !</value>
+  </data>
+  <data name="InformUser_SaveOperationFormBegan" xml:space="preserve">
+    <value>Bienvenue dans l'utilitaire de modification d'opérations de sauvegarde.</value>
+  </data>
+  <data name="InformUser_WrongNewName" xml:space="preserve">
+    <value>Le nom rentré est invalide. Veuillez réessayer.</value>
+  </data>
+  <data name="InformUser_WrongNewPath" xml:space="preserve">
+    <value>Le répertoire rentré est invalide. Veuillez réessayer.</value>
+  </data>
+  <data name="InformUser_WrongNewSaveType" xml:space="preserve">
+    <value>Le nouveau type de sauvegarde est invalide. Veuillez réessayer.</value>
+  </data>
+  <data name="InforUserDailyLogFile" xml:space="preserve">
+    <value>Les logs journalières sont actuellement stockées dans le dossier suivant :</value>
+  </data>
+  <data name="InforUserInvalidPath" xml:space="preserve">
+    <value>Le chemin rentré est invalide. Veuillez recommencer</value>
+  </data>
+  <data name="InforUserRealTimeLogFile" xml:space="preserve">
+    <value>Les logs en temps réel sont actuellement stockées dans le dossier suivant :</value>
+  </data>
+  <data name="MaximumNumberOfOperationsReached" xml:space="preserve">
+    <value>Le nombre maximal d'opérations a été atteint : {0}</value>
+  </data>
+  <data name="MessageAfterShowingAllSaveOperations" xml:space="preserve">
+    <value>Exécution teminée ! </value>
+  </data>
+  <data name="MessageBeforeExSaves" xml:space="preserve">
+    <value>Voulez-vous exécuter une ou plusieurs sauvegarde ? 
+
+    1- Exécuter toutes les sauvegardes
+    2- Exécuter un nombre défini de sauvegardes 
+    3- Retour vers le menu principal</value>
+  </data>
+  <data name="MessageBeforeShowingAllSaveOperations" xml:space="preserve">
+    <value>Exécution des sauvegardes... </value>
+  </data>
+  <data name="MessageBeforeShowingExSaves" xml:space="preserve">
+    <value>Rentrez les numéros de la sauvegarde que vous voulez exécuter : (tapez 'exit' pour annuler)</value>
+  </data>
+  <data name="MessageBeforeShowingSaveOperations" xml:space="preserve">
+    <value>Exécution de la sauvegarde...</value>
+  </data>
+  <data name="NoFolder" xml:space="preserve">
+    <value>Aucun</value>
+  </data>
+  <data name="NoOperationInStoreMessage" xml:space="preserve">
+    <value>Aucune opération de sauvegarde n'est active.</value>
+  </data>
+  <data name="OperationNumber" xml:space="preserve">
+    <value>Opération numéro {0} :</value>
+  </data>
+  <data name="PrintOperationFormat" xml:space="preserve">
+    <value>Nom : {0}
+Chemin source : {1}
+Chemin de destination : {2}
+Type : {3}</value>
+  </data>
+  <data name="SaveOperationBeganMessage" xml:space="preserve">
+    <value>Veuillez remplir le formulaire pour la création d'une opération de sauvegarde :</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>Bienvenue dans l'application de gestion de vos sauvegardes.</value>
+  </data>
+  <data name="WrongCommandMessage" xml:space="preserve">
+    <value>La commande n'a pas été reconnu, veuillez recommencer.</value>
+  </data>
+  <data name="WrongOperationName" xml:space="preserve">
+    <value>Le nom de l'opération n'est pas valide. Veuillez recommencer.</value>
+  </data>
+  <data name="WrongOperationType" xml:space="preserve">
+    <value>Choissisez un format de sauvegarde valide (1 ou 2)</value>
+  </data>
+  <data name="WrongPathMessage" xml:space="preserve">
+    <value>Le chemin {0} n'est pas valide. Veuillez réessayer.</value>
+  </data>
+</root>
