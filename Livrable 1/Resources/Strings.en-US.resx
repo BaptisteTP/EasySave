@@ -149,7 +149,7 @@ Please choose a save type:
 
     1- Edit saves
     2- Execute saves
-    3- Set application language
+    3- Set application settings
     4- Exit the application</value>
   </data>
   <data name="AskForUserAction_ChooseSaveOperationFromList" xml:space="preserve">
@@ -178,7 +178,7 @@ Please choose a save type:
   </data>
   <data name="AskUserChangeSetting" xml:space="preserve">
     <value>Which setting do you want to change?
-    1- Choice of language 
+    1- Language 
     2- Directory of daily logs
     3- Directory of real-time logs</value>
   </data>
