@@ -144,33 +144,56 @@ namespace Project_Easy_Save.Classes
 			return result;
 		}
 
-		private double GetPathSize()
-        {
-            return 0;
-        }
-
         private void CopyDirectory(Save executedSave, string destPath)
         {
-            // Create the directory in the destination path
+			// Create the directory in the destination path
+
+			TimeSpan? timeElapsed = null;
             var StopWatch = new Stopwatch();
-
             StopWatch.Start();
-			Directory.CreateDirectory(destPath);
-            StopWatch.Stop();
+			try
+			{
+				Directory.CreateDirectory(destPath);
+				StopWatch.Stop();
+				timeElapsed = StopWatch.Elapsed;
 
-            OnDirectoryCopied?.Invoke(this, new CopyDirectoryEventArgs(DateTime.Now, executedSave, destPath, StopWatch.Elapsed));
+			}
+			catch
+			{
+				StopWatch.Stop();
+				timeElapsed = null;
+			}
+			finally
+			{
+				OnDirectoryCopied?.Invoke(this, new CopyDirectoryEventArgs(DateTime.Now, executedSave, destPath, timeElapsed));
+			}
+
 		}
 
         private void CopyFile(string fileFullName, Save executedSave, string destinationPath)
         {
-            // Copy the file to the destination path
-            var stopWatch = new Stopwatch();
+			// Copy the file to the destination path
 
-            stopWatch.Start();
-			File.Copy(fileFullName, destinationPath, true);
-            stopWatch.Stop();
+			TimeSpan? timeElapsed = null;
+			var stopWatch = new Stopwatch();
+			stopWatch.Start();
 
-            OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, stopWatch.Elapsed));
+			try
+			{
+				File.Copy(fileFullName, destinationPath, true);
+				stopWatch.Stop();
+				timeElapsed = stopWatch.Elapsed;
+
+			}
+			catch
+			{
+				stopWatch.Stop();
+				timeElapsed = null;
+			}
+			finally
+			{
+				OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
+			}
         }
     }
 }

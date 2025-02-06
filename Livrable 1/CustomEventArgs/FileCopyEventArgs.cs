@@ -16,8 +16,8 @@ namespace Project_Easy_Save.CustomEventArgs
 		public FileInfo SourceFile { get; set; }
 		public long FileSize => SourceFile.Length;
 		public string DestinationPath { get; set; }
-		public TimeSpan TransferTime { get; set; }
-		public FileCopyEventArgs(DateTime copyDate, Save executedSave, FileInfo sourceFile, string destinationPath, TimeSpan transferTime)
+		public TimeSpan? TransferTime { get; set; }
+		public FileCopyEventArgs(DateTime copyDate, Save executedSave, FileInfo sourceFile, string destinationPath, TimeSpan? transferTime)
 		{
 			CopyDate = copyDate;
 			ExecutedSave = executedSave;
