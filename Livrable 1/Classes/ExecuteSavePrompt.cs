@@ -52,7 +52,7 @@ namespace Project_Easy_Save.Classes
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
-            _saveStore.DisplayAllSaves();
+            _saveStore.GetAllSaves().ForEach(save => save.Execute());
             Console.WriteLine(_resourceManager.GetString("InformUser_return"));
             ConsoleKey hitKey = Console.ReadKey(true).Key;
 
