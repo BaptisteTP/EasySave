@@ -176,6 +176,18 @@ Please choose a save type:
   <data name="AskToUser_NewSourcePathForOperation" xml:space="preserve">
     <value>What is the new operation source path ?</value>
   </data>
+  <data name="AskUserChangeSetting" xml:space="preserve">
+    <value>Which setting do you want to change?
+    1- Choice of language 
+    2- Directory of daily logs
+    3- Directory of real-time logs</value>
+  </data>
+  <data name="AskUserNewFile" xml:space="preserve">
+    <value>What is the new file? (type 'exit' to cancel)</value>
+  </data>
+  <data name="InformUserOutSettingInterface" xml:space="preserve">
+    <value>Exiting the parameter changes interface</value>
+  </data>
   <data name="InformUser_ChooseSave" xml:space="preserve">
     <value>Please choose a save to execute the operation.
 Otherwise, hit the “esc” key to go back.</value>
@@ -204,6 +216,15 @@ Otherwise, hit the “esc” key to go back.</value>
   <data name="InformUser_WrongNewSaveType" xml:space="preserve">
     <value>The new save type is invalid. Please try again.</value>
   </data>
+  <data name="InforUserDailyLogFile" xml:space="preserve">
+    <value>Daily logs are currently stored in the following folder:</value>
+  </data>
+  <data name="InforUserInvalidPath" xml:space="preserve">
+    <value>The entered path is invalid. Please start again</value>
+  </data>
+  <data name="InforUserRealTimeLogFile" xml:space="preserve">
+    <value>Real-time logs are currently stored in the following folder:</value>
+  </data>
   <data name="MaximumNumberOfOperationsReached" xml:space="preserve">
     <value>The maximum number of running saving operations has been reached : {0}</value>
   </data>
@@ -216,6 +237,9 @@ Otherwise, hit the “esc” key to go back.</value>
   </data>
   <data name="MessageBeforeShowingAllSaveOperations" xml:space="preserve">
     <value>Following is the list of all the save operations</value>
+  </data>
+  <data name="MessageBeforeShowingExSaves" xml:space="preserve">
+    <value>Choose saves numbers to execute :</value>
   </data>
   <data name="NoOperationInStoreMessage" xml:space="preserve">
     <value>No save operation are currently active.</value>

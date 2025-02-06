@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Resources;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace Project_Easy_Save.Classes
 		public string? FallBackLanguage { get; set; }
 		public string? DailyLogPath { get; set; }
 		public string? RealTimeLogPath { get; set; }
+
+		private static ResourceManager _ressourceManager = Creator.GetResourceManagerInstance();
 
 		public static Settings CreateBaseSettings()
 		{
@@ -132,18 +135,23 @@ namespace Project_Easy_Save.Classes
 			Console.Clear();
 			string currentFolderForDailyLog = GetBaseSettings().DailyLogPath!;
 
-			Console.WriteLine($"Les logs journalières sont actuellement stockées dans le dossier suivant :");
+			Console.WriteLine(_ressourceManager.GetString("InforUserDailyLogFile"));
 			Console.WriteLine(currentFolderForDailyLog);
 
 			string? newDailyLogFolderPath = string.Empty;
 			while (string.IsNullOrEmpty(newDailyLogFolderPath))
 			{
-				Console.WriteLine("Quel est le nouveau dossier ?");
+                Console.WriteLine(_ressourceManager.GetString("AskUserNewFile"));
 				newDailyLogFolderPath = Console.ReadLine();
 
-				if (string.IsNullOrEmpty(newDailyLogFolderPath) || !Directory.Exists(newDailyLogFolderPath))
+				if (newDailyLogFolderPath?.ToLower() == "exit")
 				{
-					Console.WriteLine("Le chemin rentré est invalide. Veuillez recommencer");
+					Console.Clear() ;
+					return;
+				}
+				else if (string.IsNullOrEmpty(newDailyLogFolderPath) || !Directory.Exists(newDailyLogFolderPath))
+				{
+					Console.WriteLine(_ressourceManager.GetString("InforUserInvalidPath"));
 				}
 			}
 
@@ -156,18 +164,23 @@ namespace Project_Easy_Save.Classes
 			Console.Clear();
 			string currentRealTimeLogPath = GetBaseSettings().RealTimeLogPath!;
 
-			Console.WriteLine($"Les logs en temps réel sont actuellement stockées dans le dossier suivant :");
+			Console.WriteLine(_ressourceManager.GetString("InforUserRealTimeLogFile"));
 			Console.WriteLine(currentRealTimeLogPath);
 
 			string? newRealTimeLogPath = string.Empty;
 			while (string.IsNullOrEmpty(newRealTimeLogPath))
 			{
-				Console.WriteLine("Quel est le nouveau dossier ?");
+				Console.WriteLine(_ressourceManager.GetString("AskUserNewFile"));
 				newRealTimeLogPath = Console.ReadLine();
 
-				if (string.IsNullOrEmpty(newRealTimeLogPath) || !Directory.Exists(newRealTimeLogPath))
+                if (newRealTimeLogPath?.ToLower() == "exit")
+                {
+                    Console.Clear();
+                    return;
+                }
+                else if (string.IsNullOrEmpty(newRealTimeLogPath) || !Directory.Exists(newRealTimeLogPath))
 				{
-					Console.WriteLine("Le chemin rentré est invalide. Veuillez recommencer");
+					Console.WriteLine(_ressourceManager.GetString("InforUserInvalidPath"));
 				}
 			}
 

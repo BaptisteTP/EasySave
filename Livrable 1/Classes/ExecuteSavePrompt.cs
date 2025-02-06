@@ -14,15 +14,14 @@ namespace Project_Easy_Save.Classes
         public void Interact()
         {
             IsInteracting = true;
-            //_saveStore.GetAllSaves().ForEach(save => save.Execute());
             while (IsInteracting)
             {
                 Console.Clear();
                 Console.WriteLine(_resourceManager.GetString("MessageBeforeExSaves"));
-                ConsoleKeyInfo choix = Console.ReadKey(true);
+                ConsoleKeyInfo choice = Console.ReadKey(true);
                 _saveStore.DisplayAllSaves();
 
-                switch (choix.KeyChar)
+                switch (choice.KeyChar)
                 {
                     case '1':
                         ExAllSaves();
@@ -39,18 +38,34 @@ namespace Project_Easy_Save.Classes
 
         private void ExAllSaves()
         {
-            Console.WriteLine("Execution de toutes les sauvegardes");
-            _saveStore.GetAllSaves().ForEach(save => save.Execute());
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
+            _saveStore.DisplayAllSaves();
+            Console.WriteLine(_resourceManager.GetString("InformUser_return"));
+            ConsoleKey hitKey = Console.ReadKey(true).Key;
+
+            if (hitKey == ConsoleKey.Escape)
+            {
+                Console.Clear();
+                return;
+            }
         }
         private void ExSaves()
         {
             Console.Clear();
+            _saveStore.DisplayAllSaves();
             Console.WriteLine();
             Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingExSaves"));
-            _saveStore.DisplayAllSaves();
-            _saveStore.GetSave(int.Parse(Console.ReadLine()));
             Console.WriteLine();
-            Console.WriteLine(_resourceManager.GetString("Quit"));
+            Console.WriteLine(_resourceManager.GetString("InformUser_return"));
+            ConsoleKey hitKey = Console.ReadKey(true).Key;
+
+            if (hitKey == ConsoleKey.Escape)
+            {
+                Console.Clear();
+                return;
+            }
         }
 
         private void Quit()

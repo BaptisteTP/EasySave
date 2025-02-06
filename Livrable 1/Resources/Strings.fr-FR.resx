@@ -175,6 +175,18 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
   <data name="AskToUser_NewSourcePathForOperation" xml:space="preserve">
     <value>Quel est le nouveau répertoire source de l'opération ?</value>
   </data>
+  <data name="AskUserChangeSetting" xml:space="preserve">
+    <value>Quel paramètre souhaitez-vous modifier ?
+    1- Choix de la langue 
+    2- Répertoire des logs journaliers
+    3- Répertoire des logs temps réels </value>
+  </data>
+  <data name="AskUserNewFile" xml:space="preserve">
+    <value>Quel est le nouveau dossier ? (taper  'exit' pour annuler)</value>
+  </data>
+  <data name="InformUserOutSettingInterface" xml:space="preserve">
+    <value>Sortie de l'interface de modifications des paramètres</value>
+  </data>
   <data name="InformUser_ChooseSave" xml:space="preserve">
     <value>Veuillez choisir la sauvegarde pour exécuter l'operation.
 Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
@@ -203,6 +215,15 @@ Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
   <data name="InformUser_WrongNewSaveType" xml:space="preserve">
     <value>Le nouveau type de sauvegarde est invalide. Veuillez réessayer.</value>
   </data>
+  <data name="InforUserDailyLogFile" xml:space="preserve">
+    <value>Les logs journalières sont actuellement stockées dans le dossier suivant :</value>
+  </data>
+  <data name="InforUserInvalidPath" xml:space="preserve">
+    <value>Le chemin rentré est invalide. Veuillez recommencer</value>
+  </data>
+  <data name="InforUserRealTimeLogFile" xml:space="preserve">
+    <value>Les logs en temps réel sont actuellement stockées dans le dossier suivant :</value>
+  </data>
   <data name="MaximumNumberOfOperationsReached" xml:space="preserve">
     <value>Le nombre maximal d'opérations a été atteint : {0}</value>
   </data>
@@ -215,6 +236,9 @@ Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
   </data>
   <data name="MessageBeforeShowingAllSaveOperations" xml:space="preserve">
     <value>Voici la liste de toutes les opérations de sauvegardes :</value>
+  </data>
+  <data name="MessageBeforeShowingExSaves" xml:space="preserve">
+    <value>Rentrez les numéros des sauvegardes que vous voulez exécuter : </value>
   </data>
   <data name="NoOperationInStoreMessage" xml:space="preserve">
     <value>Aucune opération de sauvegarde n'est active.</value>
