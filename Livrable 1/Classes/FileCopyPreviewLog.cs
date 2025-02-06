@@ -14,10 +14,10 @@ namespace Project_Easy_Save.Classes
 		public string TargetFilePath { get; set; }
 		public string State { get; set; }
 		public int TotalFileToCopy { get; set; }
-		public int TotalFileSize { get; set; }
+		public long TotalFileSize { get; set; }
 		public int NbFilesLeftToDo { get; set; }
 		public string Progression { get; set; }
-		public FileCopyPreviewLog(int id, string name, string sourceFilePath, string targetFilePath, string state, int totalFileToCopy, int totalFileSize, int nbFilesLeftToDo, string progression)
+		public FileCopyPreviewLog(int id, string name, string sourceFilePath, string targetFilePath, string state, int totalFileToCopy, long totalFileSize, int nbFilesLeftToDo, string progression)
 		{
 			Id = id;
 			Name = name;

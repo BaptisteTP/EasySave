@@ -65,7 +65,7 @@ namespace Project_Easy_Save.Classes
 															targetFilePath: eventArgs.CurrentFileDestinationPath,
 															state: eventArgs.State,
 															totalFileToCopy: eventArgs.EligibleFiles.Count,
-															totalFileSize: 19,
+															totalFileSize: GetTotalFileSize(eventArgs.EligibleFiles),
 															nbFilesLeftToDo: eventArgs.RemainingFiles.Count-1,
 															progression: progression.ToString() + "%");
 
@@ -77,6 +77,16 @@ namespace Project_Easy_Save.Classes
 
 			Thread.Sleep(500);
         }
+
+		private long GetTotalFileSize(List<string> eligibleFiles)
+		{
+			long totalFileSize = 0;
+			foreach (string file in eligibleFiles)
+			{
+				totalFileSize += new FileInfo(file).Length;
+			}
+			return totalFileSize;
+		}
 
 		private string SerializeObjectToJson(object log)
 		{
