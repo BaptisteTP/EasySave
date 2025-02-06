@@ -50,17 +50,10 @@ namespace Project_Easy_Save.Classes
         private void ExAllSaves()
         {
             Console.Clear();
-            Console.WriteLine();
             Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
             _saveStore.GetAllSaves().ForEach(save => save.Execute());
-            Console.WriteLine(_resourceManager.GetString("InformUser_return"));
-            string hitKey = Console.ReadLine();
+            Console.WriteLine(_resourceManager.GetString("MessageAfterShowingAllSaveOperations"));
 
-            if (hitKey == "exit")
-            {
-                Console.Clear();
-                return;
-            }
         }
         private void ExSaves()
         {
@@ -68,15 +61,8 @@ namespace Project_Easy_Save.Classes
             _saveStore.DisplayAllSaves();
             Console.WriteLine();
             Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingExSaves"));
-            Console.WriteLine();
-            Console.WriteLine(_resourceManager.GetString("InformUserReturnExit"));
-            string saves = Console.ReadLine();
-
-            if (saves == "exit")
-            {
-                Console.Clear();
-                return;
-            }
+            _saveStore.GetAllSaves().ForEach(save => save.Execute());
+            Console.WriteLine(_resourceManager.GetString("MessageAfterShowingAllSaveOperations"));
         }
 
         private void Quit()
