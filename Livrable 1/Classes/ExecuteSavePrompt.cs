@@ -42,9 +42,14 @@ namespace Project_Easy_Save.Classes
             Console.WriteLine();
             Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
             _saveStore.DisplayAllSaves();
-            _saveStore.GetSave(int.Parse(Console.ReadLine()));
-            Console.WriteLine();
-            Console.WriteLine(_resourceManager.GetString("Quit"));
+            Console.WriteLine(_resourceManager.GetString("InformUser_return"));
+            ConsoleKey hitKey = Console.ReadKey(true).Key;
+
+            if (hitKey == ConsoleKey.Escape)
+            {
+                Console.Clear();
+                return;
+            }
         }
         private void ExSaves()
         {

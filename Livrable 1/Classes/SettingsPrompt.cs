@@ -17,10 +17,7 @@ namespace Project_Easy_Save.Classes
 
 			while (IsInteracting)
 			{
-				Console.WriteLine("Quel paramètre souhaitez-vous modifier ?");
-				Console.WriteLine("\t1- Langue");
-				Console.WriteLine("\t2- Répertoire des logs journaliers");
-				Console.WriteLine("\t3- Répertoire des logs temps réels");
+				Console.WriteLine(_resourceManager.GetString("AskUserChangeSetting"));
 
 				ConsoleKey pressedKey = Console.ReadKey(true).Key;
 
@@ -40,7 +37,7 @@ namespace Project_Easy_Save.Classes
 
 					case ConsoleKey.Escape:
 						Console.Clear();
-						Console.WriteLine("Sortie de l'interface de modifications des paramètres");
+						Console.WriteLine(_resourceManager.GetString("InformUserOutSettingInterface"));
 						IsInteracting = false;
 						break;
 

@@ -176,6 +176,15 @@ Please choose a save type:
   <data name="AskToUser_NewSourcePathForOperation" xml:space="preserve">
     <value>What is the new operation source path ?</value>
   </data>
+  <data name="AskUserChangeSetting" xml:space="preserve">
+    <value>Which setting do you want to change?
+    1- Choice of language 
+    2- Directory of daily logs
+    3- Directory of real-time logs</value>
+  </data>
+  <data name="InformUserOutSettingInterface" xml:space="preserve">
+    <value>Exiting the parameter changes interface</value>
+  </data>
   <data name="InformUser_ChooseSave" xml:space="preserve">
     <value>Please choose a save to execute the operation.
 Otherwise, hit the “esc” key to go back.</value>
