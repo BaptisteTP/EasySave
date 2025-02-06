@@ -30,13 +30,11 @@ namespace Project_Easy_Save.Classes
 
 			while (IsInteracting)
 			{
-                // display the menu to help the user
-                DisplayMenu();
-				ConsoleKeyInfo choice = Console.ReadKey(true);
-
+				DisplayMenu();
+                ConsoleKeyInfo choice = Console.ReadKey(true);
+                Console.Clear();
                 if (choice.Key == ConsoleKey.Escape)
                 {
-                    Console.Clear();
                     IsInteracting = false;
                 }
 
@@ -170,14 +168,14 @@ namespace Project_Easy_Save.Classes
                 Console.WriteLine(_resourceManager.GetString("NoOperationInStoreMessage"));
                 return;
             }
-
+			Console.Clear();
             _saveStore.DisplayAllSaves();
             Console.WriteLine(_resourceManager.GetString($"MessageBeforeShowingAllSaveOperations"));
             Console.WriteLine(_resourceManager.GetString("InformUser_return"));
             ConsoleKeyInfo choix = Console.ReadKey(true);
+            Console.Clear();
             if (choix.Key == ConsoleKey.Escape)
             {
-                Console.Clear();
 				return;
             }
         }
@@ -192,7 +190,7 @@ namespace Project_Easy_Save.Classes
                 Console.WriteLine(_resourceManager.GetString("NoOperationInStoreMessage"));
                 return;
             }
-
+			Console.Clear();
             Save? saveToEdit = AskUserToSelectSaveToEdit();
 			if(saveToEdit == null) { Console.Clear(); return; }
 
@@ -468,6 +466,7 @@ namespace Project_Easy_Save.Classes
 				return;
 			}
 
+			Console.Clear();
             Save? SaveToDelete = AskUserToSelectSaveToDelete();
             if (SaveToDelete == null) { Console.Clear(); return; }
 

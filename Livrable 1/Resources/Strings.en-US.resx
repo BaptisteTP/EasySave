@@ -240,6 +240,9 @@ Otherwise, hit the “esc” key to go back.</value>
   <data name="MaximumNumberOfOperationsReached" xml:space="preserve">
     <value>The maximum number of running saving operations has been reached : {0}</value>
   </data>
+  <data name="MessageAfterShowingAllSaveOperations" xml:space="preserve">
+    <value>Execution completed</value>
+  </data>
   <data name="MessageBeforeExSaves" xml:space="preserve">
     <value>Do you want to run one or more saves? 
 
@@ -248,7 +251,7 @@ Otherwise, hit the “esc” key to go back.</value>
     3- Exit to the main menu</value>
   </data>
   <data name="MessageBeforeShowingAllSaveOperations" xml:space="preserve">
-    <value>Following is the list of all the save operations</value>
+    <value>Execution of the saves... </value>
   </data>
   <data name="MessageBeforeShowingExSaves" xml:space="preserve">
     <value>Choose saves numbers to execute :</value>

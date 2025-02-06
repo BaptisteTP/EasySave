@@ -239,6 +239,9 @@ Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
   <data name="MaximumNumberOfOperationsReached" xml:space="preserve">
     <value>Le nombre maximal d'opérations a été atteint : {0}</value>
   </data>
+  <data name="MessageAfterShowingAllSaveOperations" xml:space="preserve">
+    <value>Exécution teminée ! </value>
+  </data>
   <data name="MessageBeforeExSaves" xml:space="preserve">
     <value>Voulez-vous exécuter une ou plusieurs sauvegarde ? 
 
@@ -247,7 +250,7 @@ Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
     3- Retour vers le menu principal</value>
   </data>
   <data name="MessageBeforeShowingAllSaveOperations" xml:space="preserve">
-    <value>Voici la liste de toutes les opérations de sauvegardes :</value>
+    <value>Exécution des sauvegardes... </value>
   </data>
   <data name="MessageBeforeShowingExSaves" xml:space="preserve">
     <value>Rentrez les numéros des sauvegardes que vous voulez exécuter : </value>
