@@ -34,13 +34,13 @@ namespace Project_Easy_Save.Classes
                 DisplayMenu();
 				ConsoleKeyInfo choice = Console.ReadKey(true);
 
-                if (choix.Key == ConsoleKey.Escape)
+                if (choice.Key == ConsoleKey.Escape)
                 {
                     Console.Clear();
                     IsInteracting = false;
                 }
 
-                switch (choix.KeyChar)
+                switch (choice.KeyChar)
 				{
                     // wait the information from the user
                     case '1':
@@ -70,7 +70,6 @@ namespace Project_Easy_Save.Classes
 		{
             // Display the menu to the user
             Console.Clear();
-            Console.WriteLine(_resourceManager.GetString("AskForEditActionMessage"))
             Console.WriteLine(string.Format(_resourceManager.GetString($"AskForEditActionMessage"),  _saveStore.NumberOfSaves));
         }
 
