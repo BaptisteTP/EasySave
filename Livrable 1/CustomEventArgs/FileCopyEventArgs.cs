@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Project_Easy_Save.CustomEventArgs
 {
-	public class FileCopyEventArgs : EventArgs
+    // Event arguments for the file copy event
+    public class FileCopyEventArgs : EventArgs
 	{
 
 		public DateTime CopyDate {  get; set; }

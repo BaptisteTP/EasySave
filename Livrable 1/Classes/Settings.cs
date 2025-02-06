@@ -12,7 +12,8 @@ namespace Project_Easy_Save.Classes
 {
 	public class Settings
 	{
-		public string? ActiveLanguage { get; set; }
+        // This class is responsible for managing the settings.
+        public string? ActiveLanguage { get; set; }
 		public string? FallBackLanguage { get; set; }
 		public string? DailyLogPath { get; set; }
 		public string? RealTimeLogPath { get; set; }
@@ -21,7 +22,8 @@ namespace Project_Easy_Save.Classes
 
 		public static Settings CreateBaseSettings()
 		{
-			Settings baseSettings = new Settings()
+            // Create a base settings file with default values.
+            Settings baseSettings = new Settings()
 			{
 				ActiveLanguage = "",
 				FallBackLanguage = "en-US",
@@ -35,7 +37,8 @@ namespace Project_Easy_Save.Classes
 
 		private static void WriteSettingsToJsonFile(Settings settings)
 		{
-			var options = new JsonSerializerOptions { WriteIndented = true };
+            // Write the settings to a json file.
+            var options = new JsonSerializerOptions { WriteIndented = true };
 			string baseSttingsJson = JsonSerializer.Serialize<Settings>(settings, options);
 
 			using (StreamWriter sw = File.CreateText("appsettings.json"))
@@ -46,8 +49,9 @@ namespace Project_Easy_Save.Classes
 
 		public static Settings GetBaseSettings()
 		{
-			try
-			{
+            // Get the settings from the json file.
+            try
+            {
 				string jsonAppSettings = File.ReadAllText("appsettings.json");
 				Settings foundSettings = JsonSerializer.Deserialize<Settings>(jsonAppSettings);
 				return foundSettings;
@@ -60,7 +64,8 @@ namespace Project_Easy_Save.Classes
 
 		private static void ChangeSetting(string setting, string newValue)
 		{
-			Settings currentSettings = Creator.GetSettingsInstance();
+            // Change a setting and write it to the json file.
+            Settings currentSettings = Creator.GetSettingsInstance();
 			
 			switch (setting)
 			{
@@ -84,7 +89,8 @@ namespace Project_Easy_Save.Classes
 
 		public static void AskUserToChooseLanguage()
 		{
-			bool isSelectedLangageValid = false;
+            // Ask the user to choose a language.
+            bool isSelectedLangageValid = false;
 			Console.Clear();
 			Console.WriteLine("Welcome/Bienvenue!");
 
@@ -119,7 +125,8 @@ namespace Project_Easy_Save.Classes
 
 		public static void ApplyLanguageSettings()
 		{
-			Settings settings = Creator.GetSettingsInstance();
+            // Apply the language settings.
+            Settings settings = Creator.GetSettingsInstance();
 			if(settings.ActiveLanguage == "")
 			{
 				Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(settings.FallBackLanguage!);
@@ -132,7 +139,8 @@ namespace Project_Easy_Save.Classes
 
 		public static void AskUserToChangeDailyLogsFolder()
 		{
-			Console.Clear();
+            // Ask the user to change the daily logs folder.
+            Console.Clear();
 			string currentFolderForDailyLog = GetBaseSettings().DailyLogPath!;
 
 			string? newDailyLogFolderPath = string.Empty;
@@ -157,8 +165,9 @@ namespace Project_Easy_Save.Classes
 
 		public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
 		{
-			try
-			{
+            // Check if the user has the right permissions in the folder.
+            try
+            {
 				using FileStream fs = File.Create(
 					Path.Combine(
 						newDailyLogFolderPath,
@@ -177,7 +186,8 @@ namespace Project_Easy_Save.Classes
 
 		public static void AskUserToChangeRealTimeLogsFolder()
 		{
-			Console.Clear();
+            // Ask the user to change the real time logs folder.
+            Console.Clear();
 			string currentRealTimeLogPath = GetBaseSettings().RealTimeLogPath!;
 
 			string? newRealTimeLogPath = string.Empty;

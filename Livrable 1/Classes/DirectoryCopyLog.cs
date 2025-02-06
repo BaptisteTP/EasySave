@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace Project_Easy_Save.Classes
 {
-	public class DirectoryCopyLog
+    // Class that stores the log of the directory copy
+    public class DirectoryCopyLog
 	{
 
 		public string Name { get; set; }
 		public TimeSpan DirectoryTransferTime { get; set; }
 		public DateTime Time { get; set; }
-		public DirectoryCopyLog(string name, TimeSpan directoryTransferTime, DateTime time)
+        // Constructor for the DirectoryCopyLog class
+        public DirectoryCopyLog(string name, TimeSpan directoryTransferTime, DateTime time)
 		{
 			Name = name;
 			DirectoryTransferTime = directoryTransferTime;

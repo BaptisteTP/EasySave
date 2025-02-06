@@ -9,8 +9,8 @@ namespace Project_Easy_Save.Classes
 {
     public class Save
     {
-
-		public int Id { get; set; }
+        // Create a save attribute for other classes to use.
+        public int Id { get; set; }
         public string Name { get; set; }
         public string SourcePath { get; set; }
         public string DestinationPath { get; set; }
@@ -38,6 +38,7 @@ namespace Project_Easy_Save.Classes
 
 		public void Execute()
         {
+            // This method is called when the user wants to execute a save.
             Creator.GetPasterInstance().BeginCopyPaste(this);
         }
     }

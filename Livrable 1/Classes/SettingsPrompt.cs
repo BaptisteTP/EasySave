@@ -12,7 +12,8 @@ namespace Project_Easy_Save.Classes
 
 		public void Interact()
 		{
-			Console.Clear();
+            // Interface for the user to change the settings.
+            Console.Clear();
 			IsInteracting = true;
 
 			while (IsInteracting)
