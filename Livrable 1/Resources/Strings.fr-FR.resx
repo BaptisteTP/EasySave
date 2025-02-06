@@ -193,6 +193,9 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
   <data name="InformUserOutSettingInterface" xml:space="preserve">
     <value>Sortie de l'interface de modifications des paramètres</value>
   </data>
+  <data name="InformUserReturnExit" xml:space="preserve">
+    <value>Taper "exit" pour revenir en arrière</value>
+  </data>
   <data name="InformUser_ChooseSave" xml:space="preserve">
     <value>Veuillez choisir la sauvegarde pour exécuter l'operation.
 Sinon tapez sur la touche "échap" pour revenir en arrière. </value>

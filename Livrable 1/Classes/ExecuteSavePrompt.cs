@@ -56,9 +56,9 @@ namespace Project_Easy_Save.Classes
             Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
             _saveStore.GetAllSaves().ForEach(save => save.Execute());
             Console.WriteLine(_resourceManager.GetString("InformUser_return"));
-            ConsoleKey hitKey = Console.ReadKey(true).Key;
+            string hitKey = Console.ReadLine();
 
-            if (hitKey == ConsoleKey.Escape)
+            if (hitKey == "exit")
             {
                 Console.Clear();
                 return;
@@ -73,10 +73,10 @@ namespace Project_Easy_Save.Classes
             Console.WriteLine();
             Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingExSaves"));
             Console.WriteLine();
-            Console.WriteLine(_resourceManager.GetString("InformUser_return"));
-            ConsoleKey hitKey = Console.ReadKey(true).Key;
+            Console.WriteLine(_resourceManager.GetString("InformUserReturnExit"));
+            string saves = Console.ReadLine();
 
-            if (hitKey == ConsoleKey.Escape)
+            if (saves == "exit")
             {
                 Console.Clear();
                 return;
