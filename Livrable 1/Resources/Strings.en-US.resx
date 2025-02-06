@@ -254,7 +254,10 @@ Otherwise, hit the “esc” key to go back.</value>
     <value>Execution of the saves... </value>
   </data>
   <data name="MessageBeforeShowingExSaves" xml:space="preserve">
-    <value>Choose saves numbers to execute :</value>
+    <value>Choose the save number to execute : (type 'exit' to cancel) </value>
+  </data>
+  <data name="MessageBeforeShowingSaveOperations" xml:space="preserve">
+    <value>Execution of the save... </value>
   </data>
   <data name="NoFolder" xml:space="preserve">
     <value>None</value>

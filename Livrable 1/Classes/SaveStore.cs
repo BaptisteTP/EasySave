@@ -74,7 +74,6 @@ namespace Project_Easy_Save.Classes
 
         public void DisplayAllSaves()
         {
-            Console.Clear();
             foreach (var save in Saves)
             {
                 Console.WriteLine("===== Save Number : " + save.Id + " =====");
