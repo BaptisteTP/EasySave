@@ -184,6 +184,12 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
   <data name="AskUserNewFile" xml:space="preserve">
     <value>Quel est le nouveau dossier ? (taper  'exit' pour annuler)</value>
   </data>
+  <data name="AskUser_NewDailyLogFolder" xml:space="preserve">
+    <value>Quel est le nouveau dossier de stockage des logs journalières ?</value>
+  </data>
+  <data name="AskUser_NewRealtimeLogFolder" xml:space="preserve">
+    <value>Quel est le nouveau dossier de stockage des logs en temps réel ?</value>
+  </data>
   <data name="InformUserOutSettingInterface" xml:space="preserve">
     <value>Sortie de l'interface de modifications des paramètres</value>
   </data>
@@ -242,6 +248,9 @@ Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
   </data>
   <data name="MessageBeforeShowingExSaves" xml:space="preserve">
     <value>Rentrez les numéros des sauvegardes que vous voulez exécuter : </value>
+  </data>
+  <data name="NoFolder" xml:space="preserve">
+    <value>Aucun</value>
   </data>
   <data name="NoOperationInStoreMessage" xml:space="preserve">
     <value>Aucune opération de sauvegarde n'est active.</value>

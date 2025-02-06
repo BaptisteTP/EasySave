@@ -115,6 +115,7 @@ namespace Project_Easy_Save.Classes
                 }
                 if (!Directory.Exists(SourcePath))
                 {
+					Console.Clear();
                     Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewPath"));
                 }
             } while (!Directory.Exists(SourcePath));
@@ -129,11 +130,12 @@ namespace Project_Easy_Save.Classes
                 {
                     return;
                 }
-                if (!Directory.Exists(DestinationPath))
+                if (!Directory.Exists(DestinationPath) || !Settings.UserHasRightPermissionInFolder(DestinationPath))
                 {
+					Console.Clear();
                     Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewPath"));
                 }
-            } while (!Directory.Exists(DestinationPath));
+            } while (!Directory.Exists(DestinationPath) || !Settings.UserHasRightPermissionInFolder(DestinationPath));
 
             _saveStore.CreateNewSave(Name, Type, SourcePath, DestinationPath);
             Console.Clear();
