@@ -4,6 +4,7 @@ using System.Transactions;
 
 class Program
 {
+    // Main function
     static void Main(string[] args)
 	{
 		Settings settings = Creator.GetSettingsInstance();
@@ -14,7 +15,8 @@ class Program
 
 	}
 
-	private static void AskUserToCompleteSettings(Settings settings)
+    // Function that asks the user to complete the settings
+    private static void AskUserToCompleteSettings(Settings settings)
 	{
 		if (settings.ActiveLanguage == "")
 		{

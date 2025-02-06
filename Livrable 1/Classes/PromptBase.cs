@@ -9,7 +9,8 @@ namespace Project_Easy_Save.Classes
 {
 	public abstract class PromptBase
 	{
-		protected ResourceManager _resourceManager;
+        // This class is responsible for managing the prompts.
+        protected ResourceManager _resourceManager;
 		protected SaveStore _saveStore; 
 
 		protected PromptBase()

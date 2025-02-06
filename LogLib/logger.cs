@@ -5,8 +5,10 @@ using System.Text.Json;
 
 namespace LogLib
 {
+    // Class that stores the log of the file copy
     public class Logger
     {
+        // Method to write the log of the file copy
         public void WriteDailyLog(string logMessage, string logDirectory)
         {
         
@@ -22,6 +24,7 @@ namespace LogLib
             File.AppendAllText(logFilePath, logMessage);
         }
 
+        // Method to write the log of the file copy
         public void WriteLog(string logMessage, string logDirectory)
         {
 			string saveLogFile = Path.Combine(logDirectory, "realTimeLog.json");

@@ -11,6 +11,7 @@ namespace Project_Easy_Save.Classes
 {
 	public class Logger
 	{
+        // This class is responsible for logging the events.
         private LogLib.Logger LogLibLogger;
         public Logger()
 		{
@@ -19,7 +20,8 @@ namespace Project_Easy_Save.Classes
 
 		public void OnCopyDirectory(object sender, CopyDirectoryEventArgs eventArgs)
 		{
-			DirectoryCopyLog log = new DirectoryCopyLog(name: eventArgs.ExecutedSave.Name,
+            // Create a new DirectoryCopyLog object
+            DirectoryCopyLog log = new DirectoryCopyLog(name: eventArgs.ExecutedSave.Name,
 														directoryTransferTime: eventArgs.CreationTimeSpan,
 														time: eventArgs.CopyDate);
 
@@ -32,7 +34,8 @@ namespace Project_Easy_Save.Classes
 
 		public void OnCopyFile(object sender, FileCopyEventArgs eventArgs)
 		{
-			FileCopyLog log = new FileCopyLog(name: eventArgs.ExecutedSave.Name,
+            // Create a new FileCopyLog object
+            FileCopyLog log = new FileCopyLog(name: eventArgs.ExecutedSave.Name,
 											  fileSource: eventArgs.SourceFile.FullName,
 											  fileTarget: eventArgs.DestinationPath,
 											  fileSize: eventArgs.FileSize,
@@ -48,7 +51,8 @@ namespace Project_Easy_Save.Classes
 
 		public void OnCopyFilePreview(object sender, FileCopyPreviewEventArgs eventArgs)
 		{
-			string pathToRealTimeLog = Path.Combine(Creator.GetSettingsInstance().RealTimeLogPath, "realTimeLog.json");
+            // Write on json file for time log
+            string pathToRealTimeLog = Path.Combine(Creator.GetSettingsInstance().RealTimeLogPath, "realTimeLog.json");
 			string jsonString = File.ReadAllText(pathToRealTimeLog);
 			List<FileCopyPreviewLog> logList = JsonSerializer.Deserialize<List<FileCopyPreviewLog>>(jsonString);
 
@@ -80,7 +84,8 @@ namespace Project_Easy_Save.Classes
 
 		private long GetTotalFileSize(List<string> eligibleFiles)
 		{
-			long totalFileSize = 0;
+            // Get the total size of the files to copy
+            long totalFileSize = 0;
 			foreach (string file in eligibleFiles)
 			{
 				totalFileSize += new FileInfo(file).Length;
@@ -90,13 +95,15 @@ namespace Project_Easy_Save.Classes
 
 		private string SerializeObjectToJson(object log)
 		{
-			var options = new JsonSerializerOptions { WriteIndented = true };
+            // write in continue the object to a json file
+            var options = new JsonSerializerOptions { WriteIndented = true };
 			return JsonSerializer.Serialize(log, options);
 		}
 
 		public void OnSaveCreated(object sender, Save eventArgs)
 		{
-			List<FileCopyPreviewLog> logList = new List<FileCopyPreviewLog>();
+            // Change the status json file
+            List<FileCopyPreviewLog> logList = new List<FileCopyPreviewLog>();
 
 			foreach(Save save in Creator.GetSaveStoreInstance().GetAllSaves())
 			{
@@ -120,7 +127,8 @@ namespace Project_Easy_Save.Classes
 
 		public void OnSaveFinished(object sender, Save save)
 		{
-			string pathToRealTimeLog = Path.Combine(Creator.GetSettingsInstance().RealTimeLogPath, "realTimeLog.json");
+            // Change the status json file
+            string pathToRealTimeLog = Path.Combine(Creator.GetSettingsInstance().RealTimeLogPath, "realTimeLog.json");
 			string jsonString = File.ReadAllText(pathToRealTimeLog);
 			List<FileCopyPreviewLog> logList = JsonSerializer.Deserialize<List<FileCopyPreviewLog>>(jsonString);
 
