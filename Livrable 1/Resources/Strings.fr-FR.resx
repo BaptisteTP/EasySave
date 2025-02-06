@@ -148,7 +148,7 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
 
     1- Gérer les sauvegardes
     2- Exécuter une sauvegarde
-    3- Redéfinir le langage de l'application
+    3- Redéfinir les paramètres de l'application
     4- Quitter l'application</value>
   </data>
   <data name="AskForUserAction_ChooseSaveOperationFromList" xml:space="preserve">
@@ -162,7 +162,7 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
     4- Type de sauvegarde</value>
   </data>
   <data name="AskToUser_NewDestinationPathForOperation" xml:space="preserve">
-    <value>Quel est le nouveau répertoire de destinatino de l'opération ?</value>
+    <value>Quel est le nouveau répertoire de destination de l'opération ?</value>
   </data>
   <data name="AskToUser_NewNameForOperation" xml:space="preserve">
     <value>Quel est le nouveau nom de l'opération ?</value>
@@ -177,9 +177,10 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
   </data>
   <data name="AskUserChangeSetting" xml:space="preserve">
     <value>Quel paramètre souhaitez-vous modifier ?
-    1- Choix de la langue 
+    1- Langue 
     2- Répertoire des logs journaliers
     3- Répertoire des logs temps réels </value>
+    <comment>l</comment>
   </data>
   <data name="AskUserNewFile" xml:space="preserve">
     <value>Quel est le nouveau dossier ? (taper  'exit' pour annuler)</value>
