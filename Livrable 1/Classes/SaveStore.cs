@@ -12,6 +12,7 @@ namespace Project_Easy_Save.Classes
         private List<Save> Saves = [];
         public event EventHandler<Save>? SaveCreated;
         public bool CanAddSave => NumberOfSaves < MaximumNumberOfSave;
+        public bool CanExecuteSave => NumberOfSaves > 0;
         public int NumberOfSaves => Saves.Count;
         private int CurrentAvailableID { get; set; } = 1; 
         private int MaximumNumberOfSave { get; } = 5;

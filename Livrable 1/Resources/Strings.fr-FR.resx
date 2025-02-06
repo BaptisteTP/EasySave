@@ -194,6 +194,9 @@ Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
   <data name="InformUser_DeleteSave" xml:space="preserve">
     <value>La sauvegarde a été supprimée !</value>
   </data>
+  <data name="InformUser_LeftExecutionPrompt" xml:space="preserve">
+    <value>Sortie de l'interface d'éxécution des sauvegardes...</value>
+  </data>
   <data name="InformUser_OperationToModifMessage" xml:space="preserve">
     <value>Opération à modifier :</value>
   </data>
