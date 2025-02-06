@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Project_Easy_Save.CustomEventArgs
 {
-	public class CopyDirectoryEventArgs : EventArgs
+    // Event arguments for the copy directory event
+    public class CopyDirectoryEventArgs : EventArgs
 	{
 
 		public Save ExecutedSave { get; set; }
