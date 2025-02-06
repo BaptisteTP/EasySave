@@ -135,22 +135,18 @@ namespace Project_Easy_Save.Classes
 			Console.Clear();
 			string currentFolderForDailyLog = GetBaseSettings().DailyLogPath!;
 
-			Console.WriteLine(_ressourceManager.GetString("InforUserDailyLogFile"));
-			Console.WriteLine(currentFolderForDailyLog);
-
 			string? newDailyLogFolderPath = string.Empty;
-			while (string.IsNullOrEmpty(newDailyLogFolderPath))
+			while (string.IsNullOrEmpty(newDailyLogFolderPath) || !Directory.Exists(newDailyLogFolderPath) || !UserHasRightPermissionInFolder(newDailyLogFolderPath))
 			{
-                Console.WriteLine(_ressourceManager.GetString("AskUserNewFile"));
+				Console.WriteLine(_ressourceManager.GetString("InforUserDailyLogFile"));
+				Console.WriteLine(currentFolderForDailyLog == "" ? _ressourceManager.GetString("NoFolder") : currentFolderForDailyLog);
+				Console.WriteLine();
+				Console.WriteLine(_ressourceManager.GetString("AskUser_NewDailyLogFolder"));
 				newDailyLogFolderPath = Console.ReadLine();
 
-				if (newDailyLogFolderPath?.ToLower() == "exit")
+				if (string.IsNullOrEmpty(newDailyLogFolderPath) || !Directory.Exists(newDailyLogFolderPath) || !UserHasRightPermissionInFolder(newDailyLogFolderPath))
 				{
-					Console.Clear() ;
-					return;
-				}
-				else if (string.IsNullOrEmpty(newDailyLogFolderPath) || !Directory.Exists(newDailyLogFolderPath))
-				{
+					Console.Clear();
 					Console.WriteLine(_ressourceManager.GetString("InforUserInvalidPath"));
 				}
 			}
@@ -159,27 +155,43 @@ namespace Project_Easy_Save.Classes
 			ChangeSetting("DailyLogPath", newDailyLogFolderPath!);
 		}
 
+		public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
+		{
+			try
+			{
+				using FileStream fs = File.Create(
+					Path.Combine(
+						newDailyLogFolderPath,
+						Path.GetRandomFileName()
+					),
+					1,
+					FileOptions.DeleteOnClose);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+		
+
 		public static void AskUserToChangeRealTimeLogsFolder()
 		{
 			Console.Clear();
 			string currentRealTimeLogPath = GetBaseSettings().RealTimeLogPath!;
 
-			Console.WriteLine(_ressourceManager.GetString("InforUserRealTimeLogFile"));
-			Console.WriteLine(currentRealTimeLogPath);
-
 			string? newRealTimeLogPath = string.Empty;
-			while (string.IsNullOrEmpty(newRealTimeLogPath))
+			while (string.IsNullOrEmpty(newRealTimeLogPath) || !Directory.Exists(newRealTimeLogPath) || !UserHasRightPermissionInFolder(newRealTimeLogPath))
 			{
-				Console.WriteLine(_ressourceManager.GetString("AskUserNewFile"));
+				Console.WriteLine(_ressourceManager.GetString("InforUserRealTimeLogFile"));
+				Console.WriteLine(currentRealTimeLogPath == "" ? _ressourceManager.GetString("NoFolder") : currentRealTimeLogPath);
+				Console.WriteLine();
+				Console.WriteLine(_ressourceManager.GetString("AskUser_NewRealtimeLogFolder"));
 				newRealTimeLogPath = Console.ReadLine();
 
-                if (newRealTimeLogPath?.ToLower() == "exit")
-                {
-                    Console.Clear();
-                    return;
-                }
-                else if (string.IsNullOrEmpty(newRealTimeLogPath) || !Directory.Exists(newRealTimeLogPath))
+				if (string.IsNullOrEmpty(newRealTimeLogPath) || !Directory.Exists(newRealTimeLogPath) || !UserHasRightPermissionInFolder(newRealTimeLogPath))
 				{
+					Console.Clear();
 					Console.WriteLine(_ressourceManager.GetString("InforUserInvalidPath"));
 				}
 			}

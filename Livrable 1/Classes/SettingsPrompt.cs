@@ -25,14 +25,17 @@ namespace Project_Easy_Save.Classes
 				{
 					case ConsoleKey.NumPad1:
 						Settings.AskUserToChooseLanguage();
+						Console.Clear();
 						break;
 
 					case ConsoleKey.NumPad2:
 						Settings.AskUserToChangeDailyLogsFolder();
+						Console.Clear();
 						break;
 
 					case ConsoleKey.NumPad3:
 						Settings.AskUserToChangeRealTimeLogsFolder();
+						Console.Clear();
 						break;
 
 					case ConsoleKey.Escape:

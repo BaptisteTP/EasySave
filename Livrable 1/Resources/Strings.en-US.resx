@@ -185,6 +185,12 @@ Please choose a save type:
   <data name="AskUserNewFile" xml:space="preserve">
     <value>What is the new file? (type 'exit' to cancel)</value>
   </data>
+  <data name="AskUser_NewDailyLogFolder" xml:space="preserve">
+    <value>What is the new daily log folder ?</value>
+  </data>
+  <data name="AskUser_NewRealtimeLogFolder" xml:space="preserve">
+    <value>What is the new in real time log folder ?</value>
+  </data>
   <data name="InformUserOutSettingInterface" xml:space="preserve">
     <value>Exiting the parameter changes interface</value>
   </data>
@@ -246,6 +252,9 @@ Otherwise, hit the “esc” key to go back.</value>
   </data>
   <data name="MessageBeforeShowingExSaves" xml:space="preserve">
     <value>Choose saves numbers to execute :</value>
+  </data>
+  <data name="NoFolder" xml:space="preserve">
+    <value>None</value>
   </data>
   <data name="NoOperationInStoreMessage" xml:space="preserve">
     <value>No save operation are currently active.</value>
