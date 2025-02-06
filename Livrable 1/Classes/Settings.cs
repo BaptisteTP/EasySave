@@ -43,8 +43,16 @@ namespace Project_Easy_Save.Classes
 
 		public static Settings GetBaseSettings()
 		{
-			string jsonAppSettings = File.ReadAllText("appsettings.json");
-			return JsonSerializer.Deserialize<Settings>(jsonAppSettings);
+			try
+			{
+				string jsonAppSettings = File.ReadAllText("appsettings.json");
+				Settings foundSettings = JsonSerializer.Deserialize<Settings>(jsonAppSettings);
+				return foundSettings;
+			}
+			catch
+			{
+				return CreateBaseSettings();
+			}
 		}
 
 		private static void ChangeSetting(string setting, string newValue)
