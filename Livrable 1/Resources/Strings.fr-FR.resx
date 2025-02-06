@@ -181,6 +181,9 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
     2- Répertoire des logs journaliers
     3- Répertoire des logs temps réels </value>
   </data>
+  <data name="AskUserNewFile" xml:space="preserve">
+    <value>Quel est le nouveau dossier ? (taper  'exit' pour annuler)</value>
+  </data>
   <data name="InformUserOutSettingInterface" xml:space="preserve">
     <value>Sortie de l'interface de modifications des paramètres</value>
   </data>
@@ -211,6 +214,15 @@ Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
   </data>
   <data name="InformUser_WrongNewSaveType" xml:space="preserve">
     <value>Le nouveau type de sauvegarde est invalide. Veuillez réessayer.</value>
+  </data>
+  <data name="InforUserDailyLogFile" xml:space="preserve">
+    <value>Les logs journalières sont actuellement stockées dans le dossier suivant :</value>
+  </data>
+  <data name="InforUserInvalidPath" xml:space="preserve">
+    <value>Le chemin rentré est invalide. Veuillez recommencer</value>
+  </data>
+  <data name="InforUserRealTimeLogFile" xml:space="preserve">
+    <value>Les logs en temps réel sont actuellement stockées dans le dossier suivant :</value>
   </data>
   <data name="MaximumNumberOfOperationsReached" xml:space="preserve">
     <value>Le nombre maximal d'opérations a été atteint : {0}</value>

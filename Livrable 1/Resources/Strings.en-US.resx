@@ -182,6 +182,9 @@ Please choose a save type:
     2- Directory of daily logs
     3- Directory of real-time logs</value>
   </data>
+  <data name="AskUserNewFile" xml:space="preserve">
+    <value>What is the new file? (type 'exit' to cancel)</value>
+  </data>
   <data name="InformUserOutSettingInterface" xml:space="preserve">
     <value>Exiting the parameter changes interface</value>
   </data>
@@ -212,6 +215,15 @@ Otherwise, hit the “esc” key to go back.</value>
   </data>
   <data name="InformUser_WrongNewSaveType" xml:space="preserve">
     <value>The new save type is invalid. Please try again.</value>
+  </data>
+  <data name="InforUserDailyLogFile" xml:space="preserve">
+    <value>Daily logs are currently stored in the following folder:</value>
+  </data>
+  <data name="InforUserInvalidPath" xml:space="preserve">
+    <value>The entered path is invalid. Please start again</value>
+  </data>
+  <data name="InforUserRealTimeLogFile" xml:space="preserve">
+    <value>Real-time logs are currently stored in the following folder:</value>
   </data>
   <data name="MaximumNumberOfOperationsReached" xml:space="preserve">
     <value>The maximum number of running saving operations has been reached : {0}</value>
