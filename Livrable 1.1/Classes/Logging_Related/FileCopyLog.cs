@@ -25,5 +25,10 @@ namespace Project_Easy_Save.Classes
 			FileTransferTime = fileTransferTime;
 			Time = time;
 		}
+
+		public FileCopyLog()
+		{
+			
+		}
 	}
 }

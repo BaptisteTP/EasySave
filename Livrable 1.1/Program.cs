@@ -36,5 +36,10 @@ class Program
 		{
 			Settings.AskUserToChangeRealTimeLogsFolder();
 		}
+
+		if(settings.LogFormat == "")
+		{
+			Settings.AskUserToChooseLogFormat();
+		}
 	}
 }

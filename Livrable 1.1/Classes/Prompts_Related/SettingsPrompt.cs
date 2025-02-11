@@ -39,6 +39,11 @@ namespace Project_Easy_Save.Classes
 						Console.Clear();
 						break;
 
+					case ConsoleKey.NumPad4:
+						Settings.AskUserToChooseLogFormat();
+						Console.Clear();
+						break;
+
 					case ConsoleKey.Escape:
 						Console.Clear();
 						Console.WriteLine(_resourceManager.GetString("InformUserOutSettingInterface"));

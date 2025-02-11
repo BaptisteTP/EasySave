@@ -179,7 +179,8 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
     <value>Quel paramètre souhaitez-vous modifier ?
     1- Langue 
     2- Répertoire des logs journaliers
-    3- Répertoire des logs temps réels </value>
+    3- Répertoire des logs temps réels 
+    4- Format des logs</value>
     <comment>l</comment>
   </data>
   <data name="AskUserNewFile" xml:space="preserve">
@@ -200,6 +201,13 @@ Quelle est le type de la sauvegarde : (taper 'exit' pour annuler)
   <data name="InformUser_ChooseSave" xml:space="preserve">
     <value>Veuillez choisir la sauvegarde pour exécuter l'operation.
 Sinon tapez sur la touche "échap" pour revenir en arrière. </value>
+  </data>
+  <data name="InformUser_CurrentLogFormat" xml:space="preserve">
+    <value>Le format de log actuel est : {0}
+
+Veuillez choisir un nouveau format parmis la liste ci-dessous :
+    1- xml
+    2- json</value>
   </data>
   <data name="InformUser_DeleteSave" xml:space="preserve">
     <value>La sauvegarde a été supprimée !</value>
