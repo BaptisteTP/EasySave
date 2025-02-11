@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:EasySave2._0"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <Style x:Key="RoundedButtonStyle" TargetType="Button">
+        <Style x:Key="NextButton" TargetType="Button">
             <Setter Property="Width" Value="145"/>
             <Setter Property="Height" Value="44"/>
             <Setter Property="Margin" Value="0,550,0,0"/>
@@ -13,17 +13,25 @@
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Content" Value="Suivant ->"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="25">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}"/>
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="25">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <DataTemplate x:Key="EasySaveLogo1">
+            <Image Source="assets/images/EasySaveLogo.png" HorizontalAlignment="Center" VerticalAlignment="Top"
+                   Margin="0,130,0,0" Height="134" Width="502"/>
+        </DataTemplate>
+        <DataTemplate x:Key="EasySaveLogo2">
+            <Image Source="assets/images/EasySaveLogo.png" HorizontalAlignment="Center" VerticalAlignment="Top"
+                   Margin="0,90,0,0" Height="114" Width="427"/>
+        </DataTemplate>
+        
     </Application.Resources>
 </Application>

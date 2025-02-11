@@ -7,9 +7,7 @@
         mc:Ignorable="d"
         Title="StartPage" Height="720" Width="1280" Background="White">
     <Grid>
-        <Image Source="assets/images/EasySaveLogo.png"
-       HorizontalAlignment="Center" VerticalAlignment="Top"
-       Margin="0,130,0,0" Height="134" Width="502"/>
+        <ContentControl ContentTemplate="{StaticResource EasySaveLogo1}" />
 
         <TextBlock x:Name="WelcomeText"
            Text="Bienvenue sur Easy Save, choisissez votre langue :"
@@ -24,6 +22,8 @@
             <Image Source="assets/images/EnglishButton.png"/>
         </Button>
 
-        <Button x:Name="NextButton" Style="{StaticResource RoundedButtonStyle}" Click="NextButton_Click"/>
+        <Button x:Name="NextButton" Style="{StaticResource NextButton}" Click="NextButton_Click">
+            <TextBlock Text="Suivant ->" FontSize="22" FontWeight="Bold"/>
+        </Button>
     </Grid>
 </Window>
