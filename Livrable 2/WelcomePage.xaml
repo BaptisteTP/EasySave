@@ -7,22 +7,22 @@
         mc:Ignorable="d"
         Title="StartPage" Height="720" Width="1280" Background="White">
     <Grid>
-        <ContentControl ContentTemplate="{StaticResource EasySaveLogo1}" />
+        <ContentControl ContentTemplate="{StaticResource EasySaveLogo1}" Margin="0,120,0,0"/>
 
-        <TextBlock x:Name="WelcomeText"
-           Text="Bienvenue sur Easy Save, choisissez votre langue :"
-           HorizontalAlignment="Center" VerticalAlignment="Center"
-           FontSize="24" FontWeight="SemiBold" Margin="0,0,0,0"/>
+        <TextBlock x:Name="WelcomeText" Text="Bienvenue sur Easy Save, choisissez votre langue :" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   FontSize="24" FontWeight="Bold" Margin="0,0,0,60"/>
 
-        <Button x:Name="FrenchButton" Width="149" Height="99" Margin="0,250,300,0" Click="FrenchButton_Click">
-            <Image Source="assets/images/FrenchButton.png"/>
-        </Button>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,160,0,0">
+            <Button x:Name="FrenchButton" Style="{StaticResource NoHighlightButton}" Width="149" Height="99" Margin="40,0,0,0">
+                <Image Source="assets/images/FrenchButton.png"/>
+            </Button>
 
-        <Button x:Name="EnglishButton" Width="189" Height="99" Margin="300,250,0,0" Click="EnglishButton_Click">
-            <Image Source="assets/images/EnglishButton.png"/>
-        </Button>
+            <Button x:Name="EnglishButton" Style="{StaticResource NoHighlightButton}" Width="189" Height="99" Margin="80,0,0,0">
+                <Image Source="assets/images/EnglishButton.png"/>
+            </Button>
+        </StackPanel>
 
-        <Button x:Name="NextButton" Style="{StaticResource NextButton}" Click="NextButton_Click">
+        <Button x:Name="NextButton" Style="{StaticResource NextButton}" Margin="0,0,0,100" VerticalAlignment="Bottom">
             <TextBlock Text="Suivant ->" FontSize="22" FontWeight="Bold"/>
         </Button>
     </Grid>
