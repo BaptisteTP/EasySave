@@ -16,6 +16,7 @@ namespace Project_Easy_Save.Classes
 
         public void Interact()
         {
+            // Interface for the user to choose what to do.
             EditSavesPrompt editSavesPrompt = new EditSavesPrompt();
             SettingsPrompt settingsPrompt = new SettingsPrompt();
             isInteracting = true;
@@ -59,7 +60,8 @@ namespace Project_Easy_Save.Classes
 
 		private void HandleSaveExecution()
 		{
-			if (_saveStore.CanExecuteSave)
+            // If there are saves in the store, show the execute save prompt
+            if (_saveStore.CanExecuteSave)
 			{
 				ExecuteSavePrompt executeSavePrompt = new ExecuteSavePrompt();
 				executeSavePrompt.Interact();

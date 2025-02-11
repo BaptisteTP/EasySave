@@ -1,6 +1,7 @@
 ﻿using Project_Easy_Save.Enums;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Resources;
 using System.Runtime.CompilerServices;
@@ -11,7 +12,8 @@ namespace Project_Easy_Save.Classes
 {
 	public class EditSavesPrompt : PromptBase
 	{
-		private bool IsInteracting;
+        // Class for the interface editing the saves
+        private bool IsInteracting;
 		public event EventHandler<ConsoleKey>? OnSaveEditSelectionChanged;
 		public event EventHandler<ConsoleKey>? OnSaveDeleteSelectionChanged;
 		public EditSavesPrompt() : base()
@@ -23,22 +25,24 @@ namespace Project_Easy_Save.Classes
 
 		public void Interact()
 		{
-			Console.Clear();
+            // Method to interact with the user
+            Console.Clear();
             IsInteracting = true;
 
 			while (IsInteracting)
 			{
 				DisplayMenu();
-				ConsoleKeyInfo choix = Console.ReadKey(true);
-                if (choix.Key == ConsoleKey.Escape)
+                ConsoleKeyInfo choice = Console.ReadKey(true);
+                Console.Clear();
+                if (choice.Key == ConsoleKey.Escape)
                 {
-                    Console.Clear();
                     IsInteracting = false;
                 }
 
-                switch (choix.KeyChar)
+                switch (choice.KeyChar)
 				{
-					case '1':
+                    // wait the information from the user
+                    case '1':
 						DisplaySave();
                         break;
 
@@ -63,31 +67,40 @@ namespace Project_Easy_Save.Classes
 
 		private void DisplayMenu()
 		{
+            // Display the menu to the user
             Console.WriteLine(string.Format(_resourceManager.GetString($"AskForEditActionMessage"),  _saveStore.NumberOfSaves));
         }
 
         private void CreateSave()
         {
+            // Ask the user for the information to create a new save
             Console.Clear();
-            Console.WriteLine(_resourceManager.GetString("AskForOperationName"));
-            string Name = Console.ReadLine();
-            if (Name == "exit")
-            {
-                return;
-            }
+			string Name = string.Empty;
+			do
+			{
+				Console.WriteLine(_resourceManager.GetString("AskForOperationName"));
+				Name = Console.ReadLine();
+				if (Name == "exit")
+				{
+					Console.Clear();
+					return;
+				}
+				else if (string.IsNullOrEmpty(Name))
+				{
+					Console.Clear();
+					Console.WriteLine(_resourceManager.GetString("WrongOperationName"));
+				}
+			} while (string.IsNullOrEmpty(Name));
 
-
-            SaveType Type;
+			SaveType Type;
             while (true)
             {
+                // Ask the user for the type of save between full and differential
                 Console.Write(_resourceManager.GetString("AskForOperationType"));
 				Console.WriteLine("");
                 string typeInput = Console.ReadLine();
-                if (typeInput == "exit")
-                {
-                    return;
-                }
-                else if (typeInput == "1")
+
+                if (typeInput == "1")
                 {
                     Type = SaveType.Full;
                     break;
@@ -99,10 +112,12 @@ namespace Project_Easy_Save.Classes
                 }
 				else if (typeInput == "exit")
 				{
-					   return;
+					Console.Clear();
+					return;
 				}
                 else
                 {
+					Console.Clear();
 					Console.WriteLine(_resourceManager.GetString("WrongOperationType"));
                     Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewSaveType"));
                 }
@@ -111,37 +126,42 @@ namespace Project_Easy_Save.Classes
             string SourcePath;
             do
             {
+                // Ask the user for the source path and verify if it exists
                 Console.Write(_resourceManager.GetString("AskForOperationSourcePath"));
                 Console.WriteLine("");
                 SourcePath = Console.ReadLine();
                 if (SourcePath == "exit")
                 {
-                    return;
+					Console.Clear();
+					return;
                 } 
-				else if (!Directory.Exists(SourcePath))
+				else if (!Directory.Exists(SourcePath) || !Settings.UserHasRightPermissionInFolder(SourcePath))
                 {
 					Console.Clear();
                     Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewPath"));
                 }
-            } while (!Directory.Exists(SourcePath));
+            } while (!Directory.Exists(SourcePath) || !Settings.UserHasRightPermissionInFolder(SourcePath));
 
             string DestinationPath;
             do
             {
+                // Ask the user for the destination path and verify if it exists
                 Console.Write(_resourceManager.GetString("AskForOperationDestinationPath"));
                 Console.WriteLine("");
                 DestinationPath = Console.ReadLine();
                 if (DestinationPath == "exit")
 				{
+					Console.Clear();
                     return;
                 }
-                if (!Directory.Exists(DestinationPath) || !Settings.UserHasRightPermissionInFolder(DestinationPath))
+                if (!Directory.Exists(DestinationPath) || DestinationPath == SourcePath || !Settings.UserHasRightPermissionInFolder(DestinationPath))
                 {
 					Console.Clear();
                     Console.WriteLine(_resourceManager.GetString("InformUser_WrongNewPath"));
                 }
-            } while (!Directory.Exists(DestinationPath) || !Settings.UserHasRightPermissionInFolder(DestinationPath));
+            } while (!Directory.Exists(DestinationPath) || DestinationPath == SourcePath || !Settings.UserHasRightPermissionInFolder(DestinationPath));
 
+            // Call the method to create a new save
             _saveStore.CreateNewSave(Name, Type, SourcePath, DestinationPath);
             Console.Clear();
             Console.WriteLine(_resourceManager.GetString("InformUser_SaveCreate"));
@@ -149,31 +169,39 @@ namespace Project_Easy_Save.Classes
 
         private void DisplaySave()
 		{
+            // Display all saves and ask the user to select one
+            Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
+
             if (_saveStore.NumberOfSaves == 0)
             {
                 Console.Clear();
                 Console.WriteLine(_resourceManager.GetString("NoOperationInStoreMessage"));
                 return;
             }
+
+			Console.Clear();
             _saveStore.DisplayAllSaves();
-            Console.WriteLine(_resourceManager.GetString($"MessageBeforeShowingAllSaveOperations"));
             Console.WriteLine(_resourceManager.GetString("InformUser_return"));
+
             ConsoleKeyInfo choix = Console.ReadKey(true);
+            Console.Clear();
             if (choix.Key == ConsoleKey.Escape)
             {
-                Console.Clear();
 				return;
             }
         }
 
 		private void HandleSaveEdit()
 		{
+            // Method to edit a save
+
             if (_saveStore.NumberOfSaves == 0)
             {
                 Console.Clear();
                 Console.WriteLine(_resourceManager.GetString("NoOperationInStoreMessage"));
                 return;
             }
+			Console.Clear();
             Save? saveToEdit = AskUserToSelectSaveToEdit();
 			if(saveToEdit == null) { Console.Clear(); return; }
 
@@ -184,15 +212,22 @@ namespace Project_Easy_Save.Classes
 			if (newValue == null) { Console.Clear(); return; }
 
 			_saveStore.EditSave(saveToEdit.Id, propertyToEdit, newValue);
+			Console.Clear();
 
 		}
 
 		private Save? AskUserToSelectSaveToEdit()
 		{
-			Console.Clear();
+            // Ask the user to select a save to edit
+            Console.Clear();
 			List<Save> saves = _saveStore.GetAllSaves();
-            _saveStore.SaveToEdit = saves[0];
-            DisplayPossibleSavesToEdit(saves);
+
+			if( saves.Count == 1 ) { return saves[0]; }
+
+			_saveStore.SaveToEdit = saves[0];
+			// Display all saves 
+			DisplayPossibleSavesToEdit(saves);
+
 			while (true)
 			{
 				ConsoleKey hitKey = Console.ReadKey(true).Key;
@@ -229,9 +264,9 @@ namespace Project_Easy_Save.Classes
 
 		private int AskUserWhichPropertyToEdit(Save selectedSave)
 		{
-			string? format = _resourceManager.GetString("PrintOperationFormat");
-
-			while (true)
+            string? format = _resourceManager.GetString("PrintOperationFormat");
+            // Ask the user which property to edit
+            while (true)
 			{
 				Console.Clear();
 				Console.WriteLine(_resourceManager.GetString("InformUser_OperationToModifMessage"));
@@ -291,7 +326,8 @@ namespace Project_Easy_Save.Classes
 
 		private object PromptForChangeOperationSaveType(Save selectedSave)
 		{
-			string? format = _resourceManager.GetString("PrintOperationFormat");
+            // Inform the user about the operation and ask for a new type of save
+            string? format = _resourceManager.GetString("PrintOperationFormat");
 
 			while (true)
 			{
@@ -317,7 +353,8 @@ namespace Project_Easy_Save.Classes
 
 		private object PromptForChangeOperationPath(string type, Save selectedSave)
 		{
-			string? format = _resourceManager.GetString("PrintOperationFormat");
+            // Ask the user for a new path
+            string? format = _resourceManager.GetString("PrintOperationFormat");
 
 			while (true)
 			{
@@ -334,7 +371,7 @@ namespace Project_Easy_Save.Classes
 				Console.WriteLine();
 				string? newPath = Console.ReadLine();
 
-				if (Directory.Exists(newPath))
+				if (Directory.Exists(newPath) && newPath != selectedSave.SourcePath && newPath != selectedSave.DestinationPath)
 				{
 					return newPath;
 				}
@@ -346,7 +383,8 @@ namespace Project_Easy_Save.Classes
 
 		private object PromptForChangeOperationName(Save selectedSave)
 		{
-			string? format = _resourceManager.GetString("PrintOperationFormat");
+            // Inform the user about the operation and ask for a new name
+            string? format = _resourceManager.GetString("PrintOperationFormat");
 
 			while (true)
 			{
@@ -369,6 +407,7 @@ namespace Project_Easy_Save.Classes
         {
             Console.Clear();
             List<Save> saves = _saveStore.GetAllSaves();
+
             _saveStore.SaveToDelete = saves[0];
             DisplayPossibleSavesToDelete(saves);
             while (true)
@@ -407,7 +446,8 @@ namespace Project_Easy_Save.Classes
 
         private void DisplayPossibleSavesToEdit(List<Save> saves)
 		{
-			int saveIndex = 1;
+            // Display all saves and ask the user to select one with a selector
+            int saveIndex = 1;
 			foreach (Save save in saves)
 			{
 				if (save == _saveStore.SaveToEdit)
@@ -432,12 +472,16 @@ namespace Project_Easy_Save.Classes
 
 		private void DeleteSave()
 		{
+
+            // Call method to delete a save
 			if (_saveStore.NumberOfSaves == 0)
 			{
 				Console.Clear();
 				Console.WriteLine(_resourceManager.GetString("NoOperationInStoreMessage"));
 				return;
 			}
+
+			Console.Clear();
             Save? SaveToDelete = AskUserToSelectSaveToDelete();
             if (SaveToDelete == null) { Console.Clear(); return; }
 
@@ -447,6 +491,7 @@ namespace Project_Easy_Save.Classes
 
         private void DisplayPossibleSavesToDelete(List<Save> saves)
         {
+            // Display all saves and ask the user to select one with a selector
             int saveIndex = 1;
             foreach (Save save in saves)
             {
@@ -472,6 +517,7 @@ namespace Project_Easy_Save.Classes
 
         private void Exit()
 		{
+            // Exit the interface and return to mainMenuPrompt interface
             IsInteracting = false;
             Console.Clear();
 			Console.WriteLine(_resourceManager.GetString("InformUser_SaveOperationFormQuit"));

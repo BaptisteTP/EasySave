@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 
 namespace Project_Easy_Save.Classes
 {
-	public class FileCopyLog
+    // Class that stores the log of the file copy
+    public class FileCopyLog
 	{
 
 		public string Name { get; set; }
 		public string FileSource { get; set; }
 		public string FileTarget { get; set; }
 		public double FileSize { get; set; }
-		public TimeSpan FileTransferTime { get; set; }
+		public string FileTransferTime { get; set; }
 		public DateTime Time { get; set; }
-		public FileCopyLog(string name, string fileSource, string fileTarget, double fileSize, TimeSpan fileTransferTime, DateTime time)
+		public FileCopyLog(string name, string fileSource, string fileTarget, double fileSize, string fileTransferTime, DateTime time)
 		{
 			Name = name;
 			FileSource = fileSource;

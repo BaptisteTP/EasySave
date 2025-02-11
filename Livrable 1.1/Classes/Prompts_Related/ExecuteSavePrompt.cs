@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Project_Easy_Save.Classes
 {
-	public class ExecuteSavePrompt : PromptBase
+    // Class that prompts the user to execute the saves
+    public class ExecuteSavePrompt : PromptBase
 	{
 		private bool IsInteracting;
 		public ExecuteSavePrompt() : base() { }
@@ -19,7 +22,6 @@ namespace Project_Easy_Save.Classes
             {
                 Console.WriteLine(_resourceManager.GetString("MessageBeforeExSaves"));
                 ConsoleKeyInfo choice = Console.ReadKey(true);
-                _saveStore.DisplayAllSaves();
 
                 switch (choice.Key)
                 {
@@ -47,38 +49,48 @@ namespace Project_Easy_Save.Classes
             }
         }
 
+        // Method that executes all the saves
         private void ExAllSaves()
         {
             Console.Clear();
-            Console.WriteLine();
             Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingAllSaveOperations"));
             _saveStore.GetAllSaves().ForEach(save => save.Execute());
-            Console.WriteLine(_resourceManager.GetString("InformUser_return"));
-            string hitKey = Console.ReadLine();
+            Console.WriteLine(_resourceManager.GetString("MessageAfterShowingAllSaveOperations"));
 
-            if (hitKey == "exit")
-            {
-                Console.Clear();
-                return;
-            }
         }
+
+        // Method that executes the saves
         private void ExSaves()
         {
+            int choice;
+            bool isimputvalid = false;
+            Save save = null;
             Console.Clear();
-            _saveStore.DisplayAllSaves();
-            Console.WriteLine();
-            Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingExSaves"));
-            Console.WriteLine();
-            Console.WriteLine(_resourceManager.GetString("InformUserReturnExit"));
-            string saves = Console.ReadLine();
-
-            if (saves == "exit")
+            while (isimputvalid == false || save == null) 
             {
+                _saveStore.DisplayAllSaves();
+                Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingExSaves"));
+                string input = Console.ReadLine();
+                if (input == "exit")
+                {
+                    Console.Clear();
+                    return;
+                }
+                isimputvalid = int.TryParse(input, out choice);
+                save = _saveStore.GetSave(choice);
                 Console.Clear();
-                return;
+                if (isimputvalid == false || save == null)
+                {
+                    Console.WriteLine(_resourceManager.GetString("WrongCommandMessage"));
+                }
             }
+            Console.Clear();
+            Console.WriteLine(_resourceManager.GetString("MessageBeforeShowingSaveOperations"));
+            save.Execute();
+            Console.WriteLine(_resourceManager.GetString("MessageAfterShowingAllSaveOperations"));
         }
 
+        // Method that quits the execution
         private void Quit()
         {
             IsInteracting = false;
