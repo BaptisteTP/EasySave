@@ -32,7 +32,9 @@ namespace EasySave2._0
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-
+            AddSaveWindow addSaveWindow = new AddSaveWindow();
+            addSaveWindow.Show();
+            this.Close();
         }
     }
 }

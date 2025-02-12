@@ -58,4 +58,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="ViewModels\HomeViewModel.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
 </Project>
