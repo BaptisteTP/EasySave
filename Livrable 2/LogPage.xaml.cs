@@ -16,17 +16,13 @@ using System.Windows.Shapes;
 namespace EasySave2._0
 {
     /// <summary>
-    /// Logique d'interaction pour WelcomePage.xaml
+    /// Logique d'interaction pour LogPage.xaml
     /// </summary>
-    public partial class WelcomePage : Page
+    public partial class LogPage : Page
     {
-        public WelcomePage()
+        public LogPage()
         {
             InitializeComponent();
-        }
-        private void NextButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new LogPage());
         }
     }
 }
