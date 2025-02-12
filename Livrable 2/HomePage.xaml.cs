@@ -36,5 +36,12 @@ namespace EasySave2._0
             addSaveWindow.Show();
             this.Close();
         }
+
+        private void OptionButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingWindow SettingWindow = new SettingWindow();
+            SettingWindow.Show();
+            this.Close();
+        }
     }
 }

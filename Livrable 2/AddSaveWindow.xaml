@@ -54,7 +54,7 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,70,40">
             <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" 
-                    VerticalAlignment="Bottom" Margin="0,0,0,0">
+                    VerticalAlignment="Bottom" Margin="0,0,0,0" Click="OptionButton_Click">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="Option" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,0,0" Height="37"/>
                     <Image Source="assets/images/Option.png" Width="24" Height="24" VerticalAlignment="Center"/>
@@ -63,7 +63,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="70,0,0,40">
-            <Button Content="✖ Annuler" Background="Red" Foreground="White" Width="178" Margin="0,0,0,0" Height="45" Cursor="Hand">
+            <Button Content="✖ Annuler" Background="Red" Foreground="White" Width="178" Margin="0,0,0,0" Height="45" Cursor="Hand" Click="Button_Click">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
