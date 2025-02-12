@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Project_Easy_Save.Classes
 {
@@ -14,7 +16,9 @@ namespace Project_Easy_Save.Classes
 
         private List<Save> Saves = [];
         public event EventHandler? SaveCreated;
-        public bool CanAddSave => NumberOfSaves < MaximumNumberOfSave;
+        public event EventHandler? SaveDeleted;
+        public event EventHandler? SaveEdited;
+		public bool CanAddSave => NumberOfSaves < MaximumNumberOfSave;
         public bool CanExecuteSave => NumberOfSaves > 0;
         public int NumberOfSaves => Saves.Count;
         private int CurrentAvailableID { get; set; } = 1; 
@@ -24,7 +28,14 @@ namespace Project_Easy_Save.Classes
 
         public Save? SaveToDelete { get; set; }
 
-        public int CreateNewSave(string name, SaveType type, string sourcePath, string destinationPath)
+
+		public void LoadLoggedSaves()
+		{
+            Saves.Clear();
+            Saves = DeserializeSaves();
+		}
+
+		public int CreateNewSave(string name, SaveType type, string sourcePath, string destinationPath)
         {
             // Takes information from the user and creates a new save.
             Save newSave = new Save( // Create a new save
@@ -34,6 +45,7 @@ namespace Project_Easy_Save.Classes
                 destinationPath,
                 type);
 
+
 			Saves.Add(newSave);
             SaveCreated?.Invoke(this, EventArgs.Empty);
 
@@ -42,31 +54,93 @@ namespace Project_Easy_Save.Classes
         public void EditSave(int id, int property, object newValue)
         {
             // Edits a save's property.
-            switch (property)
+            Save? saveToEdit = Saves.FirstOrDefault(save => save.Id == id);
+            if(saveToEdit == null) { return; }
+
+			switch (property)
 			{
                 // Look for the save with the given id and change the property to the new value.
                 case 1:
-					Saves.FirstOrDefault(save => save.Id == id)!.Name = (string)newValue;
+					saveToEdit.Name = (string)newValue;
+                    SaveEdited?.Invoke(this, EventArgs.Empty);
 					break;
+
 				case 2:
-					Saves.FirstOrDefault(save => save.Id == id)!.SourcePath = (string)newValue;
+					saveToEdit.SourcePath = (string)newValue;
+					SaveEdited?.Invoke(this, EventArgs.Empty);
 					break;
+
 				case 3:
-					Saves.FirstOrDefault(save => save.Id == id)!.DestinationPath = (string)newValue;
+					saveToEdit.DestinationPath = (string)newValue;
+					SaveEdited?.Invoke(this, EventArgs.Empty);
 					break;
+
 				case 4:
-					Saves.FirstOrDefault(save => save.Id == id)!.Type = (SaveType)newValue;
+					saveToEdit.Type = (SaveType)newValue;
+					SaveEdited?.Invoke(this, EventArgs.Empty);
 					break;
+
 				default:
 					return;
 			}
 		}
         // Look for the save with the given id and remove it from the list.
-        public void DeleteSave(int id) { Saves.Remove(Saves.Find(s => s.Id == id)); }
+        public void DeleteSave(int id) 
+        {
+            Save? saveToDelete = Saves.Find(s => s.Id == id);
+            if( saveToDelete == null) { return; }
+
+			Saves.Remove(saveToDelete); 
+            SaveDeleted?.Invoke(this, EventArgs.Empty);
+        }
         // Look for the save with the given id and execute it
         public void ExecuteSave(int id) { Saves.Find(s => s.Id == id).Execute(); }
         // Execute all saves in the list
         public void ExecuteAllSaves() { Saves.ForEach(s => s.Execute()); }
+
+        public void ExecuteSavesRange(int start, int stop, Action<int> SaveExecuted, Action<int> OnFailedExecute)
+        {
+            if(Saves.Count == 0) { throw new InvalidOperationException("Cannot execute specified saves : there are nos saves currently registered."); }
+            if(start > stop) { throw new ArgumentException("Start number is greater than stop number."); }
+
+            else
+            {
+                for (int i = start - 1; i <= stop - 1; i++)
+                {
+                    if(i < Saves.Count)
+                    {
+                        SaveExecuted.Invoke(i+1);
+                        Saves.ElementAt(i).Execute();
+
+                    }
+                    else
+                    {
+						OnFailedExecute.Invoke(i+1);
+
+					}
+                }
+            }
+        }
+
+        public void ExecuteSaves(List<int> saveNumbers, Action<int> OnSaveExecute, Action<int> OnFailedExecute)
+        {
+			if (Saves.Count == 0) { throw new InvalidOperationException("Cannot execute specified saves : there are nos saves currently registered."); }
+
+			foreach (int saveNumber in saveNumbers)
+            {
+                if(saveNumber > 0 && saveNumber <= Saves.Count)
+                {
+                    OnSaveExecute.Invoke(saveNumber);
+					Saves.ElementAt(saveNumber-1).Execute();
+				}
+                else
+                {
+                    OnFailedExecute.Invoke(saveNumber);
+                }
+
+            }
+        }
+
         // Look for the save with the given id and return it
         public Save GetSave(int id) => Saves.Find(s => s.Id == id);
         // Return all saves in the list
@@ -123,5 +197,31 @@ namespace Project_Easy_Save.Classes
                 SaveToDelete = Saves[++currentIndexOfSelectedInList % NumberOfSaves];
             }   
         }
-    }
+
+		private List<Save> DeserializeSaves()
+		{
+			string? logFormat = Creator.GetSettingsInstance().LogFormat;
+            string pathToSaveslog = "saves/saves." + logFormat;
+
+            if (!File.Exists(pathToSaveslog)) { return new List<Save>(); }
+
+            string logString = File.ReadAllText(pathToSaveslog);
+
+			switch (logFormat)
+			{
+				case "xml":
+					var mySerializer = new XmlSerializer(typeof(List<Save>));
+					using (TextReader reader = new StringReader(logString))
+					{
+						return (List<Save>)mySerializer.Deserialize(reader)!;
+					}
+
+				case "json":
+					return JsonSerializer.Deserialize<List<Save>>(logString)!;
+
+				default:
+					return null;
+			}
+		}
+	}
 }

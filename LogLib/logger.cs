@@ -53,5 +53,16 @@ namespace LogLib
 
 			File.WriteAllText(logFilePath, logMessage);
 		}
+
+        public void OverwriteLog(string logMessage, string filename, string logDirectory)
+        {
+            if (!Directory.Exists(logDirectory))
+            {
+                Directory.CreateDirectory(logDirectory);
+            }
+
+            string fullFilePath = Path.Combine(logDirectory, filename);
+			File.WriteAllText(fullFilePath, logMessage);
+		}
 	}
 }

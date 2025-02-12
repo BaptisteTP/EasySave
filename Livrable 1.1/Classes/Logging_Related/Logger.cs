@@ -110,10 +110,12 @@ namespace Project_Easy_Save.Classes
 
 		public void OnSaveCreated(object sender, EventArgs eventArgs)
 		{
+			List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
+			WriteSavesInLog(saves);
+
 			// Change the status json file
 			List<FileCopyPreviewLog> logList = new List<FileCopyPreviewLog>();
-
-			foreach (Save save in Creator.GetSaveStoreInstance().GetAllSaves())
+			foreach (Save save in saves)
 			{
 				logList.Add(new FileCopyPreviewLog(id: save.Id,
 													name: save.Name,
@@ -131,6 +133,24 @@ namespace Project_Easy_Save.Classes
 
 			//Log to real time
 			LogLibLogger.WriteLog(stringToLog, pathToWriteTo);
+		}
+
+		private void WriteSavesInLog(List<Save> saves)
+		{
+			string saveLog = SerializeLogObject(saves);
+			LogLibLogger.OverwriteLog(saveLog, "saves." + Creator.GetSettingsInstance().LogFormat, "saves/");
+		}
+
+		public void OnSaveDeleted(object sender, EventArgs eventargs)
+		{
+			List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
+			WriteSavesInLog(saves);
+		}
+
+		public void OnSaveEdited(object sender, EventArgs eventargs)
+		{
+			List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
+			WriteSavesInLog(saves);
 		}
 
 		public void OnSaveStarted(object sender, Save save)
@@ -194,6 +214,7 @@ namespace Project_Easy_Save.Classes
 					XmlWriterSettings xmlSetting = new XmlWriterSettings()
 					{
 						Indent = true,
+						
 					};
 
 					using (var sw = new StringWriter())
@@ -203,6 +224,11 @@ namespace Project_Easy_Save.Classes
 							if (log is Dailylog)
 							{
 								XmlSerializer xsSubmit = new XmlSerializer(typeof(Dailylog));
+								xsSubmit.Serialize(writer, log);
+							}
+							else if (log is List<Save>)
+							{
+								XmlSerializer xsSubmit = new XmlSerializer(typeof(List<Save>));
 								xsSubmit.Serialize(writer, log);
 							}
 							else if (log is List<FileCopyPreviewLog>)
