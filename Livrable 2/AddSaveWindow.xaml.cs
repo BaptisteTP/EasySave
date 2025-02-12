@@ -50,7 +50,6 @@ namespace EasySave2._0
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             HomePage HomePage = new HomePage();
-            HomePage.Show();
             this.Close();
         }
 

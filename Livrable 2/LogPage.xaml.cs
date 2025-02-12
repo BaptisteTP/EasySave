@@ -24,5 +24,9 @@ namespace EasySave2._0
         {
             InitializeComponent();
         }
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new HomePage());
+        }
     }
 }

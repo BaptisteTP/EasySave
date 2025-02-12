@@ -1,20 +1,20 @@
-﻿<Window x:Class="EasySave2._0.HomePage"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EasySave2._0" d:DataContext="{d:DesignInstance Type=local:HomeViewModel}"
-        mc:Ignorable="d"
-        Title="HomePage" Height="720" Width="1280" Background="White" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+﻿<Page x:Class="EasySave2._0.HomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:EasySave2._0" d:DataContext="{d:DesignInstance Type=local:HomeViewModel}"
+      mc:Ignorable="d"
+      Title="HomePage">
 
     <Grid>
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}"/>
 
         <TextBlock x:Name="Text" Text="Liste de toutes les opérations de sauvegarde :"
-                       FontSize="24" FontWeight="Bold" Margin="90,150,0,0"/>
+               FontSize="24" FontWeight="Bold" Margin="90,150,0,0"/>
 
         <ListView ItemsSource="{Binding PagedItems}" Width="1090" Background="Transparent" BorderThickness="0"
-                      ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="400" Margin="95,196,95,108">
+              ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="400" Margin="95,196,95,108">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="Background" Value="Transparent"/>
@@ -31,7 +31,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border Background="#F3F1F1" Padding="10" CornerRadius="10" Width="1040" Margin="0,0,0,10" Height="60" 
-                                HorizontalAlignment="Center">
+                        HorizontalAlignment="Center">
                         <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="980">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding ID}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" FontWeight="Bold" FontSize="16"/>
@@ -39,15 +39,15 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                 <Button Margin="10,0,40,0" Style="{StaticResource NoHighlightButton}" Command="{Binding PlayCommand}" Cursor="Hand"
-                                            HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    HorizontalAlignment="Right" VerticalAlignment="Center">
                                     <Image Source="assets/images/PlayButton.png" Width="24" Height="24"/>
                                 </Button>
                                 <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Command="{Binding EditCommand}" Cursor="Hand"
-                                            HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    HorizontalAlignment="Right" VerticalAlignment="Center">
                                     <Image Source="assets/images/EditButton.png" Width="24" Height="24"/>
                                 </Button>
                                 <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Command="{Binding DeleteCommand}" Cursor="Hand"
-                                            HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    HorizontalAlignment="Right" VerticalAlignment="Center">
                                     <Image Source="assets/images/SupButton.png" Width="24" Height="24"/>
                                 </Button>
                             </StackPanel>
@@ -69,12 +69,12 @@
 
 
         <Button x:Name="CreateButton" Width="170" Height="44" Content="+ Ajouter" FontSize="24" FontWeight="Bold"
-                Background="#17CF14" Foreground="White" BorderBrush="Green" BorderThickness="2" Command="{Binding CreateSaveCommand}" Cursor="Hand"
-                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="90,0,0,50" Click="CreateButton_Click">
+        Background="#17CF14" Foreground="White" BorderBrush="Green" BorderThickness="2" Command="{Binding CreateSaveCommand}" Cursor="Hand"
+        HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="90,0,0,50" Click="CreateButton_Click">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">
+                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </ControlTemplate>
@@ -88,4 +88,4 @@
             </StackPanel>
         </Button>
     </Grid>
-</Window>
+</Page>

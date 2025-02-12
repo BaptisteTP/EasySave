@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace EasySave2._0
@@ -17,7 +18,7 @@ namespace EasySave2._0
     /// <summary>
     /// Logique d'interaction pour HomePage.xaml
     /// </summary>
-    public partial class HomePage : Window
+    public partial class HomePage : Page
     {
         public HomePage()
         {
@@ -34,14 +35,12 @@ namespace EasySave2._0
         {
             AddSaveWindow addSaveWindow = new AddSaveWindow();
             addSaveWindow.Show();
-            this.Close();
         }
 
         private void OptionButton_Click(object sender, RoutedEventArgs e)
         {
             SettingWindow SettingWindow = new SettingWindow();
             SettingWindow.Show();
-            this.Close();
         }
     }
 }
