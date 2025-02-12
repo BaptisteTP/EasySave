@@ -20,5 +20,12 @@ namespace EasySave2._0
         {
             InitializeComponent();
         }
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            LogWindow logWindow = new LogWindow();
+            logWindow.Show();
+            this.Close();
+
+        }
     }
 }
