@@ -10,37 +10,37 @@
         </Grid.RowDefinitions>
 
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,40,0,0">
             <Image Source="assets/images/EasySaveLogo.png" Width="427" Height="131"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Margin="20,10,20,0">
-            <TextBlock Text="Ajouter une nouvelle sauvegarde :" FontWeight="Bold" Margin="0,0,0,10"/>
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+        <StackPanel Grid.Row="1" Margin="70,20,0,0">
+            <TextBlock Text="Ajouter une nouvelle sauvegarde :" FontWeight="Bold" Margin="0,20,0,0"/>
+            <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                 <TextBlock Text="Nom :"/>
                 <TextBox Name="txtNom" Width="459" Margin="10,0,0,0"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
                 <TextBlock Text="Type :"/>
-                <RadioButton Content="Complete" GroupName="Type" IsChecked="True" Margin="5,5,10,0" VerticalAlignment="Center"/>
-                <RadioButton Content="Incrementielle" GroupName="Type" Margin="10,5,0,0" VerticalAlignment="Center"/>
+                <RadioButton Content="Complete" GroupName="Type" IsChecked="True" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                <RadioButton Content="Incrementielle" GroupName="Type" Margin="10,0,0,0" VerticalAlignment="Center"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBlock Text="Source :"/>
+            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                <TextBlock Text="Source :" Margin="0,5,0,0"/>
                 <TextBox Name="SourceFolderBox" Width="606" Margin="10,0,0,0"/>
                 <Button Content="..." Width="60" Height="50" FontSize="18" Click="SourceFolder_click" Margin="5,0,0,0"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBlock Text="Destination :"/>
+            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                <TextBlock Text="Destination :" Margin="0,5,0,0"/>
                 <TextBox Name="DestinationFolderBox" Width="557" Margin="10,0,0,0"/>
                 <Button Content="..." Width="60" Height="50" FontSize="18" Click="DestinationFolder_Click" Margin="5,0,0,0"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">
-                <Button Content="? Sauvegarder" Background="Green" Foreground="White" Width="210" Margin="5" Height="46">
+            <StackPanel Orientation="Horizontal" Margin="0,40,0,0" HorizontalAlignment="Center">
+                <Button Content="✔ Sauvegarder" Background="Green" Foreground="White" Width="210" Margin="0,0,0,0" Height="46">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">
@@ -52,23 +52,22 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,410,20,34" Width="197">
-            <Button Content="? Option" Width="167" Margin="10" Height="42">
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">
-                            <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,70,40">
+            <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" 
+                    VerticalAlignment="Bottom" Margin="0,0,0,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Option" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,0,0" Height="37"/>
+                    <Image Source="assets/images/Option.png" Width="24" Height="24" VerticalAlignment="Center"/>
+                </StackPanel>
             </Button>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,418,0,34" Width="190">
-            <Button Content="? Annuler" Background="Red" Foreground="White" Width="178" Margin="5" Height="45" Cursor="Hand">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="70,0,0,40">
+            <Button Content="✖ Annuler" Background="Red" Foreground="White" Width="178" Margin="0,0,0,0" Height="45" Cursor="Hand">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="25">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="25">
                             <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
