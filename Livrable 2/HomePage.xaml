@@ -5,87 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasySave2._0"
         mc:Ignorable="d"
-        Title="HomePage" Height="720" Width="1280" Background="White" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
-
+        Title="HomePage" Height="720" Width="1280" Background="White">
     <Grid>
-        <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0"/>
-
-            <TextBlock x:Name="Text" Text="Liste de toutes les opérations de sauvegarde :"
-                       FontSize="24" FontWeight="Bold" Margin="90,150,0,0"/>
-
-            <ListView ItemsSource="{Binding PagedItems}" Width="1090" Background="Transparent" BorderThickness="0"
-                      ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="400" Margin="95,196,95,108">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}">
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ListViewItem">
-                                    <ContentPresenter/>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.ItemContainerStyle>
-
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Border Background="#F3F1F1" Padding="10" CornerRadius="10" Width="1080" Margin="0,0,0,10" Height="60" 
-                                HorizontalAlignment="Center">
-                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="980">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding ID}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" FontWeight="Bold" FontSize="16"/>
-                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" FontWeight="Bold" FontSize="16"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Margin="10,0,40,0" Style="{StaticResource NoHighlightButton}" Command="{Binding PlayCommand}" Cursor="Hand"
-                                            HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Image Source="assets/images/PlayButton.png" Width="24" Height="24"/>
-                                    </Button>
-                                    <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Command="{Binding EditCommand}" Cursor="Hand"
-                                            HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Image Source="assets/images/EditButton.png" Width="24" Height="24"/>
-                                    </Button>
-                                    <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Command="{Binding DeleteCommand}" Cursor="Hand"
-                                            HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Image Source="assets/images/SupButton.png" Width="24" Height="24"/>
-                                    </Button>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,70">
-                <Button Style="{StaticResource NoHighlightButton}" Command="{Binding PreviousPageCommand}" Padding="10,5" Width="25" Cursor="Hand">
-                    <Image Source="assets/images/Previous.png"/>
-                </Button>
-                <TextBlock Text="{Binding CurrentPageFormatted}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" Margin="10"/>
-                <Button Style="{StaticResource NoHighlightButton}" Command="{Binding NextPageCommand}" Padding="10,5" Width="25" Cursor="Hand">
-                    <Image Source="assets/images/Next.png"/>
-                </Button>
-            </StackPanel>
-
-
-            <Button x:Name="CreateButton" Width="170" Height="44" Content="+ Ajouter" FontSize="24" FontWeight="Bold"
-                    Background="#17CF14" Foreground="White" BorderBrush="Green" BorderThickness="2" Command="{Binding CreateSaveCommand}" Cursor="Hand"
-                    HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="90,0,0,50">
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-
-        <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,90,50">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Option" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" Height="37"/>
-                <Image Source="assets/images/Option.png" Width="24" Height="24" VerticalAlignment="Center"/>
-            </StackPanel>
-        </Button>
+        <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}" />
     </Grid>
 </Window>
