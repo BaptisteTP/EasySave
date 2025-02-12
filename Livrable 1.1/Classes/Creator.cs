@@ -44,7 +44,11 @@ namespace Project_Easy_Save.Classes
 				_pasterInstance.SaveStarted += _loggerInstance.OnSaveStarted;
 				_pasterInstance.SaveFinished += _loggerInstance.OnSaveFinished;
 				_saveStoreInstance.SaveCreated += _loggerInstance.OnSaveCreated;
+				_saveStoreInstance.SaveDeleted += _loggerInstance.OnSaveEdited;
+				_saveStoreInstance.SaveEdited += _loggerInstance.OnSaveDeleted;
 				Settings.LogFomatChanged += _loggerInstance.OnSaveCreated;
+
+				_saveStoreInstance.LoadLoggedSaves();
 			}
 			return _saveStoreInstance;
 

@@ -36,6 +36,11 @@ namespace Project_Easy_Save.Classes
 			LastExecuteDate = lastExecutedDate;
 		}
 
+		public Save()
+		{
+			
+		}
+
 		public void Execute()
         {
             // This method is called when the user wants to execute a save.
