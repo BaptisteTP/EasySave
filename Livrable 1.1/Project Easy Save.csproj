@@ -14,10 +14,6 @@
 		<TrimmableAssembly Include="Project_Easy_Save.Classes" />
 	</ItemGroup>
 
-	<ItemGroup>
-    <Folder Include="Enums\" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\LogLib\LogLib.csproj" />
   </ItemGroup>

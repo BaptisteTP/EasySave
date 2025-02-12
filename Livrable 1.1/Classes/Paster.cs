@@ -16,6 +16,7 @@ namespace Project_Easy_Save.Classes
         public event EventHandler<CopyDirectoryEventArgs>? OnDirectoryCopied;
         public event EventHandler<FileCopyPreviewEventArgs>? OnFileCopyPreview;
         public event EventHandler<FileCopyEventArgs>? OnFileCopied;
+		public event EventHandler<Save>? SaveStarted;
 		public event EventHandler<Save>? SaveFinished;
 
 		public bool BeginCopyPaste(Save executedSave)
@@ -44,6 +45,8 @@ namespace Project_Easy_Save.Classes
 			{
 				return false;
 			}
+
+			SaveStarted?.Invoke(this, executedSave);
 
 			List<string> remainingFiles = new List<string>(eligibleFiles);
 			foreach (string fileFullName in Directory.GetFiles(executedSave.SourcePath))
@@ -110,6 +113,8 @@ namespace Project_Easy_Save.Classes
 			{
 				return false;
 			}
+
+			SaveStarted?.Invoke(this, executedSave);
 
 			List<string> remainingFiles = new List<string>(eligibleFiles);
 			foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))

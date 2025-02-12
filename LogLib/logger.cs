@@ -13,7 +13,7 @@ namespace LogLib
         /// </summary>
         /// <param name="logMessage">The information you want to log</param>
         /// <param name="logDirectory">The path to the directory you want to log to</param>
-        public void WriteDailyLog(string logMessage, string logDirectory)
+        public void WriteDailyLog(string logMessage, string logDirectory, string extension)
         {
         
             string saveLogDirectory = Path.Combine(logDirectory, "save-log");
@@ -23,7 +23,7 @@ namespace LogLib
                 Directory.CreateDirectory(saveLogDirectory);
             }
             
-            string logFilePath = Path.Combine(saveLogDirectory, $"{DateTime.Now:yyyy-MM-dd}.json");
+            string logFilePath = Path.Combine(saveLogDirectory, $"{DateTime.Now:yyyy-MM-dd}" + extension);
 
             File.AppendAllText(logFilePath, logMessage);
         }
@@ -38,6 +38,20 @@ namespace LogLib
 			string saveLogFile = Path.Combine(logDirectory, "realTimeLog.json");
 
             File.WriteAllText(saveLogFile, logMessage);
+		}
+
+        public void OverwrtieDailyLog(string logMessage, string logDirectory, string extension)
+        {
+			string saveLogDirectory = Path.Combine(logDirectory, "save-log");
+
+			if (!Directory.Exists(saveLogDirectory))
+			{
+				Directory.CreateDirectory(saveLogDirectory);
+			}
+
+			string logFilePath = Path.Combine(saveLogDirectory, $"{DateTime.Now:yyyy-MM-dd}" + extension);
+
+			File.WriteAllText(logFilePath, logMessage);
 		}
 	}
 }

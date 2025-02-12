@@ -13,7 +13,7 @@ namespace Project_Easy_Save.Classes
         // It can create, edit, delete, display and execute saves.
 
         private List<Save> Saves = [];
-        public event EventHandler<Save>? SaveCreated;
+        public event EventHandler? SaveCreated;
         public bool CanAddSave => NumberOfSaves < MaximumNumberOfSave;
         public bool CanExecuteSave => NumberOfSaves > 0;
         public int NumberOfSaves => Saves.Count;
@@ -35,7 +35,7 @@ namespace Project_Easy_Save.Classes
                 type);
 
 			Saves.Add(newSave);
-            SaveCreated?.Invoke(this, newSave);
+            SaveCreated?.Invoke(this, EventArgs.Empty);
 
             return CurrentAvailableID++;
         }

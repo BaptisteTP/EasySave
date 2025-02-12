@@ -30,5 +30,10 @@ namespace Project_Easy_Save.Classes
 			NbFilesLeftToDo = nbFilesLeftToDo;
 			Progression = progression;
 		}
+
+		public FileCopyPreviewLog()
+		{
+			
+		}
 	}
 }

@@ -41,8 +41,10 @@ namespace Project_Easy_Save.Classes
 				_pasterInstance.OnFileCopyPreview += _loggerInstance.OnCopyFilePreview;
 				_pasterInstance.OnFileCopied += _loggerInstance.OnCopyFile;
 				_pasterInstance.OnDirectoryCopied += _loggerInstance.OnCopyDirectory;
+				_pasterInstance.SaveStarted += _loggerInstance.OnSaveStarted;
 				_pasterInstance.SaveFinished += _loggerInstance.OnSaveFinished;
 				_saveStoreInstance.SaveCreated += _loggerInstance.OnSaveCreated;
+				Settings.LogFomatChanged += _loggerInstance.OnSaveCreated;
 			}
 			return _saveStoreInstance;
 

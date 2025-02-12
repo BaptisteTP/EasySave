@@ -43,6 +43,7 @@ namespace Project_Easy_Save.Classes
 					//Show settings prompt
 					case '3':
                         settingsPrompt.Interact();
+
                         break;
 
                     //Leave app

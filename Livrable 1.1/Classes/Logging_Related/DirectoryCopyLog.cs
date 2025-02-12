@@ -20,5 +20,10 @@ namespace Project_Easy_Save.Classes
 			DirectoryTransferTime = directoryTransferTime;
 			Time = time;
 		}
+
+		public DirectoryCopyLog()
+		{
+			
+		}
 	}
 }

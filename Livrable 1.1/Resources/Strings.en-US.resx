@@ -180,7 +180,8 @@ Please choose a save type:
     <value>Which setting do you want to change?
     1- Language 
     2- Directory of daily logs
-    3- Directory of real-time logs</value>
+    3- Directory of real-time logs
+    4- Logs format</value>
   </data>
   <data name="AskUserNewFile" xml:space="preserve">
     <value>What is the new file? (type 'exit' to cancel)</value>
@@ -200,6 +201,13 @@ Please choose a save type:
   <data name="InformUser_ChooseSave" xml:space="preserve">
     <value>Please choose a save to execute the operation.
 Otherwise, hit the “esc” key to go back.</value>
+  </data>
+  <data name="InformUser_CurrentLogFormat" xml:space="preserve">
+    <value>The logs are currently formated as : {0}
+
+Please choose a new format listed below :
+    1- xml
+    2- json</value>
   </data>
   <data name="InformUser_DeleteSave" xml:space="preserve">
     <value>The save has been deleted!</value>
