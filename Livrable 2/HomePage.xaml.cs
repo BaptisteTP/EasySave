@@ -22,6 +22,17 @@ namespace EasySave2._0
         public HomePage()
         {
             InitializeComponent();
+            DataContext = new HomeViewModel();
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void CreateButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
