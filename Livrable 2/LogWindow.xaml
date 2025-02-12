@@ -18,7 +18,7 @@
 					<RadioButton Content="JSON" GroupName="LogFormat" Width="120" Height="24" FontSize="18" Margin="10,0,10,0"/>
 					<RadioButton Content="XML" GroupName="LogFormat" Width="120" Height="24" FontSize="18" Margin="10,0,10,0"/>
 				</StackPanel>
-				<Button Content="Suivant ->" Width="200" Height="50" FontSize="18" HorizontalAlignment="Center" Click="Button_Click"/>
+				<Button Content="Suivant ->" Style="{StaticResource NextButton}" Width="200" Height="50" FontWeight="Bold" FontSize="22" HorizontalAlignment="Center" Click="Button_Click" Margin="0,55,0,0"/>
 			</StackPanel>
 		</Canvas>
 	</Grid>
