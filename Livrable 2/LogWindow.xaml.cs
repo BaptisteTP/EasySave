@@ -23,9 +23,11 @@ namespace EasySave2._0
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-
+            HomePage homePage = new HomePage();
+            homePage.Show();
+            this.Close();
         }
     }
 }

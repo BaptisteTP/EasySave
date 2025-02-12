@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasySave2._0"
         mc:Ignorable="d"
-        Title="StartPage" Height="720" Width="1280" Background="White">
+        Title="StartPage" Height="720" Width="1280" Background="White"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo1}" />
 
@@ -14,16 +15,17 @@
            HorizontalAlignment="Center" VerticalAlignment="Center"
            FontSize="24" FontWeight="SemiBold" Margin="0,0,0,0"/>
 
-        <Button x:Name="FrenchButton" Width="149" Height="99" Margin="0,250,300,0">
+        <Button x:Name="FrenchButton" Width="149" Height="99" Margin="0,250,300,0" Cursor="Hand">
             <Image Source="assets/images/FrenchButton.png"/>
         </Button>
 
-        <Button x:Name="EnglishButton" Width="189" Height="99" Margin="300,250,0,0">
+        <Button x:Name="EnglishButton" Width="189" Height="99" Margin="300,250,0,0" Cursor="Hand">
             <Image Source="assets/images/EnglishButton.png"/>
         </Button>
 
-        <Button x:Name="NextButton" Style="{StaticResource NextButton}" Margin="0,550,0,0">
+        <Button x:Name="NextButton" Style="{StaticResource NextButton}" Margin="0,550,0,0" Click="NextButton_Click" Cursor="Hand">
             <TextBlock Text="Suivant ->" FontSize="22" FontWeight="Bold"/>
         </Button>
     </Grid>
 </Window>
+    
