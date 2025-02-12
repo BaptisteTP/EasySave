@@ -7,7 +7,6 @@
         <Style x:Key="NextButton" TargetType="Button">
             <Setter Property="Width" Value="145"/>
             <Setter Property="Height" Value="44"/>
-            <Setter Property="Margin" Value="0,550,0,0"/>
             <Setter Property="Background" Value="#D9D9D9"/>
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="BorderThickness" Value="2"/>

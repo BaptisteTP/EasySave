@@ -22,7 +22,7 @@
             <Image Source="assets/images/EnglishButton.png"/>
         </Button>
 
-        <Button x:Name="NextButton" Style="{StaticResource NextButton}">
+        <Button x:Name="NextButton" Style="{StaticResource NextButton}" Margin="0,550,0,0">
             <TextBlock Text="Suivant ->" FontSize="22" FontWeight="Bold"/>
         </Button>
     </Grid>
