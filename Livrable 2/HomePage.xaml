@@ -81,7 +81,7 @@
             </Button.Template>
         </Button>
 
-        <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,90,50">
+        <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,90,50" Click="OptionButton_Click">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Text="Option" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" Height="37"/>
                 <Image Source="assets/images/Option.png" Width="24" Height="24" VerticalAlignment="Center"/>

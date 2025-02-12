@@ -46,5 +46,19 @@ namespace EasySave2._0
                 // Do something with the result
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            HomePage HomePage = new HomePage();
+            HomePage.Show();
+            this.Close();
+        }
+
+        private void OptionButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingWindow SettingWindow = new SettingWindow();
+            SettingWindow.Show();
+            this.Close();
+        }
     }
 }
