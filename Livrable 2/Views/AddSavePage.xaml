@@ -61,7 +61,7 @@
 
             <StackPanel Orientation="Horizontal" Margin="0,60,0,0" HorizontalAlignment="Center">
                 <Button Content="✔ Sauvegarder" Background="Green" Foreground="White" Width="210" 
-                        Margin="0,0,0,0" Height="46" FontSize="20" FontWeight="Bold" Cursor="Hand" Command="{Binding SaveCommand}">
+                        Margin="0,0,0,0" Height="46" FontSize="20" FontWeight="Bold" Cursor="Hand" Command="{Binding SaveCommand}" Click="Button_Click">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">

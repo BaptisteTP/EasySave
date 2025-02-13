@@ -15,6 +15,12 @@ namespace EasySave2._0.ViewModels
     {
         private static ResourceManager _resourceMangerInstance;
         private static SaveStore _saveStoreInstance;
+        private static HomePage _homePage;
+        private static AddSavePage _addSavePage;
+        public static LogPage _logPage;
+        public static MainWindow _mainWindow;
+        public static SettingPage _settingPage;
+        public static WelcomePage _welcomePage;
         //private static Paster _pasterInstance;
         //private static Settings _settingsInstance;
         //private static Logger _loggerInstance;
@@ -27,6 +33,15 @@ namespace EasySave2._0.ViewModels
                 _resourceMangerInstance = new ResourceManager("Project_Easy_Save.Resources.Strings", Assembly.GetExecutingAssembly());
             }
             return _resourceMangerInstance;
+        }
+
+        public static HomePage GetHomePageInstance() 
+        {
+            if (_homePage == null)
+            {
+                _homePage = new HomePage();
+            }
+            return _homePage;
         }
 
         // Returns a save store instance

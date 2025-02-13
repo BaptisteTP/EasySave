@@ -29,7 +29,6 @@ namespace EasySave2._0.ViewModels
         private void CreateSave()
         {
             saveStore.CreateNewSave(Name, SaveType.Full, SourcePath, DestinationPath);
-
         }
     }
 }

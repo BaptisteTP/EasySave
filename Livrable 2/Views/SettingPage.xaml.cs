@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using EasySave2._0.ViewModels;
 using Microsoft.Win32;
 
 namespace EasySave2._0
@@ -41,7 +42,7 @@ namespace EasySave2._0
 
         private void TerButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new HomePage());
+            NavigationService.GoBack();
         }
     }
 }
