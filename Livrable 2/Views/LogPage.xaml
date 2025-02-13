@@ -33,6 +33,11 @@
                 <TextBox Name="LogFolderPath" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
                 <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Click="BrowseFolder_Click"/>
             </StackPanel>
+            <TextBlock Text="Les logs journalier sont actuellement stockées dans le dossier suivant :" FontWeight="Bold" FontSize="24" TextAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,20">
+                <TextBox Name="LogDayFolderPath" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
+                <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Click="BrowseFolderDay_Click"/>
+            </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,20">
                 <TextBlock Text="Logs en JSON ou XML : " FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,20,0"/>
                 <RadioButton Content="JSON" GroupName="LogFormat" IsChecked="True" Cursor="Hand"/>

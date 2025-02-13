@@ -43,5 +43,17 @@ namespace EasySave2._0
                 LogFolderPath.Text = folderDialog.FolderName;
             }
         }
+        private void BrowseFolderDay_Click(object sender, RoutedEventArgs e)
+        {
+            var folderDialog = new OpenFolderDialog
+            {
+
+            };
+
+            if (folderDialog.ShowDialog() == true)
+            {
+                LogFolderPath.Text = folderDialog.FolderName;
+            }
+        }
     }
 }
