@@ -43,10 +43,11 @@ namespace EasySave2._0
         {
             Items = new ObservableCollection<ItemViewModel>();
             var Saves = saveStore.GetAllSaves();
-            foreach(var save in Saves)
+            foreach (var save in Saves)
             {
                 new ItemViewModel(save.Id.ToString(), save.Name);
             }
+            
             
 
             PagedItems = new ObservableCollection<ItemViewModel>();
@@ -94,6 +95,17 @@ namespace EasySave2._0
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        public void UpdateSave()
+        {
+            var Saves = saveStore.GetAllSaves();
+            Items.Clear();
+            foreach (var save in Saves)
+            {
+                Items.Add(new ItemViewModel(save.Id.ToString(), save.Name));
+            }
+            UpdatePagedItems();
+            CurrentPage = 1;
         }
     }
 }

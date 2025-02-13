@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Navigation;
 
 namespace EasySave2._0.ViewModels
 {
     public class AddSaveViewModel : ViewModelBase
     {
+        public event EventHandler? SaveCreated;
         public ICommand SaveCommand { get;}
-
         public Save SaveToAdd { get; set; } = new Save();
 
         public AddSaveViewModel()
@@ -29,6 +30,7 @@ namespace EasySave2._0.ViewModels
         {
 			saveStore.CreateNewSave(SaveToAdd.Name, SaveType.Full, SaveToAdd.SourcePath, SaveToAdd.DestinationPath);
             ClearFields();
+            SaveCreated?.Invoke(this, EventArgs.Empty);
 		}
 
         private void ClearFields()
