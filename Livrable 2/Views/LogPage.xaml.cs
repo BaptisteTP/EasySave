@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace EasySave2._0
 {
@@ -27,6 +28,19 @@ namespace EasySave2._0
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new HomePage());
+        }
+
+        private void BrowseFolder_Click(object sender, RoutedEventArgs e)
+        {
+            var folderDialog = new OpenFolderDialog
+            {
+
+            };
+
+            if (folderDialog.ShowDialog() == true)
+            {
+                LogFolderPath.Text = folderDialog.FolderName;
+            }
         }
     }
 }
