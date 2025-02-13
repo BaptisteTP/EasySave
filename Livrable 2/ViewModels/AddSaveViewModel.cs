@@ -2,10 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Navigation;
+using System.Xml.Linq;
 using System.Windows.Navigation;
 
 namespace EasySave2._0.ViewModels
@@ -14,14 +17,45 @@ namespace EasySave2._0.ViewModels
     {
         public event EventHandler? SaveCreated;
         public ICommand SaveCommand { get;}
-        public Save SaveToAdd { get; set; } = new Save();
+
+        public Save SaveToAdd { get; } = new Save();
 
         public AddSaveViewModel()
         {
-            SaveCommand = new RelayCommand(_ => CreateSave(), _ => CanCreateSave());
+			SaveToAdd.OnValidateProperty += SaveToAdd_OnValidateProperty;
+			SaveCommand = new RelayCommand(_ => CreateSave(), _ => CanCreateSave());
         }
 
-        private bool CanCreateSave()
+		private string SaveToAdd_OnValidateProperty(string propertyName)
+		{
+			string error = string.Empty;
+
+			switch (propertyName)
+			{
+				case nameof(SaveToAdd.Name):
+					if (string.IsNullOrWhiteSpace(SaveToAdd.Name))
+						error = "Le nom ne peut pas être vide";
+					break;
+
+				case nameof(SaveToAdd.SourcePath):
+					if (string.IsNullOrWhiteSpace(SaveToAdd.SourcePath))
+						error = "Le chemin source ne peut pas être vide. ";
+					if (!Directory.Exists(SaveToAdd.SourcePath))
+						error += $"Le dossier spécifié n'existe pas !";
+					break;
+
+				case nameof(SaveToAdd.DestinationPath):
+					if (string.IsNullOrWhiteSpace(SaveToAdd.DestinationPath))
+						error = "Le chemin de destination ne peut pas être vide. ";
+					if (!Directory.Exists(SaveToAdd.DestinationPath))
+						error += $"Le dossier spécifié n'existe pas !";
+					break;
+			}
+
+			return error;
+		}
+
+		private bool CanCreateSave()
         {
             return !string.IsNullOrEmpty(SaveToAdd.Name);
         }

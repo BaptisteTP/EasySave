@@ -1,5 +1,6 @@
 ﻿
 using EasySave2._0.Enums;
+using EasySave2._0.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,49 +13,39 @@ using System.Threading.Tasks;
 
 namespace EasySave2._0.ViewModels
 {
-	public class Save : INotifyPropertyChanged, IDataErrorInfo
+	public class Save : ValidationModelBase
     {
-		public string Error => string.Empty;
-		public event PropertyChangedEventHandler? PropertyChanged;
-
-		private void OnPropertyChanged([CallerMemberName] string propertyName = "")
-		{
-			if (PropertyChanged != null)
-			{
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-
 		// Create a save attribute for other classes to use.
-
 		public int Id { get; set; }
 
         private string name;
         public string Name
         {
             get { return name; }
-            set { name = value; OnPropertyChanged(); }
+            set { name = value; Validate(); OnPropertyChanged(); }
         }
 
 		private string sourcePath;
 		public string SourcePath
 		{
 			get { return sourcePath; }
-			set { sourcePath = value; OnPropertyChanged(); }
+			set { sourcePath = value; Validate(); OnPropertyChanged(); }
 		}
 
 		private string destinationPath;
 		public string DestinationPath
 		{
 			get { return destinationPath; }
-			set { destinationPath = value; OnPropertyChanged(); }
+			set { destinationPath = value; Validate(); OnPropertyChanged(); }
 		}
 
 		public SaveType Type { get; set; }
         public DateTime? LastExecuteDate { get; set; }
         public Save(int id, string name, string sourcePath, string destinationPath, SaveType type)
         {
-            Id = id;
+			this.CanValidate = true;
+
+			Id = id;
             Name = name;
             SourcePath = sourcePath;
             DestinationPath = destinationPath;
@@ -64,7 +55,9 @@ namespace EasySave2._0.ViewModels
 
         public Save(int id, string name, string sourcePath, string destinationPath, SaveType type, DateTime lastExecutedDate)
         {
-            Id = id;
+			this.CanValidate = true;
+
+			Id = id;
             Name = name;
             SourcePath = sourcePath;
             DestinationPath = destinationPath;
@@ -74,39 +67,7 @@ namespace EasySave2._0.ViewModels
 
 		public Save()
 		{
-			
-		}
-
-		public string this[string columnName]
-		{
-			get
-			{
-				string error = string.Empty;
-
-				switch (columnName)
-				{
-					case nameof(Name):
-						if (string.IsNullOrWhiteSpace(Name))
-							error = "Le nom ne peut pas être vide";
-						break;
-
-					case nameof(SourcePath):
-						if (string.IsNullOrWhiteSpace(SourcePath))
-							error = "Le chemin source ne peut pas être vide. ";
-						if (!Directory.Exists(SourcePath))
-							error += $"Le dossier \"{SourcePath}\" n'existe pas !";
-						break;
-
-					case nameof(DestinationPath):
-						if (string.IsNullOrWhiteSpace(DestinationPath))
-							error = "Le chemin de destination ne peut pas être vide. ";
-						if (!Directory.Exists(DestinationPath))
-							error += $"Le dossier \"{DestinationPath}\" n'existe pas !";
-						break;
-				}
-
-				return error;
-			}
+			this.CanValidate = true;
 		}
 
 		//public void Execute()

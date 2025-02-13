@@ -52,6 +52,15 @@ namespace EasySave2._0.ViewModels
             return _settingPage;
         }
 
+        public static AddSavePage GetAddSavePageInstance()
+        {
+            if(_addSavePage == null)
+            {
+				_addSavePage = new AddSavePage();
+            }
+            return _addSavePage;
+        }
+
         // Returns a save store instance
         public static SaveStore GetSaveStoreInstance()
         {
