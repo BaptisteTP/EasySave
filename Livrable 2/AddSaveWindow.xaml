@@ -42,29 +42,29 @@
             <TextBlock Text="Ajouter une nouvelle sauvegarde :" FontWeight="Bold" Margin="0,20,0,0"/>
             <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                 <TextBlock Text="Nom :" FontWeight="Bold"/>
-                <TextBox Name="txtNom" Width="459" Margin="10,0,0,0"/>
+                <TextBox Name="txtNom" Width="459" Margin="10,0,0,0" Text="{Binding Name}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
                 <TextBlock Text="Type :" FontWeight="Bold"/>
-                <RadioButton Content="Complete" GroupName="Type" IsChecked="True"/>
-                <RadioButton Content="Incrementielle" GroupName="Type"/>
+                <RadioButton Content="Complete" GroupName="Type" IsChecked="True" Name="Complete"/>
+                <RadioButton Content="Differentielle" GroupName="Type" Name="Differentielle"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
                 <TextBlock Text="Source :" Margin="0,5,0,0" FontWeight="Bold"/>
-                <TextBox Name="SourceFolderBox" Width="606" Margin="10,0,0,0"/>
+                <TextBox Name="SourceFolderBox" Width="606" Margin="10,0,0,0" Text="{Binding SourcePath}"/>
                 <Button Content="..." Width="60" Height="50" FontSize="18" Click="SourceFolder_click" Margin="5,0,0,0"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
                 <TextBlock Text="Destination :" Margin="0,5,0,0" FontWeight="Bold"/>
-                <TextBox Name="DestinationFolderBox" Width="557" Margin="10,0,0,0"/>
+                <TextBox Name="DestinationFolderBox" Width="557" Margin="10,0,0,0" Text="{Binding DestinationPath}"/>
                 <Button Content="..." Width="60" Height="50" FontSize="18" Click="DestinationFolder_Click" Margin="5,0,0,0"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,40,0,0" HorizontalAlignment="Center">
-                <Button Content="✔ Sauvegarder" Background="Green" Foreground="White" Width="210" Margin="0,0,0,0" Height="46">
+                <Button Content="✔ Sauvegarder" Background="Green" Foreground="White" Width="210" Margin="0,0,0,0" Height="46" Command="{Binding SaveCommand}" Click="Button_Click_1">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">

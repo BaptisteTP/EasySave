@@ -7,7 +7,7 @@ using EasySave2._0.ViewModels;
 
 namespace EasySave2._0
 {
-    public class HomeViewModel : INotifyPropertyChanged
+    public class HomeViewModel : ViewModelBase
     {
         private const int ItemsPerPage = 5;
         private int _currentPage = 1;
@@ -17,6 +17,7 @@ namespace EasySave2._0
 
         public ICommand NextPageCommand { get; }
         public ICommand PreviousPageCommand { get; }
+
         public string CurrentPageFormatted
         {
             get => $"{CurrentPage} / {TotalPages}";
@@ -40,24 +41,13 @@ namespace EasySave2._0
 
         public HomeViewModel()
         {
-            Items = new ObservableCollection<ItemViewModel>
+            Items = new ObservableCollection<ItemViewModel>();
+            var Saves = saveStore.GetAllSaves();
+            foreach(var save in Saves)
             {
-                new ItemViewModel("1", "Item 1"),
-                new ItemViewModel("2", "Item 2"),
-                new ItemViewModel("3", "Item 3"),
-                new ItemViewModel("4", "Item 4"),
-                new ItemViewModel("5", "Item 5"),
-                new ItemViewModel("6", "Item 6"),
-                new ItemViewModel("7", "Item 7"),
-                new ItemViewModel("7", "Item 7"),
-                new ItemViewModel("7", "Item 7"),
-                new ItemViewModel("7", "Item 7"),
-                new ItemViewModel("7", "Item 7"),
-                new ItemViewModel("7", "Item 7"),
-                new ItemViewModel("7", "Item 7"),
-                new ItemViewModel("7", "Item 7"),
-                new ItemViewModel("7", "Item 7"),
-            };
+                new ItemViewModel(save.Id.ToString(), save.Name);
+            }
+            
 
             PagedItems = new ObservableCollection<ItemViewModel>();
 
@@ -69,6 +59,7 @@ namespace EasySave2._0
         private void UpdatePagedItems()
         {
             PagedItems.Clear();
+            if (Items.Count == 0) return;
             var itemsToShow = Items.Skip((_currentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
             foreach (var item in itemsToShow)
             {

@@ -1,0 +1,47 @@
+﻿
+using EasySave2._0.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.AccessControl;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EasySave2._0.ViewModels
+{
+    public class Save
+    {
+        // Create a save attribute for other classes to use.
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string SourcePath { get; set; }
+        public string DestinationPath { get; set; }
+        public SaveType Type { get; set; }
+        public DateTime? LastExecuteDate { get; set; }
+        public Save(int id, string name, string sourcePath, string destinationPath, SaveType type)
+        {
+            Id = id;
+            Name = name;
+            SourcePath = sourcePath;
+            DestinationPath = destinationPath;
+            Type = type;
+            LastExecuteDate = null;
+        }
+
+        public Save(int id, string name, string sourcePath, string destinationPath, SaveType type, DateTime lastExecutedDate)
+        {
+            Id = id;
+            Name = name;
+            SourcePath = sourcePath;
+            DestinationPath = destinationPath;
+            Type = type;
+            LastExecuteDate = lastExecutedDate;
+        }
+
+        //public void Execute()
+        //{
+        //    // This method is called when the user wants to execute a save.
+        //    Creator.GetPasterInstance().BeginCopyPaste(this);
+        //}
+    }
+}

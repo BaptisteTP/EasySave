@@ -1,10 +1,13 @@
-﻿using Microsoft.Win32;
+﻿using EasySave2._0.Enums;
+using EasySave2._0.ViewModels;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace EasySave2._0
 {
@@ -16,7 +19,7 @@ namespace EasySave2._0
         public AddSaveWindow()
         {
             InitializeComponent();
-            DataContext = new HomeViewModel();
+            DataContext = new AddSaveViewModel();
         }
 
         private void SourceFolder_click(object sender, RoutedEventArgs e)
@@ -55,8 +58,13 @@ namespace EasySave2._0
 
         private void OptionButton_Click(object sender, RoutedEventArgs e)
         {
-            SettingWindow SettingWindow = new SettingWindow();
-            SettingWindow.Show();
+            SettingPage SettingPage = new SettingPage();
+            this.Close();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            HomePage HomePage = new HomePage();
             this.Close();
         }
     }
