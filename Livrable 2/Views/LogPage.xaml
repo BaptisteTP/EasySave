@@ -13,11 +13,9 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Border Width="20" Height="20" CornerRadius="10"
-                            BorderBrush="Black" BorderThickness="2"
-                            Background="White">
+                            <Border Width="20" Height="20" CornerRadius="10" BorderBrush="Black" BorderThickness="2" Background="White">
                                 <Ellipse Width="10" Height="10" Fill="Black"
-                                 Visibility="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                         Visibility="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             </Border>
                             <ContentPresenter Margin="5,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
@@ -37,8 +35,8 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,20">
                 <TextBlock Text="Logs en JSON ou XML : " FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                <RadioButton Content="JSON" GroupName="LogFormat" IsChecked="True"/>
-                <RadioButton Content="XML" GroupName="LogFormat"/>
+                <RadioButton Content="JSON" GroupName="LogFormat" IsChecked="True" Cursor="Hand"/>
+                <RadioButton Content="XML" GroupName="LogFormat" Cursor="Hand"/>
             </StackPanel>
         </StackPanel>
         <Button x:Name="NextButton" Style="{StaticResource NextButton}" VerticalAlignment="Bottom" Margin="0,0,0,100" Click="NextButton_Click" Cursor="Hand">
