@@ -33,8 +33,7 @@ namespace EasySave2._0
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-            AddSaveWindow addSaveWindow = new AddSaveWindow();
-            addSaveWindow.Show();
+            NavigationService.Navigate(new AddSavePage());
         }
 
         private void OptionButton_Click(object sender, RoutedEventArgs e)

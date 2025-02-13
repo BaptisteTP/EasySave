@@ -59,6 +59,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="ViewModels\HomeViewModel.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

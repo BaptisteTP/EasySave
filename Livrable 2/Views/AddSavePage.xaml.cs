@@ -1,19 +1,27 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace EasySave2._0
 {
     /// <summary>
-    /// Logique d'interaction pour HomePage.xaml
+    /// Logique d'interaction pour AddSavePage.xaml
     /// </summary>
-    public partial class AddSaveWindow : Window
+    public partial class AddSavePage : Page
     {
-        public AddSaveWindow()
+        public AddSavePage()
         {
             InitializeComponent();
             DataContext = new HomeViewModel();
@@ -23,13 +31,12 @@ namespace EasySave2._0
         {
             var folderDialog = new OpenFolderDialog
             {
-                // Set options here
+
             };
 
             if (folderDialog.ShowDialog() == true)
             {
                 SourceFolderBox.Text = folderDialog.FolderName;
-                // Do something with the result
             }
         }
 
@@ -37,27 +44,23 @@ namespace EasySave2._0
         {
             var folderDialog = new OpenFolderDialog
             {
-                // Set options here
+
             };
 
             if (folderDialog.ShowDialog() == true)
             {
                 DestinationFolderBox.Text = folderDialog.FolderName;
-                // Do something with the result
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            HomePage HomePage = new HomePage();
-            this.Close();
+            NavigationService.Navigate(new HomePage()); ;
         }
 
         private void OptionButton_Click(object sender, RoutedEventArgs e)
         {
-            SettingWindow SettingWindow = new SettingWindow();
-            SettingWindow.Show();
-            this.Close();
+            NavigationService.Navigate(new SettingPage());
         }
     }
 }
