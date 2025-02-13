@@ -21,7 +21,7 @@
             <Image Source="assets/images/FrenchButton.png" Height="101" Width="110" Margin="10,0,0,0"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="70,0,0,40">
-            <Button Content="✔ Terminer" Background="Green" Foreground="White" Width="178" Margin="0,0,0,0" Height="45" Cursor="Hand" Click="Button_Click">
+            <Button Content="✔ Terminer" Background="Green" Foreground="White" Width="178" Margin="0,0,0,0" Height="45" Cursor="Hand" Click="TerButton_Click">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 

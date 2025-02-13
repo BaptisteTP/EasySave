@@ -39,8 +39,8 @@ namespace EasySave2._0
 
         private void OptionButton_Click(object sender, RoutedEventArgs e)
         {
-            SettingWindow SettingWindow = new SettingWindow();
-            SettingWindow.Show();
+            NavigationService.Navigate(new SettingPage());
         }
     }
 }
+
