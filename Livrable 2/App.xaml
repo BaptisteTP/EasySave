@@ -35,26 +35,6 @@
             </Setter>
         </Style>
 
-        <Style x:Key="OptionButton" TargetType="Button">
-            <Setter Property="Width" Value="154"/>
-            <Setter Property="Height" Value="44"/>
-            <Setter Property="Background" Value="#D9D9D9"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                            BorderBrush="{TemplateBinding BorderBrush}" 
-                            BorderThickness="{TemplateBinding BorderThickness}" 
-                            CornerRadius="20">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <Style x:Key="BaseButtonStyle" TargetType="Button">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="20"/>
@@ -85,12 +65,33 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="TestButtonStyle" BasedOn="{StaticResource BaseButtonStyle}" TargetType="Button">
+        <Style x:Key="GreenButtonStyle" BasedOn="{StaticResource BaseButtonStyle}" TargetType="Button">
             <Setter Property="Background" Value="Green"/>
         </Style>
 
-        <Style x:Key="TeButtonStyle" BasedOn="{StaticResource BaseButtonStyle}" TargetType="Button">
+        <Style x:Key="RedButtonStyle" BasedOn="{StaticResource BaseButtonStyle}" TargetType="Button">
             <Setter Property="Background" Value="Red"/>
+        </Style>
+
+        <Style x:Key="OptionButton" BasedOn="{StaticResource BaseButtonStyle}" TargetType="Button">
+            <Setter Property="Width" Value="154"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Background" Value="#D9D9D9"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                    BorderBrush="{TemplateBinding BorderBrush}" 
+                    BorderThickness="{TemplateBinding BorderThickness}" 
+                    CornerRadius="20">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="NextButton" BasedOn="{StaticResource BaseButtonStyle}" TargetType="Button">

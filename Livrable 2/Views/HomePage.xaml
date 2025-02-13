@@ -11,7 +11,7 @@
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}"/>
 
         <TextBlock x:Name="Text" Text="Liste de toutes les opérations de sauvegarde :"
-               FontSize="24" FontWeight="Bold" Margin="90,150,0,0"/>
+                   FontSize="24" FontWeight="Bold" Margin="90,150,0,0"/>
 
         <ListView ItemsSource="{Binding PagedItems}" Width="1090" Background="Transparent" BorderThickness="0"
               ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="400" Margin="95,196,95,108">
@@ -39,7 +39,7 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                 <Button Margin="10,0,40,0" Style="{StaticResource NoHighlightButton}" Command="{Binding PlayCommand}" Cursor="Hand"
-                                    HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        HorizontalAlignment="Right" VerticalAlignment="Center">
                                     <Image Source="../assets/images/PlayButton.png" Width="24" Height="24"/>
                                 </Button>
                                 <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Command="{Binding EditCommand}" Cursor="Hand"
@@ -67,19 +67,8 @@
             </Button>
         </StackPanel>
 
-
-        <Button x:Name="CreateButton" Width="170" Height="44" Content="+ Ajouter" FontSize="24" FontWeight="Bold"
-                Background="#17CF14" Foreground="White" BorderBrush="Green" BorderThickness="2" Command="{Binding CreateSaveCommand}" Cursor="Hand"
-                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="100,0,0,100" Click="CreateButton_Click">
-            <Button.Template>
-                <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
+        <Button x:Name="CreateButton" Content="+ Ajouter" Click="CreateButton_Click" Style="{StaticResource GreenButtonStyle}" Width="170"
+                Height="44" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="100,0,0,100"/>
 
         <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" 
                 VerticalAlignment="Bottom" Margin="0,0,100,100" Click="OptionButton_Click">

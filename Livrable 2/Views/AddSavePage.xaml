@@ -21,7 +21,7 @@
                             <Border Width="20" Height="20" CornerRadius="10"
                             BorderBrush="Black" BorderThickness="2"
                             Background="White">
-                                <Ellipse Width="10" Height="10" Fill="Black"
+                                <Ellipse Width="10" Height="10" Fill="#FF007FCA"
                                  Visibility="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             </Border>
                             <ContentPresenter Margin="5,0,0,0" VerticalAlignment="Center"/>
@@ -41,6 +41,28 @@
                                 <AdornedElementPlaceholder/>
                             </Border>
                         </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Width="20" Height="20" CornerRadius="4"
+                                    BorderBrush="Black" BorderThickness="2"
+                                    Background="White">
+                                <Rectangle Width="12" Height="12" Fill="#FF007FCA"
+                                           Visibility="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            </Border>
+                            <ContentPresenter Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -86,8 +108,8 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="0,0,0,100" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-            <Button Content="✔ Sauvegarder" Background="Green" Foreground="White" Width="210" 
-            Margin="0,0,0,0" Height="46" FontSize="20" FontWeight="Bold" Cursor="Hand" Command="{Binding SaveCommand}">
+            <Button Content="✔ Sauvegarder" Style="{StaticResource GreenButtonStyle}" Width="210" 
+                    Margin="0,0,0,0" Height="46" FontSize="20" FontWeight="Bold" Cursor="Hand" Command="{Binding SaveCommand}">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">
@@ -101,12 +123,12 @@
         <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" 
                     VerticalAlignment="Bottom" Margin="0,0,100,100" Click="OptionButton_Click">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Option" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,0,0" Height="37"/>
+                <TextBlock Text="Option" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" Height="37"/>
                 <Image Source="../assets/images/Option.png" Width="24" Height="24" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
 
-        <Button Content="✖ Annuler" Background="Red" Foreground="White" Width="178" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+        <Button Content="✖ Annuler" Style="{StaticResource RedButtonStyle}" Width="178" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
                     Margin="100,0,0,100" Height="45" Cursor="Hand" Click="CancelButton_Click" FontWeight="Bold" FontSize="20">
             <Button.Template>
                 <ControlTemplate TargetType="Button">

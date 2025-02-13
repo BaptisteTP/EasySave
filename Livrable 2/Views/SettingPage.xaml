@@ -22,8 +22,8 @@
         <TextBlock FontSize="20" FontWeight="Bold" Text="Pour changer le dossier des logs en temps réel choisissez un nouveau dossier pour accueillir le dossier : " 
                    Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        <Button Width="170" Height="44" Content="✔ Terminer" FontSize="24" FontWeight="Bold"
-                Background="#17CF14" Foreground="White" BorderBrush="Green" BorderThickness="2" Command="{Binding CreateSaveCommand}" Cursor="Hand"
+        <Button Width="170" Height="44" Content="✔ Terminer" FontSize="24" FontWeight="Bold" Style="{StaticResource GreenButtonStyle}"
+                BorderThickness="2" Command="{Binding CreateSaveCommand}" Cursor="Hand"
                 HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="100,0,0,100" Click="TerButton_Click">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
