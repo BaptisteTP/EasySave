@@ -75,5 +75,5 @@ namespace EasySave2._0
             NavigationService.Navigate(homePage);
             ((HomeViewModel)homePage.DataContext).UpdateSave();
         }
-    }
+	}
 }

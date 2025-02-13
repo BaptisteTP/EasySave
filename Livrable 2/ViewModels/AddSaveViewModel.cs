@@ -10,68 +10,111 @@ using System.Windows.Input;
 using System.Windows.Navigation;
 using System.Xml.Linq;
 using System.Windows.Navigation;
+using EasySave2._0.Models;
 
 namespace EasySave2._0.ViewModels
 {
-    public class AddSaveViewModel : ViewModelBase
+    public class AddSaveViewModel : ValidationViewModelBase
     {
         public event EventHandler? SaveCreated;
         public ICommand SaveCommand { get;}
 
-        public Save SaveToAdd { get; } = new Save();
+        private string _saveName;
+
+        public string SaveName
+        {
+            get { return _saveName; }
+            set 
+            {
+                _saveName = value; 
+                OnPropertyChanged();
+
+                ClearError(nameof(SaveName));
+                if( _saveName == "")
+                {
+                    AddError(nameof(SaveName), "Le nom de la sauvegarde ne peut pas être vide.");
+                }
+            }
+        }
+
+        private string _sourcePath;
+
+        public string SourcePath
+        {
+            get { return _sourcePath; }
+            set
+            {
+                _sourcePath = value;
+                OnPropertyChanged();
+
+				ClearError(nameof(SourcePath));
+				if (_sourcePath == "")
+				{
+					AddError(nameof(SourcePath), "Le chemin source ne peut pas être vide.");
+				}
+                if (!Settings.UserHasRightPermissionInFolder(SourcePath))
+                {
+					AddError(nameof(SourcePath), "Le chemin source spécifié n'est pas valide.");
+				}
+
+			}
+        }
+
+        private string _destinationPath;
+
+        public string DestinationPath
+        {
+            get { return _destinationPath; }
+            set 
+            {
+                _destinationPath = value; 
+                OnPropertyChanged();
+
+				ClearError(nameof(DestinationPath));
+				if (_destinationPath == "")
+				{
+					AddError(nameof(DestinationPath), "Le chemin destination ne peut pas être vide.");
+				}
+				if (!Settings.UserHasRightPermissionInFolder(DestinationPath))
+				{
+					AddError(nameof(DestinationPath), "Le chemin source spécifié n'est pas valide.");
+				}
+			}
+        }
+
+
 
         public AddSaveViewModel()
         {
-			SaveToAdd.OnValidateProperty += SaveToAdd_OnValidateProperty;
 			SaveCommand = new RelayCommand(_ => CreateSave(), _ => CanCreateSave());
         }
 
-		private string SaveToAdd_OnValidateProperty(string propertyName)
-		{
-			string error = string.Empty;
-
-			switch (propertyName)
-			{
-				case nameof(SaveToAdd.Name):
-					if (string.IsNullOrWhiteSpace(SaveToAdd.Name))
-						error = "Le nom ne peut pas être vide";
-					break;
-
-				case nameof(SaveToAdd.SourcePath):
-					if (string.IsNullOrWhiteSpace(SaveToAdd.SourcePath))
-						error = "Le chemin source ne peut pas être vide. ";
-					if (!Directory.Exists(SaveToAdd.SourcePath))
-						error += $"Le dossier spécifié n'existe pas !";
-					break;
-
-				case nameof(SaveToAdd.DestinationPath):
-					if (string.IsNullOrWhiteSpace(SaveToAdd.DestinationPath))
-						error = "Le chemin de destination ne peut pas être vide. ";
-					if (!Directory.Exists(SaveToAdd.DestinationPath))
-						error += $"Le dossier spécifié n'existe pas !";
-					break;
-			}
-
-			return error;
-		}
-
 		private bool CanCreateSave()
         {
-            return !string.IsNullOrEmpty(SaveToAdd.Name);
+            return !string.IsNullOrEmpty(SaveName)
+                && !string.IsNullOrEmpty(SourcePath)
+                && !string.IsNullOrEmpty(DestinationPath)
+                && HasErrors == false;
         }
 
         private void CreateSave()
         {
-			saveStore.CreateNewSave(SaveToAdd.Name, SaveType.Full, SaveToAdd.SourcePath, SaveToAdd.DestinationPath);
+			saveStore.CreateNewSave(SaveName, SaveType.Full, SourcePath, DestinationPath);
             ClearFields();
             SaveCreated?.Invoke(this, EventArgs.Empty);
 		}
 
         private void ClearFields()
         {
-			SaveToAdd.Name = string.Empty;
-			SaveToAdd.SourcePath = string.Empty;
-			SaveToAdd.DestinationPath = string.Empty;
+			SaveName = string.Empty;
+			ClearError(nameof(SaveName));
+
+			SourcePath = string.Empty;
+			ClearError(nameof(SourcePath));
+
+			DestinationPath = string.Empty;
+			ClearError(nameof(DestinationPath));
+
 		}
-    }
+	}
 }

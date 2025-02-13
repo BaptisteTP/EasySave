@@ -34,8 +34,8 @@ namespace EasySave2._0
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(Creator.GetAddSavePageInstance());
-        }
+			NavigationService.Navigate(Creator.GetAddSavePageInstance());
+		}
 
         private void OptionButton_Click(object sender, RoutedEventArgs e)
         {
