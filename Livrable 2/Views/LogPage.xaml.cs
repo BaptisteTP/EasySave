@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasySave2._0.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,7 +28,7 @@ namespace EasySave2._0
         }
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new HomePage());
+            NavigationService.Navigate(Creator.GetHomePageInstance());
         }
 
         private void BrowseFolder_Click(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasySave2._0.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,7 @@ namespace EasySave2._0
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new AddSavePage());
+            NavigationService.Navigate(Creator.GetAddSavePageInstance());
         }
 
         private void OptionButton_Click(object sender, RoutedEventArgs e)

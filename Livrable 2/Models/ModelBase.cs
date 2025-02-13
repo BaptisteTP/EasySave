@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Design;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EasySave2._0.ViewModels
+namespace EasySave2._0.Models
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public class ModelBase : INotifyPropertyChanged
     {
-        protected SaveStore saveStore {  get; set; }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			if (PropertyChanged != null)
@@ -21,11 +18,5 @@ namespace EasySave2._0.ViewModels
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-
-		public ViewModelBase()
-        {
-            saveStore = Creator.GetSaveStoreInstance();
-        }
-    }
+	}
 }
-

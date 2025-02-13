@@ -27,7 +27,10 @@ namespace EasySave2._0
         public AddSavePage()
         {
             InitializeComponent();
-            DataContext = new AddSaveViewModel();
+            AddSaveViewModel viewModel = new AddSaveViewModel();
+            viewModel.SaveCreated += GoBackToHomeView;
+            DataContext = viewModel;
+
         }
 
         private void SourceFolder_click(object sender, RoutedEventArgs e)
@@ -58,12 +61,19 @@ namespace EasySave2._0
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new HomePage()); ;
+            NavigationService.Navigate(Creator.GetHomePageInstance());
         }
 
         private void OptionButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new SettingPage());
+            NavigationService.Navigate(Creator.GetSettingPageInstance());
+        }
+
+        private void GoBackToHomeView(object sender, EventArgs e)
+        {
+            HomePage homePage = Creator.GetHomePageInstance();
+            NavigationService.Navigate(homePage);
+            ((HomeViewModel)homePage.DataContext).UpdateSave();
         }
     }
 }
