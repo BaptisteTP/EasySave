@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:EasySave2._0"
+      xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
       mc:Ignorable="d" 
       Title="AddSavePage" Height="720" Width="1280" Background="#fff">
     <Page.Resources>
@@ -31,6 +32,10 @@
         </Style>
     </Page.Resources>
 
+    <Page.DataContext>
+        <viewmodels:AddSaveViewModel/>
+    </Page.DataContext>
+
     <Grid>
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}"/>
 
@@ -38,7 +43,24 @@
             <TextBlock Text="Ajouter une nouvelle sauvegarde :" FontWeight="Bold" FontSize="20" Margin="0,20,0,0"/>
             <StackPanel Orientation="Horizontal" Margin="0,25,0,0">
                 <TextBlock Text="Nom :" FontWeight="Bold" FontSize="20"/>
-                <TextBox Name="txtNom" Width="459" Margin="10,0,0,0" FontSize="20" Text="{Binding Name}"/>
+                <TextBox Name="txtNom" Width="459" Margin="10,0,0,0" FontSize="20" Text="{Binding SaveToAdd.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Validation.ErrorTemplate">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <DockPanel>
+                                            <TextBlock Text="{Binding [0].ErrorContent}" DockPanel.Dock="Bottom" Foreground="Red"/>
+                                            <Border BorderBrush="Red" BorderThickness="2">
+                                                <AdornedElementPlaceholder/>
+                                            </Border>
+                                        </DockPanel>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
@@ -49,13 +71,47 @@
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Source :" Margin="0,10,0,0" FontSize="20" FontWeight="Bold"/>
-                <TextBox Name="SourceFolderBox" Width="606" FontSize="20" Margin="10,0,0,0" Text="{Binding SourcePath}"/>
+                <TextBox Name="SourceFolderBox" Width="606" FontSize="20" Margin="10,0,0,0" Text="{Binding SaveToAdd.SourcePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Validation.ErrorTemplate">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <DockPanel>
+                                            <TextBlock Text="{Binding [0].ErrorContent}" DockPanel.Dock="Bottom" Foreground="Red"/>
+                                            <Border BorderBrush="Red" BorderThickness="2">
+                                                <AdornedElementPlaceholder/>
+                                            </Border>
+                                        </DockPanel>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
                 <Button Content="..." Width="60" Height="50" FontSize="18" Click="SourceFolder_click" Margin="5,0,0,0"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Destination :" FontSize="20" Margin="0,10,0,0" FontWeight="Bold"/>
-                <TextBox Name="DestinationFolderBox" FontSize="20" Width="557" Margin="10,0,0,0" Text="{Binding DestinationPath}"/>
+                <TextBox Name="DestinationFolderBox" FontSize="20" Width="557" Margin="10,0,0,0" Text="{Binding SaveToAdd.DestinationPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Validation.ErrorTemplate">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <DockPanel>
+                                            <TextBlock Text="{Binding [0].ErrorContent}" DockPanel.Dock="Bottom" Foreground="Red"/>
+                                            <Border BorderBrush="Red" BorderThickness="2">
+                                                <AdornedElementPlaceholder/>
+                                            </Border>
+                                        </DockPanel>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
                 <Button Content="..." Width="60" Height="50" FontSize="18" Click="DestinationFolder_Click" Margin="5,0,0,0" />
             </StackPanel>
 
@@ -73,24 +129,24 @@
             </StackPanel>
         </StackPanel>
 
-            <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" 
+        <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" 
                     VerticalAlignment="Bottom" Margin="0,0,100,100" Click="OptionButton_Click">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="Option" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,0,0" Height="37"/>
-                    <Image Source="../assets/images/Option.png" Width="24" Height="24" VerticalAlignment="Center"/>
-                </StackPanel>
-            </Button>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Option" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,0,0" Height="37"/>
+                <Image Source="../assets/images/Option.png" Width="24" Height="24" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
 
-            <Button Content="✖ Annuler" Background="Red" Foreground="White" Width="178" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+        <Button Content="✖ Annuler" Background="Red" Foreground="White" Width="178" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
                     Margin="100,0,0,100" Height="45" Cursor="Hand" Click="CancelButton_Click" FontWeight="Bold" FontSize="20">
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">
-                            <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
+                        <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
     </Grid>
 </Page>
