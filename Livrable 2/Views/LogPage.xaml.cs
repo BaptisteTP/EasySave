@@ -25,35 +25,16 @@ namespace EasySave2._0
         public LogPage()
         {
             InitializeComponent();
+            var viewModel = new LogViewModel();
+			viewModel.NextPageButtonClicked += ViewModel_NextPageButtonClicked;
+            DataContext = viewModel;
         }
-        private void NextButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(Creator.GetHomePageInstance());
-        }
 
-        private void BrowseFolder_Click(object sender, RoutedEventArgs e)
-        {
-            var folderDialog = new OpenFolderDialog
-            {
-
-            };
-
-            if (folderDialog.ShowDialog() == true)
-            {
-                LogFolderPath.Text = folderDialog.FolderName;
-            }
-        }
-        private void BrowseFolderDay_Click(object sender, RoutedEventArgs e)
-        {
-            var folderDialog = new OpenFolderDialog
-            {
-
-            };
-
-            if (folderDialog.ShowDialog() == true)
-            {
-                LogFolderPath.Text = folderDialog.FolderName;
-            }
-        }
+		private void ViewModel_NextPageButtonClicked(object? sender, EventArgs e)
+		{
+			MainWindow mainWindow = Creator.GetMainWindow();
+			NavigationService.Navigate(mainWindow);
+			mainWindow.StartAppNaviguation();
+		}
     }
 }

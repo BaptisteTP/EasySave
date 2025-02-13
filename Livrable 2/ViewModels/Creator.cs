@@ -1,6 +1,9 @@
-﻿using EasySave2._0.ViewModels;
+﻿using EasySave2._0.Models;
+using EasySave2._0.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
@@ -13,26 +16,33 @@ namespace EasySave2._0.ViewModels
     // Class that creates instances of the classes in the project
     public static class Creator
     {
-        private static ResourceManager _resourceMangerInstance;
-        private static SaveStore _saveStoreInstance;
+        #region Views
+        private static MainWindow _mainWindow;
         private static HomePage _homePage;
         private static AddSavePage _addSavePage;
-        public static LogPage _logPage;
-        public static MainWindow _mainWindow;
-        public static SettingPage _settingPage;
-        public static WelcomePage _welcomePage;
-        //private static Paster _pasterInstance;
-        //private static Settings _settingsInstance;
-        //private static Logger _loggerInstance;
+        private static SettingPage _settingPage;
+        private static WelcomePage _welcomePage;
 
-        // Returns a resource manager instance
-        public static ResourceManager GetResourceManagerInstance()
+		#endregion
+
+		private static ResourceManager _resourceMangerInstance;
+        private static SaveStore _saveStoreInstance;
+        public static LogPage _logPage;
+        private static Settings _settingsInstance;
+		//private static Paster _pasterInstance;
+		//private static Logger _loggerInstance;
+
+		// Returns a resource manager instance
+
+		#region Get Views Instance
+
+        public static MainWindow GetMainWindow()
         {
-            if (_resourceMangerInstance == null)
+            if (_mainWindow == null)
             {
-                _resourceMangerInstance = new ResourceManager("Project_Easy_Save.Resources.Strings", Assembly.GetExecutingAssembly());
+                _mainWindow = new MainWindow();
             }
-            return _resourceMangerInstance;
+            return _mainWindow;
         }
 
         public static HomePage GetHomePageInstance() 
@@ -60,6 +70,36 @@ namespace EasySave2._0.ViewModels
             }
             return _addSavePage;
         }
+
+        public static LogPage GetLogPageInstance()
+        {
+            if (_logPage == null)
+            {
+                _logPage = new LogPage();
+            }
+            return _logPage;
+        }
+
+        public static WelcomePage GetWelcomePage()
+        {
+            if( _welcomePage == null)
+            {
+                _welcomePage = new WelcomePage();
+            }
+            return _welcomePage;
+        }
+
+		#endregion
+
+		public static ResourceManager GetResourceManagerInstance()
+        {
+            if (_resourceMangerInstance == null)
+            {
+                _resourceMangerInstance = new ResourceManager("Project_Easy_Save.Resources.Strings", Assembly.GetExecutingAssembly());
+            }
+            return _resourceMangerInstance;
+        }
+
 
         // Returns a save store instance
         public static SaveStore GetSaveStoreInstance()
@@ -91,22 +131,22 @@ namespace EasySave2._0.ViewModels
         //    return _pasterInstance;
         //}
 
-        //// Returns a logger instance
-        //public static Settings GetSettingsInstance()
-        //{
-        //    if (_settingsInstance == null)
-        //    {
-        //        string appsettings = "appsettings.json";
-        //        if (!File.Exists(appsettings))
-        //        {
-        //            _settingsInstance = Settings.CreateBaseSettings();
-        //        }
-        //        else
-        //        {
-        //            _settingsInstance = Settings.GetBaseSettings();
-        //        }
-        //    }
-        //    return _settingsInstance;
-        //}
+        // Returns a logger instance
+        public static Settings GetSettingsInstance()
+        {
+            if (_settingsInstance == null)
+            {
+                string appsettings = "appsettings.json";
+                if (!File.Exists(appsettings))
+                {
+                    _settingsInstance = Settings.CreateBaseSettings();
+                }
+                else
+                {
+                    _settingsInstance = Settings.GetBaseSettings();
+                }
+            }
+            return _settingsInstance;
+        }
     }
 }
