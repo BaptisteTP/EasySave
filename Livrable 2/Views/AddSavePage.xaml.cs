@@ -58,12 +58,17 @@ namespace EasySave2._0
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new HomePage()); ;
+            NavigationService.Navigate(Creator.GetHomePageInstance());
         }
 
         private void OptionButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new SettingPage());
+            NavigationService.Navigate(Creator._settingPage);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(Creator.GetHomePageInstance());
         }
     }
 }
