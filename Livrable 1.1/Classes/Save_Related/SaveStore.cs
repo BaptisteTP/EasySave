@@ -1,6 +1,7 @@
 ﻿using Project_Easy_Save.Enums;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -33,6 +34,8 @@ namespace Project_Easy_Save.Classes
 		{
             Saves.Clear();
             Saves = DeserializeSaves();
+            CurrentAvailableID = Saves.OrderBy(save => save.Id).Last().Id + 1;
+            SaveCreated?.Invoke(this, EventArgs.Empty);
 		}
 
 		public int CreateNewSave(string name, SaveType type, string sourcePath, string destinationPath)
