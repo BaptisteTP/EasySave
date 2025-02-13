@@ -30,6 +30,21 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="ErrorTemplate" TargetType="TextBox">
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <DockPanel>
+                            <TextBlock Text="{Binding [0].ErrorContent}" DockPanel.Dock="Bottom" Foreground="Red"/>
+                            <Border BorderBrush="Red" BorderThickness="2">
+                                <AdornedElementPlaceholder/>
+                            </Border>
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
     <Page.DataContext>
@@ -43,24 +58,7 @@
             <TextBlock Text="Ajouter une nouvelle sauvegarde :" FontWeight="Bold" FontSize="20" Margin="0,20,0,0"/>
             <StackPanel Orientation="Horizontal" Margin="0,25,0,0">
                 <TextBlock Text="Nom :" FontWeight="Bold" FontSize="20"/>
-                <TextBox Name="txtNom" Width="459" Margin="10,0,0,0" FontSize="20" Text="{Binding SaveToAdd.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Setter Property="Validation.ErrorTemplate">
-                                <Setter.Value>
-                                    <ControlTemplate>
-                                        <DockPanel>
-                                            <TextBlock Text="{Binding [0].ErrorContent}" DockPanel.Dock="Bottom" Foreground="Red"/>
-                                            <Border BorderBrush="Red" BorderThickness="2">
-                                                <AdornedElementPlaceholder/>
-                                            </Border>
-                                        </DockPanel>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
+                <TextBox Name="txtNom" Width="459" Style="{StaticResource ErrorTemplate}" Margin="10,0,0,0" FontSize="20" Text="{Binding SaveToAdd.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
@@ -71,47 +69,13 @@
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Source :" Margin="0,10,0,0" FontSize="20" FontWeight="Bold"/>
-                <TextBox Name="SourceFolderBox" Width="606" FontSize="20" Margin="10,0,0,0" Text="{Binding SaveToAdd.SourcePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Setter Property="Validation.ErrorTemplate">
-                                <Setter.Value>
-                                    <ControlTemplate>
-                                        <DockPanel>
-                                            <TextBlock Text="{Binding [0].ErrorContent}" DockPanel.Dock="Bottom" Foreground="Red"/>
-                                            <Border BorderBrush="Red" BorderThickness="2">
-                                                <AdornedElementPlaceholder/>
-                                            </Border>
-                                        </DockPanel>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-                <Button Content="..." Width="60" Height="50" FontSize="18" Click="SourceFolder_click" Margin="5,0,0,0"/>
+                <TextBox Name="SourceFolderBox" Style="{StaticResource ErrorTemplate}" Width="606" FontSize="20" Margin="10,0,0,0" Text="{Binding SaveToAdd.SourcePath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"></TextBox>
+                    <Button Content="..." Width="60" Height="50" FontSize="18" Click="SourceFolder_click" Margin="5,0,0,0"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Destination :" FontSize="20" Margin="0,10,0,0" FontWeight="Bold"/>
-                <TextBox Name="DestinationFolderBox" FontSize="20" Width="557" Margin="10,0,0,0" Text="{Binding SaveToAdd.DestinationPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Setter Property="Validation.ErrorTemplate">
-                                <Setter.Value>
-                                    <ControlTemplate>
-                                        <DockPanel>
-                                            <TextBlock Text="{Binding [0].ErrorContent}" DockPanel.Dock="Bottom" Foreground="Red"/>
-                                            <Border BorderBrush="Red" BorderThickness="2">
-                                                <AdornedElementPlaceholder/>
-                                            </Border>
-                                        </DockPanel>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
+                <TextBox Name="DestinationFolderBox" Style="{StaticResource ErrorTemplate}" FontSize="20" Width="557" Margin="10,0,0,0" Text="{Binding SaveToAdd.DestinationPath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                 <Button Content="..." Width="60" Height="50" FontSize="18" Click="DestinationFolder_Click" Margin="5,0,0,0" />
             </StackPanel>
 
