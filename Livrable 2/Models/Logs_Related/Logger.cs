@@ -153,6 +153,25 @@ namespace EasySave2._0.Models.Logs_Related
 			WriteSavesInLog(saves);
 		}
 
+		public void OnBuisnessSoftwareDetected(object sender, Save save)
+		{
+			Settings settings = Creator.GetSettingsInstance();
+			string pathToDailLog = settings.DailyLogPath;
+			string extension = "." + settings.LogFormat;
+
+			Dailylog daylyLog = DeserializeDailyLogs(Path.Combine(pathToDailLog, "save-log", $"{DateTime.Now:yyyy-MM-dd}" + extension));
+
+			SaveLog savelog = new SaveLog(save.Name);
+			savelog.State = "Buisness Software Detected";
+			daylyLog.Saves.Add(savelog);
+
+			string stringToLog = SerializeLogObject(daylyLog);
+			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
+
+			//Log with logger lib
+			LogLibLogger.OverwrtieDailyLog(stringToLog, pathToWriteTo, extension);
+		}
+
 		public void OnSaveStarted(object sender, Save save)
 		{
 			Settings settings = Creator.GetSettingsInstance();

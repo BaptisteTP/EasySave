@@ -68,39 +68,113 @@
     <Page.DataContext>
         <viewmodels:SettingsViewModel/>
     </Page.DataContext>
-    
-    <Grid Cursor="">
-        <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}"/>
 
-        <StackPanel Orientation="Horizontal" Margin="0,150,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <TextBlock FontSize="24" FontWeight="Bold" Text="Choisissez votre langue : " Height="50" Margin="0,0,50,0"/>
-            <Image Source="../assets/images/EnglishButton.png" Height="70" Width="143" Margin="0,0,50,10"/>
-            <Image Source="../assets/images/FrenchButton.png" Height="101" Width="110" Margin="0,0,0,10"/>
-        </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <ContentControl Grid.Row="0" ContentTemplate="{StaticResource EasySaveLogo2}"/>
+        
+        <ScrollViewer Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
+            <StackPanel Cursor="">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <TextBlock FontSize="24" FontWeight="Bold" Text="Choisissez votre langue : " Height="50" Margin="0,0,50,0"/>
+                    <Image Source="../assets/images/EnglishButton.png" Height="70" Width="143" />
+                    <Image Source="../assets/images/FrenchButton.png" Height="101" Width="110"/>
+                </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,50">
-            <TextBox Style="{StaticResource ErrorTemplate}" Text="{Binding RealTimeLogPath, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
-            <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Command="{Binding ChangedLogPathCommand}" CommandParameter="realtime"/>
-        </StackPanel>
-        <TextBlock FontSize="20" FontWeight="Bold" Text="Pour changer le dossier des logs en temps réel choisissez un nouveau dossier pour accueillir le dossier : " 
-                   Margin="0,0,0,150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <StackPanel>
+                    <TextBlock FontSize="20" FontWeight="Bold" Text="Pour changer le dossier des logs en temps réel choisissez un nouveau dossier pour accueillir le dossier : " 
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,50">
+                        <TextBox Style="{StaticResource ErrorTemplate}" Text="{Binding RealTimeLogPath, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
+                        <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Command="{Binding ChangedLogPathCommand}" CommandParameter="realtime"/>
+                    </StackPanel>
+                </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,180,0,0">
-            <TextBox Style="{StaticResource ErrorTemplate}" Text="{Binding DailyLogPath, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
-            <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Command="{Binding ChangedLogPathCommand}" CommandParameter="daily"/>
-        </StackPanel>
-        <TextBlock FontSize="20" FontWeight="Bold" Text="Pour changer le dossier des logs journalier choisissez un nouveau dossier pour accueillir le dossier : " 
-                   Margin="0,80,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <StackPanel>
+                    <TextBlock FontSize="20" FontWeight="Bold" Text="Pour changer le dossier des logs journalier choisissez un nouveau dossier pour accueillir le dossier : " 
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBox Style="{StaticResource ErrorTemplate}" Text="{Binding DailyLogPath, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
+                        <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Command="{Binding ChangedLogPathCommand}" CommandParameter="daily"/>
+                    </StackPanel>
+                </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,300,0,0">
-            <TextBlock Text="Logs en JSON ou XML : " FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,20,0"/>
-            <RadioButton Content="JSON" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.json}}" Cursor="Hand"/>
-            <RadioButton Content="XML" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.xml}}" Cursor="Hand"/>
-        </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Logs en JSON ou XML : " FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                    <RadioButton Content="JSON" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.json}}" Cursor="Hand"/>
+                    <RadioButton Content="XML" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.xml}}" Cursor="Hand"/>
+                </StackPanel>
 
-        <Button Width="170" Height="44" Content="✔ Terminer" FontSize="24" FontWeight="Bold" Style="{StaticResource GreenButtonStyle}"
+                <Grid HorizontalAlignment="Stretch" Margin="170 20 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Column="0" Grid.RowSpan="2" Text="Logiciel métier bloquant les sauvegardes :"  FontSize="20" FontWeight="Bold" VerticalAlignment="Top" Margin="0,0,20,0"/>
+
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="Aucun">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding BuisnessSoftwaresInterrupt.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <ListBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding BuisnessSoftwaresInterrupt}" MaxHeight="100" Width="195" HorizontalAlignment="Left">
+                        <ListBox.Style>
+                            <Style TargetType="ListBox">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding BuisnessSoftwaresInterrupt.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.Style>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="3" Background="LightGray">
+                                    <Grid>
+                                        <TextBlock Text="{Binding}" HorizontalAlignment="Left" Padding="4" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    
+                    <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0" Text="{Binding BuisnessSoftwareToAdd}"  Margin="5 0"/>
+                        <Button Grid.Column="1" Content="Ajouter" Margin="5,0" Command="{Binding AddBuisnessSoftwareCommand}"/>
+                    </Grid>
+                    
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        
+        <Button Grid.Row="2" Width="170" Height="44" Content="✔ Terminer" FontSize="24" FontWeight="Bold" Style="{StaticResource GreenButtonStyle}"
                 BorderThickness="2" Command="{Binding ConfirmSettingsCommand}" Cursor="Hand"
-                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="100,0,0,100">
+                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,0,0,80">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
@@ -110,6 +184,5 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-
     </Grid>
 </Page>

@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using EasySave2._0.CustomEventArgs;
 using EasySave2._0.ViewModels;
 using System.Windows.Navigation;
+using System.Diagnostics;
 
 namespace EasySave2._0
 {

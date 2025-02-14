@@ -5,9 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:EasySave2._0"
       xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
+      xmlns:valueconverters="clr-namespace:EasySave2._0.ValueConverters"
+      xmlns:enums="clr-namespace:EasySave2._0.Enums"
       mc:Ignorable="d" 
       Title="AddSavePage" Height="720" Width="1280" Background="#fff">
+
     <Page.Resources>
+        <valueconverters:SaveTypeToSelectedBool x:Key="SaveTypeToSelectedBool"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Style TargetType="RadioButton">
             <Setter Property="FontSize" Value="16"/>
@@ -21,7 +25,7 @@
                             <Border Width="20" Height="20" CornerRadius="10"
                             BorderBrush="Black" BorderThickness="2"
                             Background="White">
-                                <Ellipse Width="10" Height="10" Fill="Black"
+                                <Ellipse Width="10" Height="10" Fill="#FF007FCA"
                                  Visibility="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             </Border>
                             <ContentPresenter Margin="5,0,0,0" VerticalAlignment="Center"/>
@@ -32,15 +36,53 @@
         </Style>
 
         <Style x:Key="ErrorTemplate" TargetType="TextBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <Border Padding="{TemplateBinding Padding}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="3">
+                                <ScrollViewer x:Name="PART_ContentHost"/>
+                            </Border>
+                            <ItemsControl Margin="0 5 0 0" FontSize="12" ItemsSource="{TemplateBinding Validation.Errors}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Foreground="Red" Text="{Binding ErrorContent}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Validation.ErrorTemplate">
                 <Setter.Value>
                     <ControlTemplate>
-                        <DockPanel>
-                            <TextBlock Text="{Binding [0].ErrorContent}" DockPanel.Dock="Bottom" Foreground="Red"/>
-                            <Border BorderBrush="Red" BorderThickness="2">
-                                <AdornedElementPlaceholder/>
+                        <AdornedElementPlaceholder/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Width="20" Height="20" CornerRadius="4"
+                                    BorderBrush="Black" BorderThickness="2"
+                                    Background="White">
+                                <Rectangle Width="12" Height="12" Fill="#FF007FCA"
+                                           Visibility="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             </Border>
-                        </DockPanel>
+                            <ContentPresenter Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -48,14 +90,14 @@
     </Page.Resources>
 
     <Page.DataContext>
-        <viewmodels:EditSaveViewModel/>
+        <viewmodels:AddSaveViewModel/>
     </Page.DataContext>
 
     <Grid>
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}"/>
 
         <StackPanel Margin="100,150,0,0">
-            <TextBlock Text="Ajouter une nouvelle sauvegarde :" FontWeight="Bold" FontSize="20" Margin="0,20,0,0"/>
+            <TextBlock Text="Modifier la sauvegarde :" FontWeight="Bold" FontSize="20" Margin="0,20,0,0"/>
             <StackPanel Orientation="Horizontal" Margin="0,25,0,0">
                 <TextBlock Text="Nom :" FontWeight="Bold" FontSize="20"/>
                 <TextBox Name="txtNom" Width="459" Style="{StaticResource ErrorTemplate}" Margin="10,0,0,0" FontSize="20" Text="{Binding SaveName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
@@ -63,45 +105,54 @@
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Type :" FontWeight="Bold" FontSize="20"/>
-                <RadioButton Content="Complete" FontSize="20" FontWeight="Bold" GroupName="Type" IsChecked="True" Margin="15,2,0,0" Cursor="Hand"/>
-                <RadioButton Content="Incrementielle" FontSize="20" FontWeight="Bold" GroupName="Type" Margin="15,2,0,0" Cursor="Hand"/>
+                <RadioButton Content="Complete" FontSize="20" FontWeight="Bold" GroupName="Type"
+                             IsChecked="{Binding SelectedSaveType, Mode=TwoWay, Converter={StaticResource SaveTypeToSelectedBool}, ConverterParameter={x:Static enums:SaveType.Full}}"
+                             Margin="15,2,0,0" Cursor="Hand"/>
+                <RadioButton Content="Differentielle" FontSize="20" FontWeight="Bold" GroupName="Type"
+                             IsChecked="{Binding SelectedSaveType, Mode=TwoWay, Converter={StaticResource SaveTypeToSelectedBool}, ConverterParameter={x:Static enums:SaveType.Differential}}"
+                             Margin="15,2,0,0" Cursor="Hand"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Source :" Margin="0,10,0,0" FontSize="20" FontWeight="Bold"/>
-                <TextBox Name="SourceFolderBox" Style="{StaticResource ErrorTemplate}" Width="606" FontSize="20" Margin="10,0,0,0" Text="{Binding SourcePath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"></TextBox>
-                <Button Content="..." Width="60" Height="50" FontSize="18" Click="SourceFolder_click" Margin="5,0,0,0"/>
+                <TextBox Name="SourceFolderBox" Style="{StaticResource ErrorTemplate}" Width="606" FontSize="20" Margin="10,10,0,0" Text="{Binding SourcePath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"></TextBox>
+                <Button Content="..." Width="60" Height="30" FontSize="18" Click="SourceFolder_click" Margin="5,4,0,0"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Destination :" FontSize="20" Margin="0,10,0,0" FontWeight="Bold"/>
-                <TextBox Name="DestinationFolderBox" Style="{StaticResource ErrorTemplate}" FontSize="20" Width="557" Margin="10,0,0,0" Text="{Binding DestinationPath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
-                <Button Content="..." Width="60" Height="50" FontSize="18" Click="DestinationFolder_Click" Margin="5,0,0,0" />
+                <TextBox Name="DestinationFolderBox" Style="{StaticResource ErrorTemplate}" FontSize="20" Width="557" Margin="10,10,0,0" Text="{Binding DestinationPath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                <Button Content="..." Width="60" Height="30" FontSize="18" Click="DestinationFolder_Click" Margin="5,4,0,0"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,60,0,0" HorizontalAlignment="Center">
-                <Button Content="✔ Modifier" Background="Green" Foreground="White" Width="210" 
-                        Margin="0,0,0,0" Height="46" FontSize="20" FontWeight="Bold" Cursor="Hand" Command="{Binding ModifCommand}">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">
-                                <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+            <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
+                <TextBlock Text="Chiffrage :" FontWeight="Bold" FontSize="20"/>
+                <CheckBox Name="ChifrageBox" Content="Chiffrer la sauvegarde" FontSize="20" FontWeight="Bold" Margin="15,0,0,0" Cursor="Hand"/>
             </StackPanel>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,100" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Button Content="✔ Modifier" Style="{StaticResource GreenButtonStyle}" Width="210" 
+                    Margin="0,0,0,0" Height="46" FontSize="20" FontWeight="Bold" Cursor="Hand" Command="{Binding ModifCommand}">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="20">
+                            <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </StackPanel>
 
         <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" 
                     VerticalAlignment="Bottom" Margin="0,0,100,100" Click="OptionButton_Click">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Option" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,0,0" Height="37"/>
+                <TextBlock Text="Option" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" Height="37"/>
                 <Image Source="../assets/images/Option.png" Width="24" Height="24" VerticalAlignment="Center"/>
             </StackPanel>
         </Button>
 
-        <Button Content="✖ Annuler" Background="Red" Foreground="White" Width="178" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+        <Button Content="✖ Annuler" Style="{StaticResource RedButtonStyle}" Width="178" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
                     Margin="100,0,0,100" Height="45" Cursor="Hand" Click="CancelButton_Click" FontWeight="Bold" FontSize="20">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
