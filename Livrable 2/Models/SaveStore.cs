@@ -7,6 +7,7 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace EasySave2._0.ViewModels
@@ -114,7 +115,7 @@ namespace EasySave2._0.ViewModels
 		// Execute all saves in the list
 		public void ExecuteAllSaves() { Saves.ForEach(s => s.Execute()); }
 
-		public void ExecuteSavesRange(int start, int stop, Action<int> SaveExecuted, Action<int> OnFailedExecute)
+		public async Task ExecuteSavesRange(int start, int stop, Action<int> SaveExecuted, Action<int> OnFailedExecute)
 		{
 			if (Saves.Count == 0) { throw new InvalidOperationException("Cannot execute specified saves : there are nos saves currently registered."); }
 			if (start > stop) { throw new ArgumentException("Start number is greater than stop number."); }
@@ -126,7 +127,7 @@ namespace EasySave2._0.ViewModels
 					if (i < Saves.Count)
 					{
 						SaveExecuted.Invoke(i + 1);
-						Saves.ElementAt(i).Execute();
+						await Saves.ElementAt(i).Execute();
 
 					}
 					else
@@ -138,7 +139,7 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-		public void ExecuteSaves(List<int> saveNumbers, Action<int> OnSaveExecute, Action<int> OnFailedExecute)
+		public async Task ExecuteSaves(List<int> saveNumbers, Action<int> OnSaveExecute, Action<int> OnFailedExecute)
 		{
 			if (Saves.Count == 0) { throw new InvalidOperationException("Cannot execute specified saves : there are nos saves currently registered."); }
 
@@ -147,7 +148,7 @@ namespace EasySave2._0.ViewModels
 				if (saveNumber > 0 && saveNumber <= Saves.Count)
 				{
 					OnSaveExecute.Invoke(saveNumber);
-					Saves.ElementAt(saveNumber - 1).Execute();
+					await Saves.ElementAt(saveNumber - 1).Execute();
 				}
 				else
 				{

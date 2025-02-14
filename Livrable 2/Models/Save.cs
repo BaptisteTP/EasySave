@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace EasySave2._0.ViewModels
 {
@@ -81,9 +82,7 @@ namespace EasySave2._0.ViewModels
 		public async Task Execute(IProgress<int>? progress = null)
 		{
 			IsExecuting = true;
-
 			await Task.Run(() => Creator.GetPasterInstance().BeginCopyPaste(this, progress));
-
 			IsExecuting = false;
 		}
 	}

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Xml;
 using EasySave2._0.CustomEventArgs;
+using System.Windows;
 
 namespace EasySave2._0.Models.Logs_Related
 {
@@ -157,15 +158,18 @@ namespace EasySave2._0.Models.Logs_Related
 			Settings settings = Creator.GetSettingsInstance();
 			string pathToDailLog = settings.DailyLogPath;
 			string extension = "." + settings.LogFormat;
+
 			Dailylog daylyLog = DeserializeDailyLogs(Path.Combine(pathToDailLog, "save-log", $"{DateTime.Now:yyyy-MM-dd}" + extension));
 
 			daylyLog.Saves.Add(new SaveLog(save.Name));
+
 
 			string stringToLog = SerializeLogObject(daylyLog);
 			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
 
 			//Log with logger lib
 			LogLibLogger.OverwrtieDailyLog(stringToLog, pathToWriteTo, extension);
+
 		}
 
 		public void OnSaveFinished(object sender, Save save)

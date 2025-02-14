@@ -49,14 +49,12 @@ namespace EasySave2._0.Models
 			}
 
 			SaveStarted?.Invoke(this, executedSave);
-
 			List<string> remainingFiles = new List<string>(eligibleFiles);
 			foreach (string fileFullName in Directory.GetFiles(executedSave.SourcePath))
 			{
 				if (eligibleFiles.Contains(fileFullName))
 				{
 					string destinationPath = fileFullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
-
 					OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, fileFullName, destinationPath));
 					CopyFile(fileFullName, executedSave, destinationPath);
 					remainingFiles.Remove(fileFullName);
@@ -117,7 +115,7 @@ namespace EasySave2._0.Models
 			}
 
 			SaveStarted?.Invoke(this, executedSave);
-
+			
 			List<string> remainingFiles = new List<string>(eligibleFiles);
 			foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
 			{
@@ -155,7 +153,6 @@ namespace EasySave2._0.Models
 		private void CopyDirectory(Save executedSave, string destPath)
 		{
 			// Create the directory in the destination path
-
 			TimeSpan? timeElapsed = null;
 			var StopWatch = new Stopwatch();
 			StopWatch.Start();
