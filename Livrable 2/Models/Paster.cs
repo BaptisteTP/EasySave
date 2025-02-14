@@ -4,14 +4,16 @@ using EasySave2._0.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace EasySave2._0.Models
 {
-    class Paster
+    public class Paster
     {
 		public event EventHandler<CopyDirectoryEventArgs>? OnDirectoryCopied;
 		public event EventHandler<FileCopyPreviewEventArgs>? OnFileCopyPreview;
@@ -19,14 +21,14 @@ namespace EasySave2._0.Models
 		public event EventHandler<Save>? SaveStarted;
 		public event EventHandler<Save>? SaveFinished;
 
-		public bool BeginCopyPaste(Save executedSave)
+		public bool BeginCopyPaste(Save executedSave, IProgress<int> progress)
 		{
 			if (!Directory.Exists(executedSave.SourcePath)) { return false; }
 
 			switch (executedSave.Type)
 			{
 				case SaveType.Full:
-					return BeginFullSave(executedSave);
+					return BeginFullSave(executedSave, progress);
 
 				case SaveType.Differential:
 					return BeginDifferentialSave(executedSave);
@@ -104,7 +106,7 @@ namespace EasySave2._0.Models
 			return result;
 		}
 
-		private bool BeginFullSave(Save executedSave)
+		private bool BeginFullSave(Save executedSave, IProgress<int> progress)
 		{
 			// Get all files in the source path
 			List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
@@ -127,6 +129,7 @@ namespace EasySave2._0.Models
 				string destinationPath = newPath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
 
 				OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, newPath, destinationPath));
+				progress?.Report(Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100));
 				CopyFile(newPath, executedSave, destinationPath);
 				remainingFiles.Remove(newPath);
 			}

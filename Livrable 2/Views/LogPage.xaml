@@ -53,8 +53,8 @@
             
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,20">
                 <TextBlock Text="Logs en JSON ou XML : " FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                <RadioButton Content="JSON" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.JSON}}" Cursor="Hand"/>
-                <RadioButton Content="XML" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.XML}}" Cursor="Hand"/>
+                <RadioButton Content="JSON" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.json}}" Cursor="Hand"/>
+                <RadioButton Content="XML" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.xml}}" Cursor="Hand"/>
             </StackPanel>
             
         </StackPanel>

@@ -8,7 +8,7 @@ namespace EasySave2._0.Enums
 {
 	public enum LogType
 	{
-		XML,
-		JSON
+		xml,
+		json
 	}
 }

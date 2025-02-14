@@ -2,21 +2,35 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
+using EasySave2._0.CustomEventArgs;
 using EasySave2._0.ViewModels;
 
 namespace EasySave2._0
 {
     public class HomeViewModel : ViewModelBase
     {
+        private bool _isASaveExecuting = false;
+
+        public bool IsASaveExecuting
+		{
+            get { return _isASaveExecuting; }
+            set { _isASaveExecuting = value; OnPropertyChanged(); }
+        }
+
         private const int ItemsPerPage = 5;
         private int _currentPage = 1;
 
-        public ObservableCollection<ItemViewModel> Items { get; set; }
-        public ObservableCollection<ItemViewModel> PagedItems { get; set; }
+        public ObservableCollection<Save> Items { get; set; } = new ObservableCollection<Save>();
 
-        public ICommand NextPageCommand { get; }
+        public ObservableCollection<Save> PagedItems { get; set; } = new ObservableCollection<Save>();
+
+
+		public ICommand NextPageCommand { get; }
         public ICommand PreviousPageCommand { get; }
+        public ICommand StartSaveCommand {  get; }
 
         public string CurrentPageFormatted
         {
@@ -39,32 +53,75 @@ namespace EasySave2._0
             }
         }
 
+        private int _saveExecutionProgress = 0;
+        public int SaveExecutionProgress
+        {
+            get { return _saveExecutionProgress; }
+            set 
+            {
+                _saveExecutionProgress = value;
+                OnPropertyChanged();
+            }
+        }
+
         public HomeViewModel()
         {
-            Items = new ObservableCollection<ItemViewModel>();
             var Saves = saveStore.GetAllSaves();
             foreach (var save in Saves)
             {
-                new ItemViewModel(save.Id.ToString(), save.Name);
+                Items.Add(save);
             }
-            
-            
-
-            PagedItems = new ObservableCollection<ItemViewModel>();
 
             NextPageCommand = new RelayCommand(_ => NextPage(), _ => CanGoNext());
             PreviousPageCommand = new RelayCommand(_ => PreviousPage(), _ => CanGoPrevious());
+            StartSaveCommand = new RelayCommand(StartSave, CanStartSave);
 
             UpdatePagedItems();
         }
-        private void UpdatePagedItems()
+
+		private bool CanStartSave(object arg)
+		{
+            return !IsASaveExecuting;
+		}
+
+		private async void StartSave(object obj)
+		{
+			if(obj is Save saveToExecute)
+            {
+				IProgress<int> progress = new Progress<int>(progress =>
+				{
+                    SaveExecutionProgress = progress;
+				});
+				bool executionSuccessful = false ;
+                try
+                {
+                    IsASaveExecuting = true;
+                    await saveToExecute.Execute(progress);
+
+                    SaveExecutionProgress = 0;
+                    executionSuccessful = true;
+
+				}
+				catch
+                {
+                    executionSuccessful = false;
+
+				}
+                finally
+                {
+                    IsASaveExecuting = false;
+                }
+            }
+		}
+
+		private void UpdatePagedItems()
         {
             PagedItems.Clear();
             if (Items.Count == 0) return;
-            var itemsToShow = Items.Skip((_currentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
-            foreach (var item in itemsToShow)
+            var savesToShow = Items.Skip((_currentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
+            foreach (var save in savesToShow)
             {
-                PagedItems.Add(item);
+                PagedItems.Add(save);
             }
         }
 
@@ -102,10 +159,10 @@ namespace EasySave2._0
             Items.Clear();
             foreach (var save in Saves)
             {
-                Items.Add(new ItemViewModel(save.Id.ToString(), save.Name));
+                Items.Add(save);
             }
             UpdatePagedItems();
             CurrentPage = 1;
         }
-    }
+	}
 }

@@ -24,10 +24,11 @@ namespace EasySave2._0
         public HomePage()
         {
             InitializeComponent();
-            DataContext = new HomeViewModel();
+            var viewModel = new HomeViewModel();
+			DataContext = viewModel;
         }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }

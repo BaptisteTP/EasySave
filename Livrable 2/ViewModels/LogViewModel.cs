@@ -40,7 +40,7 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-		private LogType selectedLogType = LogType.JSON;
+		private LogType selectedLogType = LogType.json;
 
 		public LogType SelectedLogType
 		{

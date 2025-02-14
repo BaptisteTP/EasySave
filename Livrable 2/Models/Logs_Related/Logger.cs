@@ -254,25 +254,31 @@ namespace EasySave2._0.Models.Logs_Related
 			string logFormat = Creator.GetSettingsInstance().LogFormat;
 			if (!File.Exists(pathToDailyLog)) { return new Dailylog(); }
 
-			switch (logFormat)
+			try{
+				switch (logFormat)
+				{
+					case "xml":
+						var mySerializer = new XmlSerializer(typeof(Dailylog));
+						//string xml = File.ReadAllText(pathToDailyLog);
+						using (TextReader reader = new StreamReader(pathToDailyLog))
+						{
+							return (Dailylog)mySerializer.Deserialize(reader)!;
+						}
+
+					case "json":
+						using (FileStream reader = File.OpenRead(pathToDailyLog))
+						{
+							if (reader.Length == 0) { return new Dailylog(); }
+							return JsonSerializer.Deserialize<Dailylog>(reader)!;
+						}
+
+					default:
+						return new Dailylog();
+				}
+			}
+			catch
 			{
-				case "xml":
-					var mySerializer = new XmlSerializer(typeof(Dailylog));
-					//string xml = File.ReadAllText(pathToDailyLog);
-					using (TextReader reader = new StreamReader(pathToDailyLog))
-					{
-						return (Dailylog)mySerializer.Deserialize(reader)!;
-					}
-
-				case "json":
-					using (FileStream reader = File.OpenRead(pathToDailyLog))
-					{
-						if (reader.Length == 0) { return new Dailylog(); }
-						return JsonSerializer.Deserialize<Dailylog>(reader)!;
-					}
-
-				default:
-					return new Dailylog();
+				return new Dailylog();
 			}
 		}
 

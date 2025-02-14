@@ -45,6 +45,7 @@ namespace EasySave2._0.Models
 		protected void OnErrorsChanged(string propertyName)
 		{
 			ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+			OnPropertyChanged(nameof(HasErrors));
 		}
 	}
 }

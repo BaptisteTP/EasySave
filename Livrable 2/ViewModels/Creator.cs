@@ -1,4 +1,5 @@
 ﻿using EasySave2._0.Models;
+using EasySave2._0.Models.Logs_Related;
 using EasySave2._0.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -27,14 +28,14 @@ namespace EasySave2._0.ViewModels
 
 		private static ResourceManager _resourceMangerInstance;
         private static SaveStore _saveStoreInstance;
-        public static LogPage _logPage;
+        private static LogPage _logPage;
         private static Settings _settingsInstance;
-		//private static Paster _pasterInstance;
-		//private static Logger _loggerInstance;
+        private static Paster _pasterInstance;
+        private static Logger _loggerInstance;
 
-		// Returns a resource manager instance
+        // Returns a resource manager instance
 
-		#region Get Views Instance
+        #region Get Views Instance
 
         public static MainWindow GetMainWindow()
         {
@@ -108,28 +109,34 @@ namespace EasySave2._0.ViewModels
             {
                 _saveStoreInstance = new SaveStore();
 
-                //_pasterInstance = new Paster();
-                //_loggerInstance = new Logger();
+                _pasterInstance = new Paster();
+                _loggerInstance = new Logger();
 
-                //_pasterInstance.OnFileCopyPreview += _loggerInstance.OnCopyFilePreview;
-                //_pasterInstance.OnFileCopied += _loggerInstance.OnCopyFile;
-                //_pasterInstance.OnDirectoryCopied += _loggerInstance.OnCopyDirectory;
-                //_pasterInstance.SaveFinished += _loggerInstance.OnSaveFinished;
-                //_saveStoreInstance.SaveCreated += _loggerInstance.OnSaveCreated;
-            }
+                _pasterInstance.OnFileCopyPreview += _loggerInstance.OnCopyFilePreview;
+                _pasterInstance.OnFileCopied += _loggerInstance.OnCopyFile;
+				_pasterInstance.OnDirectoryCopied += _loggerInstance.OnCopyDirectory;
+				_pasterInstance.SaveStarted += _loggerInstance.OnSaveStarted;
+				_pasterInstance.SaveFinished += _loggerInstance.OnSaveFinished;
+				_saveStoreInstance.SaveCreated += _loggerInstance.OnSaveCreated;
+				_saveStoreInstance.SaveDeleted += _loggerInstance.OnSaveEdited;
+				_saveStoreInstance.SaveEdited += _loggerInstance.OnSaveDeleted;
+				Settings.LogFomatChanged += _loggerInstance.OnSaveCreated;
+
+				_saveStoreInstance.LoadLoggedSaves();
+			}
             return _saveStoreInstance;
 
         }
 
         // Returns a paster instance
-        //public static Paster GetPasterInstance()
-        //{
-        //    if (_pasterInstance == null)
-        //    {
-        //        throw new Exception("Error");
-        //    }
-        //    return _pasterInstance;
-        //}
+        public static Paster GetPasterInstance()
+        {
+            if (_pasterInstance == null)
+            {
+                throw new Exception("Error");
+            }
+            return _pasterInstance;
+        }
 
         // Returns a logger instance
         public static Settings GetSettingsInstance()

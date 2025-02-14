@@ -20,7 +20,7 @@ namespace EasySave2._0.ValueConverters
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (!Enum.IsDefined(typeof(LogType), parameter.ToString()!))
-				return LogType.JSON;
+				return LogType.json;
 
 			return (LogType)Enum.Parse(typeof(LogType), parameter.ToString()!);
 		}

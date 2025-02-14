@@ -39,6 +39,18 @@ namespace EasySave2._0.ViewModels
 			set { destinationPath = value; OnPropertyChanged(); }
 		}
 
+		private bool isExecuting;
+
+		public bool IsExecuting
+		{
+			get { return isExecuting; }
+			set
+			{
+				isExecuting = value;
+				OnPropertyChanged();
+			}
+		}
+
 		public SaveType Type { get; set; }
         public DateTime? LastExecuteDate { get; set; }
         public Save(int id, string name, string sourcePath, string destinationPath, SaveType type)
@@ -66,10 +78,13 @@ namespace EasySave2._0.ViewModels
 
 		}
 
-		//public void Execute()
-		//{
-		//    // This method is called when the user wants to execute a save.
-		//    Creator.GetPasterInstance().BeginCopyPaste(this);
-		//}
+		public async Task Execute(IProgress<int>? progress = null)
+		{
+			IsExecuting = true;
+
+			await Task.Run(() => Creator.GetPasterInstance().BeginCopyPaste(this, progress));
+
+			IsExecuting = false;
+		}
 	}
 }
