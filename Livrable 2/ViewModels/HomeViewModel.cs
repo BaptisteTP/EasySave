@@ -32,6 +32,7 @@ namespace EasySave2._0
 		public ICommand NextPageCommand { get; }
         public ICommand PreviousPageCommand { get; }
         public ICommand StartSaveCommand {  get; }
+        public ICommand DeleteCommand { get; }
 
     public string CurrentPageFormatted
     {
@@ -76,6 +77,7 @@ namespace EasySave2._0
             NextPageCommand = new RelayCommand(_ => NextPage(), _ => CanGoNext());
             PreviousPageCommand = new RelayCommand(_ => PreviousPage(), _ => CanGoPrevious());
             StartSaveCommand = new RelayCommand(StartSave, CanStartSave);
+            DeleteCommand = new RelayCommand(DeleteItem);
 
             UpdatePagedItems();
         }
@@ -154,10 +156,6 @@ namespace EasySave2._0
 
     public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
         public void UpdateSave()
         {
             var Saves = saveStore.GetAllSaves();
@@ -169,34 +167,20 @@ namespace EasySave2._0
             UpdatePagedItems();
             CurrentPage = 1;
         }
-	}
-}
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 
-    public void UpdateSave()
-    {
-        var Saves = saveStore.GetAllSaves();
-        Items.Clear();
-        foreach (var save in Saves)
+        public void DeleteItem(object obj)
         {
-            Items.Add(new ItemViewModel(save.Id.ToString(), save.Name, this));
+            if (obj is Save save)
+            {
+                Items.Remove(save);
+                saveStore.DeleteSave(save.Id);
+                UpdatePagedItems();
+                OnPropertyChanged(nameof(TotalPages));
+                OnPropertyChanged(nameof(CurrentPageFormatted));
+            }
+            
         }
-        CurrentPage = 1; // Réinitialiser la page actuelle à 1
-        UpdatePagedItems(); // Mettre à jour les éléments paginés
-        OnPropertyChanged(nameof(TotalPages)); // Notifier le changement de TotalPages
-        OnPropertyChanged(nameof(CurrentPageFormatted)); // Notifier le changement de CurrentPageFormatted
-    }
 
-    public void DeleteItem(ItemViewModel item)
-    {
-        Items.Remove(item);
-        UpdatePagedItems();
-        OnPropertyChanged(nameof(TotalPages));
-        OnPropertyChanged(nameof(CurrentPageFormatted));
-        saveStore.DeleteSave(int.Parse(item.ID));
     }
 
 }

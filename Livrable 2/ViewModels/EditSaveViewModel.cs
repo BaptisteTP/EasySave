@@ -18,7 +18,6 @@ namespace EasySave2._0.ViewModels
         public EditSaveViewModel(Save save)
         {
             SaveToEdit = save;
-            SaveToEdit.OnValidateProperty += SaveToAdd_OnValidateProperty;
             SaveCommand = new RelayCommand(_ => CreateSave(), _ => CanCreateSave());
         }
 

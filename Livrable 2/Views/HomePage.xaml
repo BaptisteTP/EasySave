@@ -59,6 +59,8 @@
                                         <Image Source="../assets/images/EditButton.png" Width="24" Height="24"/>
                                     </Button>
                                     <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Cursor="Hand"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.DeleteCommand}"
+                                            CommandParameter="{Binding}"
                                             HorizontalAlignment="Right" VerticalAlignment="Center">
                                         <Image Source="../assets/images/SupButton.png" Width="24" Height="24"/>
                                     </Button>
