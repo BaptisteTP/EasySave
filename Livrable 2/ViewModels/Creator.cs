@@ -117,6 +117,7 @@ namespace EasySave2._0.ViewModels
 				_pasterInstance.OnDirectoryCopied += _loggerInstance.OnCopyDirectory;
 				_pasterInstance.SaveStarted += _loggerInstance.OnSaveStarted;
 				_pasterInstance.SaveFinished += _loggerInstance.OnSaveFinished;
+                _pasterInstance.BuisnessSoftwareDetected += _loggerInstance.OnBuisnessSoftwareDetected;
 				_saveStoreInstance.SaveCreated += _loggerInstance.OnSaveCreated;
 				_saveStoreInstance.SaveDeleted += _loggerInstance.OnSaveEdited;
 				_saveStoreInstance.SaveEdited += _loggerInstance.OnSaveDeleted;

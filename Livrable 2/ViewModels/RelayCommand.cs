@@ -13,7 +13,7 @@ public class RelayCommand : ICommand
         _canExecute = canExecute;
     }
 
-	public RelayCommand(ICommand? startSave)
+	public RelayCommand(ICommand? startSave, object canAddBuisnessSoftware)
 	{
 		this.startSave = startSave;
 	}

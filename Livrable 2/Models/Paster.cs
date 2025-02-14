@@ -20,10 +20,12 @@ namespace EasySave2._0.Models
 		public event EventHandler<FileCopyEventArgs>? OnFileCopied;
 		public event EventHandler<Save>? SaveStarted;
 		public event EventHandler<Save>? SaveFinished;
+		public event EventHandler<Save>? BuisnessSoftwareDetected;
 
 		public bool BeginCopyPaste(Save executedSave, IProgress<int> progress)
 		{
 			if (!Directory.Exists(executedSave.SourcePath)) { return false; }
+			if (AreAnyBuisnessSoftwareUp()) { BuisnessSoftwareDetected?.Invoke(this, executedSave);  return false; }
 
 			switch (executedSave.Type)
 			{
@@ -199,6 +201,24 @@ namespace EasySave2._0.Models
 			{
 				OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
 			}
+		}
+
+		private bool AreAnyBuisnessSoftwareUp()
+		{
+			Settings settings = Creator.GetSettingsInstance();
+			Process[] processes = Process.GetProcesses();
+
+			foreach(string buisnessSoftware in settings.BuisnessSoftwaresInterrupt)
+			{
+				foreach (var process in processes)
+				{
+					if(process.ProcessName == buisnessSoftware)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 }

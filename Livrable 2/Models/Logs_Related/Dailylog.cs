@@ -16,6 +16,9 @@ namespace EasySave2._0.Models.Logs_Related
 	{
 		[XmlAttribute("Save")]
 		public string Savename { get; set; }
+
+		[XmlAttribute("State")]
+		public string State { get; set; } = "Executed";
 		public List<DirectoryCopyLog> CopiedDirectories { get; set; } = new List<DirectoryCopyLog>();
 		public List<FileCopyLog> CopiedFiles { get; set; } = new List<FileCopyLog>();
 

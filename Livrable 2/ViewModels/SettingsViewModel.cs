@@ -3,6 +3,8 @@ using EasySave2._0.Models;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +18,24 @@ namespace EasySave2._0.ViewModels
 		public ICommand ChangedLogPathCommand { get; }
 		public ICommand ConfirmSettingsCommand { get; }
 
+		public ICommand AddBuisnessSoftwareCommand { get; }
+
 		#region Attributes
+
+		public ObservableCollection<string> BuisnessSoftwaresInterrupt { get; }
+
+		private string _buisnessSoftwareToAdd = "";
+
+		public string BuisnessSoftwareToAdd
+		{
+			get { return _buisnessSoftwareToAdd; }
+			set
+			{
+				_buisnessSoftwareToAdd = value;
+				OnPropertyChanged();
+			}
+		}
+
 
 		private string selectedLanguage;
 		public string SelectedLanguage
@@ -84,14 +103,17 @@ namespace EasySave2._0.ViewModels
 		{
 			ChangedLogPathCommand = new RelayCommand(ChangeViaFolderDialog);
 			ConfirmSettingsCommand = new RelayCommand(ConfirmSettings, CanConfirmSettings);
+			AddBuisnessSoftwareCommand = new RelayCommand(AddBuisnessSoftware, CanAddBuisness);
 
 			Settings settings = Creator.GetSettingsInstance();
+
 
 			SelectedLanguage = settings.ActiveLanguage;
 			DailyLogPath = settings.DailyLogPath;
 			RealTimeLogPath = settings.RealTimeLogPath;
+			BuisnessSoftwaresInterrupt = new ObservableCollection<string>(settings.BuisnessSoftwaresInterrupt);
 
-			if(Enum.IsDefined(typeof(LogType), settings.LogFormat))
+			if (Enum.IsDefined(typeof(LogType), settings.LogFormat))
 			{
 				SelectedLogType = (LogType)Enum.Parse(typeof(LogType), settings.LogFormat);
 			}
@@ -100,6 +122,22 @@ namespace EasySave2._0.ViewModels
 				SelectedLogType = LogType.json;
 			}
 			
+		}
+
+		private void AddBuisnessSoftware(object obj)
+		{
+			Settings settings = Creator.GetSettingsInstance();
+
+			BuisnessSoftwaresInterrupt.Add(BuisnessSoftwareToAdd);
+			BuisnessSoftwareToAdd = "";
+
+			Settings.ChangeSetting("BuisnessSoftwaresInterrupt", new List<string>(BuisnessSoftwaresInterrupt));
+			settings.BuisnessSoftwaresInterrupt = new List<string>(BuisnessSoftwaresInterrupt);
+		}
+
+		private bool CanAddBuisness(object arg)
+		{
+			return BuisnessSoftwareToAdd != "";
 		}
 
 		private void ConfirmSettings(object obj)
