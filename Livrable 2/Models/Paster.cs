@@ -212,44 +212,41 @@ namespace EasySave2._0.Models
             {
                 OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
             }
+            try
+            {
+                File.Copy(fileFullName, destinationPath, true);
+                stopWatch.Stop();
+                timeElapsed = stopWatch.Elapsed;
+
+            }
+            catch
+            {
+                stopWatch.Stop();
+                timeElapsed = null;
+            }
+            finally
+            {
+                OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
+            }
         }
 
+        private bool AreAnyBuisnessSoftwareUp()
+        {
+            Settings settings = Creator.GetSettingsInstance();
+            Process[] processes = Process.GetProcesses();
+
+            foreach (string buisnessSoftware in settings.BuisnessSoftwaresInterrupt)
+            {
+                foreach (var process in processes)
+                {
+                    if (process.ProcessName == buisnessSoftware)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
-			try
-			{
-				File.Copy(fileFullName, destinationPath, true);
-				stopWatch.Stop();
-				timeElapsed = stopWatch.Elapsed;
-
-			}
-			catch
-			{
-				stopWatch.Stop();
-				timeElapsed = null;
-			}
-			finally
-			{
-				OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
-			}
-		}
-
-		private bool AreAnyBuisnessSoftwareUp()
-		{
-			Settings settings = Creator.GetSettingsInstance();
-			Process[] processes = Process.GetProcesses();
-
-			foreach(string buisnessSoftware in settings.BuisnessSoftwaresInterrupt)
-			{
-				foreach (var process in processes)
-				{
-					if(process.ProcessName == buisnessSoftware)
-					{
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-	}
 }
 

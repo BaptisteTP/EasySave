@@ -119,9 +119,7 @@ namespace EasySave2._0.ViewModels
 
         private void CreateSave()
         {
-			saveStore.CreateNewSave(SaveName, SaveType.Full, SourcePath, DestinationPath, Encrypt);
-
-			saveStore.CreateNewSave(SaveName, SelectedSaveType, SourcePath, DestinationPath);
+			saveStore.CreateNewSave(SaveName, SelectedSaveType, SourcePath, DestinationPath, Encrypt);
             ClearFields();
             SaveCreated?.Invoke(this, EventArgs.Empty);
 		}
