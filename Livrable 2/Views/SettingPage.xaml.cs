@@ -32,7 +32,7 @@ namespace EasySave2._0
 
 		private void ViewModel_SettingsConfirmed(object? sender, EventArgs e)
 		{
-            NavigationService.Navigate(Creator.GetHomePageInstance());
+            NavigationService.GoBack();
 		}
 	}
 }

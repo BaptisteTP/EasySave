@@ -29,6 +29,14 @@ namespace EasySave2._0.ViewModels
                 SaveName = saveToEdit.Name;
                 SourcePath = saveToEdit.SourcePath;
                 DestinationPath = saveToEdit.DestinationPath;
+                if (Enum.IsDefined(typeof(SaveType), saveToEdit.Type))
+                {
+                    SelectedSaveType = saveToEdit.Type;
+                }
+                else
+                {
+                    SelectedSaveType = SaveType.Full;
+                }
             }
         }
 
@@ -47,6 +55,18 @@ namespace EasySave2._0.ViewModels
                 {
                     AddError(nameof(SaveName), "Le nom de la sauvegarde ne peut pas être vide.");
                 }
+            }
+        }
+
+        private SaveType selectedSaveType = SaveType.Full;
+
+        public SaveType SelectedSaveType
+        {
+            get { return selectedSaveType; }
+            set
+            {
+                selectedSaveType = value;
+                OnPropertyChanged();
             }
         }
 
@@ -94,6 +114,7 @@ namespace EasySave2._0.ViewModels
                 }
             }
         }
+
         public EditSaveViewModel()
         {
             ModifCommand = new RelayCommand(ModifySave, CanModifySave);
@@ -108,15 +129,13 @@ namespace EasySave2._0.ViewModels
         {
             if (SaveToEdit != null)
             {
-                saveStore.EditSave(SaveToEdit.Id, 1, _saveName);
-                saveStore.EditSave(SaveToEdit.Id, 2, _sourcePath);
-                saveStore.EditSave(SaveToEdit.Id, 3, _destinationPath);
+                SaveToEdit.Name = SaveName;
+                SaveToEdit.SourcePath = SourcePath;
+                SaveToEdit.DestinationPath = DestinationPath;
+                SaveToEdit.Type = SelectedSaveType;
 
-                // Optionally, you can raise an event or call a method to notify that the save has been modified
                 SaveEdit?.Invoke(this, EventArgs.Empty);
-                
             }
         }
-
     }
 }

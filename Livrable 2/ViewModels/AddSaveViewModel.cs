@@ -81,6 +81,17 @@ namespace EasySave2._0.ViewModels
 				}
 			}
         }
+        private SaveType selectedSaveType = SaveType.Full;
+
+        public SaveType SelectedSaveType
+        {
+            get { return selectedSaveType; }
+            set
+            {
+                selectedSaveType = value;
+                OnPropertyChanged();
+            }
+        }
 
 
 
@@ -99,7 +110,8 @@ namespace EasySave2._0.ViewModels
 
         private void CreateSave()
         {
-			saveStore.CreateNewSave(SaveName, SaveType.Full, SourcePath, DestinationPath);
+
+			saveStore.CreateNewSave(SaveName, SelectedSaveType, SourcePath, DestinationPath);
             ClearFields();
             SaveCreated?.Invoke(this, EventArgs.Empty);
 		}

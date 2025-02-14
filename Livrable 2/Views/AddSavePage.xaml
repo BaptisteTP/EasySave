@@ -5,9 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:EasySave2._0"
       xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
+      xmlns:valueconverters="clr-namespace:EasySave2._0.ValueConverters"
+      xmlns:enums="clr-namespace:EasySave2._0.Enums"
       mc:Ignorable="d" 
       Title="AddSavePage" Height="720" Width="1280" Background="#fff">
+    
     <Page.Resources>
+        <valueconverters:SaveTypeToSelectedBool x:Key="SaveTypeToSelectedBool"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Style TargetType="RadioButton">
             <Setter Property="FontSize" Value="16"/>
@@ -40,7 +44,7 @@
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     CornerRadius="3">
-                                    <ScrollViewer x:Name="PART_ContentHost"/>
+                                <ScrollViewer x:Name="PART_ContentHost"/>
                             </Border>
                             <ItemsControl Margin="0 5 0 0" FontSize="12" ItemsSource="{TemplateBinding Validation.Errors}">
                                 <ItemsControl.ItemTemplate>
@@ -101,8 +105,12 @@
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Type :" FontWeight="Bold" FontSize="20"/>
-                <RadioButton Content="Complete" FontSize="20" FontWeight="Bold" GroupName="Type" IsChecked="True" Margin="15,2,0,0" Cursor="Hand"/>
-                <RadioButton Content="Incrementielle" FontSize="20" FontWeight="Bold" GroupName="Type" Margin="15,2,0,0" Cursor="Hand"/>
+                <RadioButton Content="Complete" FontSize="20" FontWeight="Bold" GroupName="Type"
+                             IsChecked="{Binding SelectedSaveType, Mode=TwoWay, Converter={StaticResource SaveTypeToSelectedBool}, ConverterParameter={x:Static enums:SaveType.Full}}"
+                             Margin="15,2,0,0" Cursor="Hand"/>
+                <RadioButton Content="Differentielle" FontSize="20" FontWeight="Bold" GroupName="Type"
+                             IsChecked="{Binding SelectedSaveType, Mode=TwoWay, Converter={StaticResource SaveTypeToSelectedBool}, ConverterParameter={x:Static enums:SaveType.Differential}}"
+                             Margin="15,2,0,0" Cursor="Hand"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
