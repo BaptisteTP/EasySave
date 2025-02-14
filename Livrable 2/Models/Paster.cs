@@ -127,7 +127,14 @@ namespace EasySave2._0.Models
 				string destinationPath = newPath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
 
 				OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, newPath, destinationPath));
-				progress?.Report(Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100));
+				try
+				{
+					progress?.Report(Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100));
+				}
+				catch
+				{
+                    progress?.Report(0);
+                }
 				CopyFile(newPath, executedSave, destinationPath);
 				remainingFiles.Remove(newPath);
 			}
@@ -175,31 +182,36 @@ namespace EasySave2._0.Models
 
 		}
 
-		private void CopyFile(string fileFullName, Save executedSave, string destinationPath)
-		{
-			// Copy the file to the destination path
+        private void CopyFile(string fileFullName, Save executedSave, string destinationPath)
+        {
+            TimeSpan? timeElapsed = null;
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
 
-			TimeSpan? timeElapsed = null;
-			var stopWatch = new Stopwatch();
-			stopWatch.Start();
+            try
+            {
+                File.Copy(fileFullName, destinationPath, true);
 
-			try
-			{
-				File.Copy(fileFullName, destinationPath, true);
-				stopWatch.Stop();
-				timeElapsed = stopWatch.Elapsed;
+                if (executedSave.Encrypt)
+                {
+                    var crypto = new CryptoManager(destinationPath, "Baptiste"); 
+                    crypto.EncryptFile();
+                }
 
-			}
-			catch
-			{
-				stopWatch.Stop();
-				timeElapsed = null;
-			}
-			finally
-			{
-				OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
-			}
-		}
-	}
+                stopWatch.Stop();
+                timeElapsed = stopWatch.Elapsed;
+            }
+            catch
+            {
+                stopWatch.Stop();
+                timeElapsed = null;
+            }
+            finally
+            {
+                OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
+            }
+        }
+
+    }
 }
 

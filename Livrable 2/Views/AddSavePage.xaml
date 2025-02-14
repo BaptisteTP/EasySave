@@ -119,7 +119,7 @@
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Chiffrage :" FontWeight="Bold" FontSize="20"/>
-                <CheckBox Name="ChifrageBox" Content="Chiffrer la sauvegarde" FontSize="20" FontWeight="Bold" Margin="15,0,0,0" Cursor="Hand"/>
+                <CheckBox x:Name="EncryptCheckBox" Content="Chiffrer la sauvegarde" FontSize="20" FontWeight="Bold" Margin="15,0,0,0" Cursor="Hand" IsChecked="{Binding Encrypt, Mode=TwoWay}"/>
             </StackPanel>
         </StackPanel>
 

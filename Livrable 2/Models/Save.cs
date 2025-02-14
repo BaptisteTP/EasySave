@@ -52,25 +52,34 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-		public SaveType Type { get; set; }
+        private bool encrypt;
+        public bool Encrypt
+        {
+            get { return encrypt; }
+            set { encrypt = value; OnPropertyChanged(); }
+        }
+
+        public SaveType Type { get; set; }
         public DateTime? LastExecuteDate { get; set; }
-        public Save(int id, string name, string sourcePath, string destinationPath, SaveType type)
+        public Save(int id, string name, string sourcePath, string destinationPath, SaveType type, bool encrypt)
         {
 			Id = id;
             Name = name;
             SourcePath = sourcePath;
             DestinationPath = destinationPath;
             Type = type;
+            Encrypt = encrypt;
             LastExecuteDate = null;
         }
 
-        public Save(int id, string name, string sourcePath, string destinationPath, SaveType type, DateTime lastExecutedDate)
+        public Save(int id, string name, string sourcePath, string destinationPath, SaveType type, DateTime lastExecutedDate, bool encrypt)
         {
 			Id = id;
             Name = name;
             SourcePath = sourcePath;
             DestinationPath = destinationPath;
             Type = type;
+            Encrypt = encrypt;
             LastExecuteDate = lastExecutedDate;
         }
 
