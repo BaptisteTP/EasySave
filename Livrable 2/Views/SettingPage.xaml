@@ -4,11 +4,15 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:EasySave2._0"
+      xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
+      xmlns:valueconverters="clr-namespace:EasySave2._0.ValueConverters"
+      xmlns:enums="clr-namespace:EasySave2._0.Enums"
       mc:Ignorable="d"
       Title="SettingPage" Background="#fff" Height="720" Width="1280">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <valueconverters:LogTypeToSelectedBool x:Key="LogTypeToSelectedBool"/>
         <Style TargetType="RadioButton">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -28,8 +32,43 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="ErrorTemplate" TargetType="TextBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <Border Padding="{TemplateBinding Padding}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="3">
+                                <ScrollViewer x:Name="PART_ContentHost"/>
+                            </Border>
+                            <ItemsControl Margin="0 5 0 0" FontSize="12" ItemsSource="{TemplateBinding Validation.Errors}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Foreground="Red" Text="{Binding ErrorContent}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <AdornedElementPlaceholder/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
+    <Page.DataContext>
+        <viewmodels:SettingsViewModel/>
+    </Page.DataContext>
+    
     <Grid Cursor="">
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}"/>
 
@@ -40,28 +79,28 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,50">
-            <TextBox Name="LogFolderPath" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
-            <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand"/>
+            <TextBox Style="{StaticResource ErrorTemplate}" Text="{Binding RealTimeLogPath, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
+            <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Command="{Binding ChangedLogPathCommand}" CommandParameter="realtime"/>
         </StackPanel>
         <TextBlock FontSize="20" FontWeight="Bold" Text="Pour changer le dossier des logs en temps réel choisissez un nouveau dossier pour accueillir le dossier : " 
                    Margin="0,0,0,150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,180,0,0">
-            <TextBox Name="LogDayFolderPath" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
-            <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand"/>
+            <TextBox Style="{StaticResource ErrorTemplate}" Text="{Binding DailyLogPath, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
+            <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Command="{Binding ChangedLogPathCommand}" CommandParameter="daily"/>
         </StackPanel>
         <TextBlock FontSize="20" FontWeight="Bold" Text="Pour changer le dossier des logs journalier choisissez un nouveau dossier pour accueillir le dossier : " 
                    Margin="0,80,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,300,0,0">
             <TextBlock Text="Logs en JSON ou XML : " FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,20,0"/>
-            <RadioButton Content="JSON" GroupName="LogFormat" IsChecked="True" Cursor="Hand"/>
-            <RadioButton Content="XML" GroupName="LogFormat" Cursor="Hand"/>
+            <RadioButton Content="JSON" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.json}}" Cursor="Hand"/>
+            <RadioButton Content="XML" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.xml}}" Cursor="Hand"/>
         </StackPanel>
 
         <Button Width="170" Height="44" Content="✔ Terminer" FontSize="24" FontWeight="Bold" Style="{StaticResource GreenButtonStyle}"
-                BorderThickness="2" Command="{Binding CreateSaveCommand}" Cursor="Hand"
-                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="100,0,0,100" Click="TerButton_Click">
+                BorderThickness="2" Command="{Binding ConfirmSettingsCommand}" Cursor="Hand"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="100,0,0,100">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"

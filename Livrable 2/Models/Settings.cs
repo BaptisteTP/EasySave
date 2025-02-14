@@ -176,6 +176,8 @@ namespace EasySave2._0.Models
 		public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
 		{
 			// Check if the user has the right permissions in the folder.
+			if (!Directory.Exists(newDailyLogFolderPath)) {  return false; }
+
 			try
 			{
 				using FileStream fs = File.Create(
