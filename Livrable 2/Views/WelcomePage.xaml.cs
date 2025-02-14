@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasySave2._0.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,10 +24,17 @@ namespace EasySave2._0
         public WelcomePage()
         {
             InitializeComponent();
+            var viewModel = new WelcomeViewModel();
+			viewModel.NextPageButtonClicked += ViewModel_NextPageButtonClicked;
+            DataContext = viewModel;
         }
-        private void NextButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new LogPage());
-        }
-    }
+
+		private void ViewModel_NextPageButtonClicked(object? sender, EventArgs e)
+		{
+            MainWindow mainWindow = Creator.GetMainWindow();
+            NavigationService.Navigate(mainWindow);
+			mainWindow.StartAppNaviguation();
+
+		}
+	}
 }

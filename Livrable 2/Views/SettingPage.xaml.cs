@@ -25,24 +25,14 @@ namespace EasySave2._0
         public SettingPage()
         {
             InitializeComponent();
+            SettingsViewModel viewModel = new SettingsViewModel();
+			viewModel.SettingsConfirmed += ViewModel_SettingsConfirmed;
+            DataContext = viewModel;
         }
 
-        private void BrowseFolder_Click(object sender, RoutedEventArgs e)
-        {
-            var folderDialog = new OpenFolderDialog
-            {
-
-            };
-
-            if (folderDialog.ShowDialog() == true)
-            {
-                LogFolderPath.Text = folderDialog.FolderName;
-            }
-        }
-
-        private void TerButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.GoBack();
-        }
-    }
+		private void ViewModel_SettingsConfirmed(object? sender, EventArgs e)
+		{
+            NavigationService.Navigate(Creator.GetHomePageInstance());
+		}
+	}
 }

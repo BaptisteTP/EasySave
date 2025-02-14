@@ -1,17 +1,19 @@
-﻿using System;
+﻿
+using EasySave2._0.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Resources;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Project_Easy_Save.Classes
+namespace EasySave2._0.Models
 {
-	public class Settings
-	{
+    public class Settings
+    {
 		public string? ActiveLanguage { get; set; }
 		public string? FallBackLanguage { get; set; }
 		public string? DailyLogPath { get; set; }
@@ -65,7 +67,7 @@ namespace Project_Easy_Save.Classes
 			}
 		}
 
-		private static void ChangeSetting(string setting, string newValue)
+		public static void ChangeSetting(string setting, string newValue)
 		{
 			// Change a setting and write it to the json file.
 			Settings currentSettings = Creator.GetSettingsInstance();
@@ -174,6 +176,8 @@ namespace Project_Easy_Save.Classes
 		public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
 		{
 			// Check if the user has the right permissions in the folder.
+			if (!Directory.Exists(newDailyLogFolderPath)) {  return false; }
+
 			try
 			{
 				using FileStream fs = File.Create(
@@ -217,34 +221,6 @@ namespace Project_Easy_Save.Classes
 			GetBaseSettings().RealTimeLogPath = newRealTimeLogPath;
 			ChangeSetting("RealTimeLogPath", newRealTimeLogPath!);
 		}
-
-		public static void AskUserToChooseLogFormat()
-		{
-			Console.Clear();
-			string currentLogFormat = GetBaseSettings().LogFormat!;
-
-			int chosenFormat = -1;
-			while (!IsChoosenLogFormatValid(chosenFormat))
-			{
-				Console.WriteLine(string.Format(_ressourceManager.GetString("InformUser_CurrentLogFormat"), currentLogFormat));
-				bool isParseSuccessful = int.TryParse(Console.ReadKey().KeyChar.ToString(), out chosenFormat);
-
-				if (!isParseSuccessful)
-				{
-					Console.Clear();
-					Console.WriteLine(_ressourceManager.GetString("WrongCommandMessage"));
-				}
-			}
-			LogFormat newLogFormat = Enum.Parse<LogFormat>(chosenFormat.ToString());
-			ChangeSetting("LogFormat", newLogFormat.ToString());
-
-
-		}
-
-		private static bool IsChoosenLogFormatValid(int logFormat)
-		{
-			return Enum.IsDefined(typeof(LogFormat), logFormat);
-		}
 	}
 }
-}
+

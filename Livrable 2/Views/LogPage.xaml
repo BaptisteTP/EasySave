@@ -1,7 +1,11 @@
 ﻿<Page x:Class="EasySave2._0.LogPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
+      xmlns:valueconverters="clr-namespace:EasySave2._0.ValueConverters"
+      xmlns:enums="clr-namespace:EasySave2._0.Enums"
       Background="White" Cursor="" Height="720" Width="1280">
+    
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Style TargetType="RadioButton">
@@ -23,28 +27,38 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <valueconverters:LogTypeToSelectedBool x:Key="LogTypeToSelectedBool"/>
     </Page.Resources>
+
+    <Page.DataContext>
+        <viewmodels:LogViewModel/>
+    </Page.DataContext>
     
     <Grid Cursor="">
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo1}" />
+        
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0">
+            
             <TextBlock Text="Les logs en temps réel sont actuellement stockées dans le dossier suivant :" FontWeight="Bold" FontSize="24" TextAlignment="Center"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,20">
-                <TextBox Name="LogFolderPath" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
-                <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Click="BrowseFolder_Click"/>
+                <TextBox Name="LogFolderPath" Text="{Binding RealTimeLogPath, Mode=TwoWay}" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
+                <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Command="{Binding ChangePathCommand}" CommandParameter="realtime"/>
             </StackPanel>
+            
             <TextBlock Text="Les logs journalier sont actuellement stockées dans le dossier suivant :" FontWeight="Bold" FontSize="24" TextAlignment="Center"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,20">
-                <TextBox Name="LogDayFolderPath" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
-                <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Click="BrowseFolderDay_Click"/>
+                <TextBox Name="LogDayFolderPath" Text="{Binding DailyLogPath, Mode=TwoWay}" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
+                <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Command="{Binding ChangePathCommand}" CommandParameter="daily"/>
             </StackPanel>
+            
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,20">
                 <TextBlock Text="Logs en JSON ou XML : " FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                <RadioButton Content="JSON" GroupName="LogFormat" IsChecked="True" Cursor="Hand"/>
-                <RadioButton Content="XML" GroupName="LogFormat" Cursor="Hand"/>
+                <RadioButton Content="JSON" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.json}}" Cursor="Hand"/>
+                <RadioButton Content="XML" GroupName="LogFormat" IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.xml}}" Cursor="Hand"/>
             </StackPanel>
+            
         </StackPanel>
-        <Button x:Name="NextButton" Style="{StaticResource NextButton}" VerticalAlignment="Bottom" Margin="0,0,0,100" Click="NextButton_Click" Cursor="Hand">
+        <Button x:Name="NextButton" Style="{StaticResource NextButton}" VerticalAlignment="Bottom" Margin="0,0,0,100" Command="{Binding GoNext}" Cursor="Hand">
             <TextBlock Text="Suivant ->" FontSize="22" FontWeight="Bold"/>
         </Button>
     </Grid>

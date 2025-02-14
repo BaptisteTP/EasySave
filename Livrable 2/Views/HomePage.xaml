@@ -3,15 +3,21 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:EasySave2._0"
+      xmlns:local="clr-namespace:EasySave2._0" d:DataContext="{d:DesignInstance Type=local:HomeViewModel}"
+      xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
       mc:Ignorable="d"
       Title="HomePage" Background="#fff" Height="720" Width="1280">
 
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Page.Resources>
+    
     <Grid>
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}"/>
 
         <TextBlock x:Name="Text" Text="Liste de toutes les opérations de sauvegarde :"
                    FontSize="24" FontWeight="Bold" Margin="90,150,0,0"/>
+
 
         <ListView ItemsSource="{Binding PagedItems}" Width="1090" Background="Transparent" BorderThickness="0"
               ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="400" Margin="95,196,95,108">
@@ -29,27 +35,39 @@
             </ListView.ItemContainerStyle>
 
             <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border Background="#F3F1F1" Padding="10" CornerRadius="10" Width="1040" Margin="0,0,0,10" Height="60" 
+                <DataTemplate DataType="viewmodels:Save">
+                    <Border Background="#F3F1F1" Padding="10" CornerRadius="10" Width="1040" Margin="0,0,0,10" MinHeight="60" MaxHeight="90"
                         HorizontalAlignment="Center">
-                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="980">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding ID}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" FontWeight="Bold" FontSize="16"/>
-                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" FontWeight="Bold" FontSize="16"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                <Button Margin="10,0,40,0" Style="{StaticResource NoHighlightButton}" Command="{Binding PlayCommand}" Cursor="Hand"
-                                        HorizontalAlignment="Right" VerticalAlignment="Center">
-                                    <Image Source="../assets/images/PlayButton.png" Width="24" Height="24"/>
-                                </Button>
-                                <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Command="{Binding EditCommand}" CommandParameter="{Binding}" Cursor="Hand"
-                                    HorizontalAlignment="Right" VerticalAlignment="Center">
-                                    <Image Source="../assets/images/EditButton.png" Width="24" Height="24"/>
-                                </Button>
-                                <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Command="{Binding DeleteCommand}" Cursor="Hand"
-                                    HorizontalAlignment="Right" VerticalAlignment="Center">
-                                    <Image Source="../assets/images/SupButton.png" Width="24" Height="24"/>
-                                </Button>
+                        <Grid VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding Id}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" FontWeight="Bold" FontSize="16"/>
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" FontWeight="Bold" FontSize="16"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Margin="10,0,40,0" Style="{StaticResource NoHighlightButton}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.StartSaveCommand}" CommandParameter="{Binding}" Cursor="Hand"
+                                                HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Image Source="../assets/images/PlayButton.png" Width="24" Height="24"/>
+                                    </Button>
+                                    <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Cursor="Hand"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Image Source="../assets/images/EditButton.png" Width="24" Height="24"/>
+                                    </Button>
+                                    <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Cursor="Hand"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Image Source="../assets/images/SupButton.png" Width="24" Height="24"/>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                            
+                            <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Visibility="{Binding IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock Text="Executing..." FontWeight="Medium"/>
+                                <ProgressBar VerticalAlignment="Bottom" Height="4" Minimum="0" Maximum="100" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.SaveExecutionProgress}" />
                             </StackPanel>
                         </Grid>
                     </Border>

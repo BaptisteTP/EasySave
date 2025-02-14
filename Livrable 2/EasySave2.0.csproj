@@ -63,6 +63,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="LogLib">
+      <HintPath>LogLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="ViewModels\HomeViewModel.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

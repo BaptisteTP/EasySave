@@ -24,25 +24,19 @@ namespace EasySave2._0
         public HomePage()
         {
             InitializeComponent();
-            var viewmodel = new HomeViewModel();
-            viewmodel.EditSaveRaised += Viewmodel_EditSaveRaised;
-            DataContext = new HomeViewModel();
+            var viewModel = new HomeViewModel();
+			DataContext = viewModel;
         }
 
-        private void Viewmodel_EditSaveRaised(object? sender, Save save)
-        {
-            NavigationService.Navigate(new EditSavePage(save));
-        }
-
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(Creator.GetAddSavePageInstance());
-        }
+			NavigationService.Navigate(Creator.GetAddSavePageInstance());
+		}
 
         private void OptionButton_Click(object sender, RoutedEventArgs e)
         {
