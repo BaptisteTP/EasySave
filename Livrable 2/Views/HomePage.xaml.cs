@@ -25,10 +25,18 @@ namespace EasySave2._0
         {
             InitializeComponent();
             var viewModel = new HomeViewModel();
-			DataContext = viewModel;
+            viewModel.SaveModify += ViewModel_SaveModify;
+            DataContext = viewModel;
         }
 
-		private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ViewModel_SaveModify(object? sender, Save e)
+        {
+            var editPage = new EditSavePage();
+            editPage.SaveToEdit = e;
+            NavigationService.Navigate(editPage);
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }

@@ -24,14 +24,24 @@ namespace EasySave2._0
     /// </summary>
     public partial class EditSavePage : Page
     {
-        public EditSavePage(Save save)
+        private Save saveToEdit;
+        public Save SaveToEdit
+        {
+            get { return saveToEdit; }
+            set
+            {
+                saveToEdit = value;
+                EditSaveViewModel viewModel = new EditSaveViewModel();
+                viewModel.SaveEdit += GoBackToHomeView;
+                viewModel.SaveToEdit = saveToEdit;
+                DataContext = viewModel;
+            }
+        }
+        public EditSavePage()
         {
             InitializeComponent();
-            EditSaveViewModel viewModel = new EditSaveViewModel(save);
-            //viewModel.SaveCreated += GoBackToHomeView;
-            DataContext = viewModel;
-
         }
+
 
         private void SourceFolder_click(object sender, RoutedEventArgs e)
         {

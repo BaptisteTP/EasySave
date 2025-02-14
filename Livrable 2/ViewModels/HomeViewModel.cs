@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using EasySave2._0.CustomEventArgs;
 using EasySave2._0.ViewModels;
+using System.Windows.Navigation;
 
 namespace EasySave2._0
 {
@@ -33,8 +34,10 @@ namespace EasySave2._0
         public ICommand PreviousPageCommand { get; }
         public ICommand StartSaveCommand {  get; }
         public ICommand DeleteCommand { get; }
+        public ICommand EditItemCommand { get; }
+        public event EventHandler<Save> SaveModify;
 
-    public string CurrentPageFormatted
+        public string CurrentPageFormatted
     {
         get => $"{CurrentPage} / {TotalPages}";
     }
@@ -76,16 +79,25 @@ namespace EasySave2._0
 
             NextPageCommand = new RelayCommand(_ => NextPage(), _ => CanGoNext());
             PreviousPageCommand = new RelayCommand(_ => PreviousPage(), _ => CanGoPrevious());
-            StartSaveCommand = new RelayCommand(StartSave, CanStartSave);
-            DeleteCommand = new RelayCommand(DeleteItem);
+            StartSaveCommand = new RelayCommand(StartSave, CanInteract);
+            DeleteCommand = new RelayCommand(DeleteItem, CanInteract);
+            EditItemCommand = new RelayCommand(EditItem, CanInteract);
 
             UpdatePagedItems();
         }
 
-		private bool CanStartSave(object arg)
-		{
+        private bool CanInteract(object arg)
+        {
             return !IsASaveExecuting;
-		}
+        }
+
+        private void EditItem(object obj)
+        {
+            if (obj is Save save)
+            {
+                SaveModify?.Invoke(this, save);
+            }
+        }
 
 		private async void StartSave(object obj)
 		{

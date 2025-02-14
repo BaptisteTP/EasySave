@@ -58,7 +58,7 @@
             <TextBlock Text="Ajouter une nouvelle sauvegarde :" FontWeight="Bold" FontSize="20" Margin="0,20,0,0"/>
             <StackPanel Orientation="Horizontal" Margin="0,25,0,0">
                 <TextBlock Text="Nom :" FontWeight="Bold" FontSize="20"/>
-                <TextBox Name="txtNom" Width="459" Style="{StaticResource ErrorTemplate}" Margin="10,0,0,0" FontSize="20" Text="{Binding SaveToEdit.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                <TextBox Name="txtNom" Width="459" Style="{StaticResource ErrorTemplate}" Margin="10,0,0,0" FontSize="20" Text="{Binding SaveName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
@@ -69,13 +69,13 @@
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Source :" Margin="0,10,0,0" FontSize="20" FontWeight="Bold"/>
-                <TextBox Name="SourceFolderBox" Style="{StaticResource ErrorTemplate}" Width="606" FontSize="20" Margin="10,0,0,0" Text="{Binding SaveToEdit.SourcePath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"></TextBox>
+                <TextBox Name="SourceFolderBox" Style="{StaticResource ErrorTemplate}" Width="606" FontSize="20" Margin="10,0,0,0" Text="{Binding SourcePath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"></TextBox>
                 <Button Content="..." Width="60" Height="50" FontSize="18" Click="SourceFolder_click" Margin="5,0,0,0"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                 <TextBlock Text="Destination :" FontSize="20" Margin="0,10,0,0" FontWeight="Bold"/>
-                <TextBox Name="DestinationFolderBox" Style="{StaticResource ErrorTemplate}" FontSize="20" Width="557" Margin="10,0,0,0" Text="{Binding SaveToEdit.DestinationPath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                <TextBox Name="DestinationFolderBox" Style="{StaticResource ErrorTemplate}" FontSize="20" Width="557" Margin="10,0,0,0" Text="{Binding DestinationPath, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                 <Button Content="..." Width="60" Height="50" FontSize="18" Click="DestinationFolder_Click" Margin="5,0,0,0" />
             </StackPanel>
 

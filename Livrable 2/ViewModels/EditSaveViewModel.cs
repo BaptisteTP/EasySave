@@ -1,4 +1,5 @@
 ﻿using EasySave2._0.Enums;
+using EasySave2._0.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,65 +10,113 @@ using System.Windows.Input;
 
 namespace EasySave2._0.ViewModels
 {
-    public class EditSaveViewModel : ViewModelBase
+    public class EditSaveViewModel : ValidationViewModelBase
     {
-        public event EventHandler? SaveCreated;
-        public ICommand SaveCommand { get; }
+        public event EventHandler? SaveEdit;
+        public ICommand ModifCommand { get; }
 
-        public Save SaveToEdit { get; }
-        public EditSaveViewModel(Save save)
+        private Save saveToEdit;
+
+        public Save SaveToEdit
         {
-            SaveToEdit = save;
-            SaveCommand = new RelayCommand(_ => CreateSave(), _ => CanCreateSave());
-        }
-
-        private string SaveToAdd_OnValidateProperty(string propertyName)
-        {
-            string error = string.Empty;
-
-            switch (propertyName)
+            get
             {
-                case nameof(SaveToEdit.Name):
-                    if (string.IsNullOrWhiteSpace(SaveToEdit.Name))
-                        error = "Le nom ne peut pas être vide";
-                    break;
-
-                case nameof(SaveToEdit.SourcePath):
-                    if (string.IsNullOrWhiteSpace(SaveToEdit.SourcePath))
-                        error = "Le chemin source ne peut pas être vide. ";
-                    if (!Directory.Exists(SaveToEdit.SourcePath))
-                        error += $"Le dossier spécifié n'existe pas !";
-                    break;
-
-                case nameof(SaveToEdit.DestinationPath):
-                    if (string.IsNullOrWhiteSpace(SaveToEdit.DestinationPath))
-                        error = "Le chemin de destination ne peut pas être vide. ";
-                    if (!Directory.Exists(SaveToEdit.DestinationPath))
-                        error += $"Le dossier spécifié n'existe pas !";
-                    break;
+                return saveToEdit;
             }
-
-            return error;
+            set
+            {
+                saveToEdit = value;
+                SaveName = saveToEdit.Name;
+                SourcePath = saveToEdit.SourcePath;
+                DestinationPath = saveToEdit.DestinationPath;
+            }
         }
 
-        private bool CanCreateSave()
+        private string _saveName;
+
+        public string SaveName
         {
-            return !string.IsNullOrEmpty(SaveToEdit.Name);
+            get { return _saveName; }
+            set
+            {
+                _saveName = value;
+                OnPropertyChanged();
+
+                ClearError(nameof(SaveName));
+                if (_saveName == "")
+                {
+                    AddError(nameof(SaveName), "Le nom de la sauvegarde ne peut pas être vide.");
+                }
+            }
         }
 
-        private void CreateSave()
+        private string _sourcePath;
+
+        public string SourcePath
         {
-            saveStore.CreateNewSave(SaveToEdit.Name, SaveType.Full, SaveToEdit.SourcePath, SaveToEdit.DestinationPath);
-            ClearFields();
-            SaveCreated?.Invoke(this, EventArgs.Empty);
+            get { return _sourcePath; }
+            set
+            {
+                _sourcePath = value;
+                OnPropertyChanged();
+
+                ClearError(nameof(SourcePath));
+                if (_sourcePath == "")
+                {
+                    AddError(nameof(SourcePath), "Le chemin source ne peut pas être vide.");
+                }
+                if (!Settings.UserHasRightPermissionInFolder(SourcePath))
+                {
+                    AddError(nameof(SourcePath), "Le chemin source spécifié n'est pas valide.");
+                }
+
+            }
         }
 
-        private void ClearFields()
+        private string _destinationPath;
+
+        public string DestinationPath
         {
-            SaveToEdit.Name = string.Empty;
-            SaveToEdit.SourcePath = string.Empty;
-            SaveToEdit.DestinationPath = string.Empty;
+            get { return _destinationPath; }
+            set
+            {
+                _destinationPath = value;
+                OnPropertyChanged();
 
+                ClearError(nameof(DestinationPath));
+                if (_destinationPath == "")
+                {
+                    AddError(nameof(DestinationPath), "Le chemin destination ne peut pas être vide.");
+                }
+                if (!Settings.UserHasRightPermissionInFolder(DestinationPath))
+                {
+                    AddError(nameof(DestinationPath), "Le chemin source spécifié n'est pas valide.");
+                }
+            }
         }
+        public EditSaveViewModel()
+        {
+            ModifCommand = new RelayCommand(ModifySave, CanModifySave);
+        }
+
+        private bool CanModifySave(object arg)
+        {
+            return !HasErrors;
+        }
+
+        private void ModifySave(object obj)
+        {
+            if (SaveToEdit != null)
+            {
+                saveStore.EditSave(SaveToEdit.Id, 1, _saveName);
+                saveStore.EditSave(SaveToEdit.Id, 2, _sourcePath);
+                saveStore.EditSave(SaveToEdit.Id, 3, _destinationPath);
+
+                // Optionally, you can raise an event or call a method to notify that the save has been modified
+                SaveEdit?.Invoke(this, EventArgs.Empty);
+                
+            }
+        }
+
     }
 }
