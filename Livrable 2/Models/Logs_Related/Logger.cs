@@ -105,7 +105,7 @@ namespace EasySave2._0.Models.Logs_Related
 			//Log with logger lib
 			LogLibLogger.WriteLog(stringToLog, pathToWriteTo);
 
-			Thread.Sleep(500);
+			//Thread.Sleep(500);
 		}
 
 		public void OnSaveCreated(object sender, EventArgs eventArgs)

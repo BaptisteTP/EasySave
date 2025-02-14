@@ -35,138 +35,156 @@ namespace EasySave2._0
         public ICommand StartSaveCommand {  get; }
         public ICommand DeleteCommand { get; }
         public ICommand EditItemCommand { get; }
+
+        public ICommand ExecuteAllSavesCommand { get; }
         public event EventHandler<Save> SaveModify;
 
         public string CurrentPageFormatted
-    {
-        get => $"{CurrentPage} / {TotalPages}";
-    }
-    public int TotalPages => (int)Math.Ceiling((double)Items.Count / ItemsPerPage);
-
-    public int CurrentPage
-    {
-        get => _currentPage;
-        set
         {
-            if (_currentPage != value)
-            {
-                _currentPage = value;
-                OnPropertyChanged(nameof(CurrentPage));
-                OnPropertyChanged(nameof(CurrentPageFormatted));
-                UpdatePagedItems();
-            }
+            get => $"{CurrentPage} / {TotalPages}";
         }
-    }
+        public int TotalPages => (int)Math.Ceiling((double)Items.Count / ItemsPerPage);
 
-        private int _saveExecutionProgress = 0;
-        public int SaveExecutionProgress
+        public int CurrentPage
         {
-            get { return _saveExecutionProgress; }
-            set 
+            get => _currentPage;
+            set
             {
-                _saveExecutionProgress = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public HomeViewModel()
-        {
-            var Saves = saveStore.GetAllSaves();
-            foreach (var save in Saves)
-            {
-                Items.Add(save);
-            }
-
-            NextPageCommand = new RelayCommand(_ => NextPage(), _ => CanGoNext());
-            PreviousPageCommand = new RelayCommand(_ => PreviousPage(), _ => CanGoPrevious());
-            StartSaveCommand = new RelayCommand(StartSave, CanInteract);
-            DeleteCommand = new RelayCommand(DeleteItem, CanInteract);
-            EditItemCommand = new RelayCommand(EditItem, CanInteract);
-
-            UpdatePagedItems();
-        }
-
-        private bool CanInteract(object arg)
-        {
-            return !IsASaveExecuting;
-        }
-
-        private void EditItem(object obj)
-        {
-            if (obj is Save save)
-            {
-                SaveModify?.Invoke(this, save);
-            }
-        }
-
-		private async void StartSave(object obj)
-		{
-			if(obj is Save saveToExecute)
-            {
-				IProgress<int> progress = new Progress<int>(progress =>
-				{
-                    SaveExecutionProgress = progress;
-				});
-				bool executionSuccessful = false ;
-                try
+                if (_currentPage != value)
                 {
-                    IsASaveExecuting = true;
-                    await saveToExecute.Execute(progress);
-
-                    SaveExecutionProgress = 0;
-                    executionSuccessful = true;
-
-				}
-				catch
-                {
-                    executionSuccessful = false;
-
-				}
-                finally
-                {
-                    IsASaveExecuting = false;
+                    _currentPage = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(CurrentPageFormatted));
+                    UpdatePagedItems();
                 }
             }
-		}
+        }
 
-		private void UpdatePagedItems()
-        {
-            PagedItems.Clear();
-            if (Items.Count == 0) return;
-            var savesToShow = Items.Skip((_currentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
-            foreach (var save in savesToShow)
+            private int _saveExecutionProgress = 0;
+            public int SaveExecutionProgress
             {
-                PagedItems.Add(save);
+                get { return _saveExecutionProgress; }
+                set 
+                {
+                    _saveExecutionProgress = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public HomeViewModel()
+            {
+                var Saves = saveStore.GetAllSaves();
+                foreach (var save in Saves)
+                {
+                    Items.Add(save);
+                }
+
+                NextPageCommand = new RelayCommand(_ => NextPage(), _ => CanGoNext());
+                PreviousPageCommand = new RelayCommand(_ => PreviousPage(), _ => CanGoPrevious());
+                StartSaveCommand = new RelayCommand(StartSave, CanInteract);
+                DeleteCommand = new RelayCommand(DeleteItem, CanInteract);
+                EditItemCommand = new RelayCommand(EditItem, CanInteract);
+                ExecuteAllSavesCommand = new RelayCommand(ExecuteAllSaves, CanInteract);
+
+                UpdatePagedItems();
+            }
+
+		    private async void ExecuteAllSaves(object obj)
+		    {
+			    foreach(Save save in Items)
+                {
+				    await ExecuteSaveAync(save);
+                }
+		    }
+
+		    private bool CanInteract(object arg)
+            {
+                return !IsASaveExecuting;
+            }
+
+            private void EditItem(object obj)
+            {
+                if (obj is Save save)
+                {
+                    SaveModify?.Invoke(this, save);
+                }
+            }
+
+		    private async void StartSave(object obj)
+		    {
+			    if(obj is Save saveToExecute)
+			    {
+				    await ExecuteSaveAync(saveToExecute);
+			    }
+		    }
+
+		    private async Task ExecuteSaveAync(Save saveToExecute)
+		    {
+			    IProgress<int> progress = new Progress<int>(progress =>
+			    {
+				    SaveExecutionProgress = progress;
+			    });
+			    bool executionSuccessful = false;
+			    try
+			    {
+				    IsASaveExecuting = true;
+				    await saveToExecute.Execute(progress);
+
+				    SaveExecutionProgress = 0;
+				    executionSuccessful = true;
+
+			    }
+			    catch
+			    {
+				    executionSuccessful = false;
+
+			    }
+			    finally
+			    {
+				    IsASaveExecuting = false;
+			    }
+		    }
+
+		    private void UpdatePagedItems()
+            {
+                PagedItems.Clear();
+                if (Items.Count == 0) return;
+
+                var savesToShow = Items.Skip((_currentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
+                foreach (var save in savesToShow)
+                {
+                    PagedItems.Add(save);
+                }
+
+			    OnPropertyChanged(nameof(CurrentPageFormatted));
+			    OnPropertyChanged(nameof(CurrentPage));
+            }
+
+        private void NextPage()
+        {
+            if (CanGoNext())
+            {
+                CurrentPage++;
             }
         }
 
-    private void NextPage()
-    {
-        if (CanGoNext())
+        private void PreviousPage()
         {
-            CurrentPage++;
+            if (CanGoPrevious())
+            {
+                CurrentPage--;
+            }
         }
-    }
 
-    private void PreviousPage()
-    {
-        if (CanGoPrevious())
+        private bool CanGoNext()
         {
-            CurrentPage--;
+            return _currentPage * ItemsPerPage < Items.Count;
         }
-    }
 
-    private bool CanGoNext()
-    {
-        return _currentPage * ItemsPerPage < Items.Count;
-    }
-
-    private bool CanGoPrevious()
-    {
-        return _currentPage > 1;
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
+        private bool CanGoPrevious()
+        {
+            return _currentPage > 1;
+        }
 
         public void UpdateSave()
         {
@@ -177,8 +195,7 @@ namespace EasySave2._0
                 Items.Add(save);
             }
             UpdatePagedItems();
-            CurrentPage = 1;
-        }
+		}
 
         public void DeleteItem(object obj)
         {
@@ -186,13 +203,10 @@ namespace EasySave2._0
             {
                 Items.Remove(save);
                 saveStore.DeleteSave(save.Id);
+
+                CurrentPage = 1;
                 UpdatePagedItems();
-                OnPropertyChanged(nameof(TotalPages));
-                OnPropertyChanged(nameof(CurrentPageFormatted));
-            }
-            
+			}
         }
-
     }
-
 }
