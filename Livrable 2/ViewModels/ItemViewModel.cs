@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
+﻿using EasySave2._0.ViewModels;
 using System.Windows.Input;
 
-namespace EasySave2._0.ViewModels
+public class ItemViewModel
 {
-    public class ItemViewModel
+    public string ID { get; set; }
+    public string Name { get; set; }
+    public ICommand PlayCommand { get; set; }
+    public ICommand EditCommand { get; set; }
+    public ICommand DeleteCommand { get; set; }
+
+    public ItemViewModel(string id, string name, HomeViewModel homeViewModel)
     {
-        public string ID { get; set; }
-        public string Name { get; set; }
-        public ICommand PlayCommand { get; set; }
-        public ICommand EditCommand { get; set; }
-        public ICommand DeleteCommand { get; set; }
-
-        public ItemViewModel(string id, string name)
-        {
-            ID = id;
-            Name = name;
-            PlayCommand = new RelayCommand(Play);
-            EditCommand = new RelayCommand(Edit);
-            DeleteCommand = new RelayCommand(Delete);
-        }
-
-        private void Play(object obj) => Debug.WriteLine($"Play clicked on {Name}");
-        private void Edit(object obj) => Debug.WriteLine($"Edit clicked on {Name}");
-        private void Delete(object obj) => Debug.WriteLine($"Delete clicked on {Name}");
+        ID = id;
+        Name = name;
+        DeleteCommand = new RelayCommand(_ => homeViewModel.DeleteItem(this));
+        EditCommand = new RelayCommand(_ => homeViewModel.EdtiSave(this));
     }
+
+    private void Play(object obj) { /* Implementation */ }
+    private void Edit(object obj) { /* Implementation */ }
+    private void Delete(object obj) { /* Implementation */ }
 }

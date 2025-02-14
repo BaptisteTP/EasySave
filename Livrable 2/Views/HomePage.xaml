@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:EasySave2._0" d:DataContext="{d:DesignInstance Type=local:HomeViewModel}"
+      xmlns:local="clr-namespace:EasySave2._0"
       mc:Ignorable="d"
       Title="HomePage" Background="#fff" Height="720" Width="1280">
 
@@ -42,7 +42,7 @@
                                         HorizontalAlignment="Right" VerticalAlignment="Center">
                                     <Image Source="../assets/images/PlayButton.png" Width="24" Height="24"/>
                                 </Button>
-                                <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Command="{Binding EditCommand}" Cursor="Hand"
+                                <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" Command="{Binding EditCommand}" CommandParameter="{Binding}" Cursor="Hand"
                                     HorizontalAlignment="Right" VerticalAlignment="Center">
                                     <Image Source="../assets/images/EditButton.png" Width="24" Height="24"/>
                                 </Button>
