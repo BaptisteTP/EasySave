@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:EasySave2._0" d:DataContext="{d:DesignInstance Type=local:HomeViewModel}"
       xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
+      xmlns:language="clr-namespace:EasySave2._0.Resources"
       mc:Ignorable="d"
       Title="HomePage" Background="#fff" Height="720" Width="1280">
 
@@ -15,7 +16,7 @@
     <Grid>
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}"/>
 
-        <TextBlock x:Name="Text" Text="Liste de toutes les opérations de sauvegarde :"
+        <TextBlock x:Name="Text" Text="{x:Static language:Strings.OperationList}"
                    FontSize="24" FontWeight="Bold" Margin="90,150,0,0"/>
 
 

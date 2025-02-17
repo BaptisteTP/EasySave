@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:EasySave2._0"
       xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
       xmlns:valueconverters="clr-namespace:EasySave2._0.ValueConverters"
+      xmlns:language="clr-namespace:EasySave2._0.Resources"
       xmlns:enums="clr-namespace:EasySave2._0.Enums"
       mc:Ignorable="d"
       Title="SettingPage" Background="#fff" Height="720" Width="1280">
@@ -74,22 +75,22 @@
 
         <StackPanel Orientation="Horizontal" Margin="0,150,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
             <TextBlock FontSize="24" FontWeight="Bold" Text="Choisissez votre langue : " Height="50" Margin="0,0,50,0"/>
-            <Image Source="../assets/images/EnglishButton.png" Height="70" Width="143" Margin="0,0,50,10"/>
-            <Image Source="../assets/images/FrenchButton.png" Height="101" Width="110" Margin="0,0,0,10"/>
+            <Image x:Name="EnglishButton" Tag="en-US" Source="../assets/images/EnglishButton.png" Height="70" Width="143" Margin="0,0,50,10"/>
+            <Image x:Name="FrenchButton" Tag="fr-FR" Source="../assets/images/FrenchButton.png" Height="101" Width="110" Margin="0,0,0,10"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,50">
             <TextBox Style="{StaticResource ErrorTemplate}" Text="{Binding RealTimeLogPath, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
             <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Command="{Binding ChangedLogPathCommand}" CommandParameter="realtime"/>
         </StackPanel>
-        <TextBlock FontSize="20" FontWeight="Bold" Text="Pour changer le dossier des logs en temps réel choisissez un nouveau dossier pour accueillir le dossier : " 
+        <TextBlock FontSize="20" FontWeight="Bold" Text="{x:Static language:Strings.RealTimeLogFolder}" 
                    Margin="0,0,0,150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,180,0,0">
             <TextBox Style="{StaticResource ErrorTemplate}" Text="{Binding DailyLogPath, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Width="600" Height="50" FontSize="18" Background="White" Margin="0,0,20,0"/>
             <Button Content="..." Width="60" Height="50" FontSize="18" Cursor="Hand" Command="{Binding ChangedLogPathCommand}" CommandParameter="daily"/>
         </StackPanel>
-        <TextBlock FontSize="20" FontWeight="Bold" Text="Pour changer le dossier des logs journalier choisissez un nouveau dossier pour accueillir le dossier : " 
+        <TextBlock FontSize="20" FontWeight="Bold" Text="{x:Static language:Strings.DailyLogFolder}" 
                    Margin="0,80,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,300,0,0">
