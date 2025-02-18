@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:EasySave2._0"
+      xmlns:usercontrols="clr-namespace:EasySave2._0.Usercontrols"
       xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
       xmlns:valueconverters="clr-namespace:EasySave2._0.ValueConverters"
       xmlns:enums="clr-namespace:EasySave2._0.Enums"
@@ -90,12 +91,7 @@
 
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock FontSize="24" FontWeight="Bold" Text="{DynamicResource ChooseLanguage}" Height="50" Margin="0,0,50,0" />
-                    <Button x:Name="FrenchButton" Style="{StaticResource NoHighlightButton}" Width="143" Height="70" Margin="0,0,50,10" Cursor="Hand" Command="{Binding SetAppLanguage}" CommandParameter="fr-FR">
-                        <Image Source="../assets/images/FrenchButton.png"/>
-                    </Button>
-                    <Button x:Name="EnglishButton" Style="{StaticResource NoHighlightButton}" Width="110" Height="101" Margin="0,0,0,10" Cursor="Hand" Command="{Binding SetAppLanguage}" CommandParameter="en-US">
-                        <Image Source="../assets/images/EnglishButton.png"/>
-                    </Button>
+                    <usercontrols:LanguageControl x:Name="LanguageSelector" ItemsSource="{Binding LanguageItems}" SelectedLanguage="{Binding SelectedLanguage}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Margin="0 20 0 0">
