@@ -42,5 +42,7 @@
     <system:String x:Key="DestinationPathWrongMessage">Le chemin de destination spécifié n'est pas valide.</system:String>
     <system:String x:Key="DailyLogUnvalidMessage">Le dossier des logs journaliers n'est pas valide.</system:String>
     <system:String x:Key="RealTimeLogUnvalidMessage">Le dossier des logs en temps réel n'est pas valide.</system:String>
+    <system:String x:Key="SettingText">Paramètres</system:String>
+
 
 </ResourceDictionary>

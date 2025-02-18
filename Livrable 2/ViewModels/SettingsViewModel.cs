@@ -21,8 +21,8 @@ namespace EasySave2._0.ViewModels
 		public event EventHandler? SettingsConfirmed;
 		public ICommand ChangedLogPathCommand { get; }
 		public ICommand ConfirmSettingsCommand { get; }
-
 		public ICommand AddBuisnessSoftwareCommand { get; }
+		public ICommand DeleteBuisnessSoftwareCommand { get; }
 
 		public ObservableCollection<LanguageItem> LanguageItems { get; } = new ObservableCollection<LanguageItem>(Creator.GetAvalaibleLanguages());
 
@@ -100,6 +100,7 @@ namespace EasySave2._0.ViewModels
 			ChangedLogPathCommand = new RelayCommand(ChangeViaFolderDialog);
 			ConfirmSettingsCommand = new RelayCommand(ConfirmSettings, CanConfirmSettings);
 			AddBuisnessSoftwareCommand = new RelayCommand(AddBuisnessSoftware, CanAddBuisness);
+			DeleteBuisnessSoftwareCommand = new RelayCommand(DeleteBuisnessSoftware, _ => true);
 
 			Settings settings = Creator.GetSettingsInstance();
 
@@ -116,6 +117,19 @@ namespace EasySave2._0.ViewModels
 			else
 			{
 				SelectedLogType = LogType.json;
+			}
+		}
+
+		private void DeleteBuisnessSoftware(object obj)
+		{
+			if(obj is string softwareToRemove)
+			{
+				Settings settings = Creator.GetSettingsInstance();
+
+				BuisnessSoftwaresInterrupt.Remove(softwareToRemove);
+
+				Settings.ChangeSetting("BuisnessSoftwaresInterrupt", new List<string>(BuisnessSoftwaresInterrupt));
+				settings.BuisnessSoftwaresInterrupt = new List<string>(BuisnessSoftwaresInterrupt);
 			}
 		}
 
