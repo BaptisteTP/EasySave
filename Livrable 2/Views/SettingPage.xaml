@@ -135,7 +135,7 @@
 
                     <TextBlock Grid.Column="0" Grid.RowSpan="2" Text="{DynamicResource BusinessSoftware}"  FontSize="20" FontWeight="Bold" VerticalAlignment="Top" Margin="0,0,20,0"/>
 
-                    <TextBlock Grid.Column="1" Grid.Row="2" Text="Aucun">
+                    <TextBlock Grid.Column="1" Grid.Row="2" Text="{DynamicResource NoBusinessSoftware}">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Visibility" Value="Collapsed"/>

@@ -34,5 +34,13 @@
     <system:String x:Key="EditPathRealTimeLog">Pour changer le dossier des logs en temps réel choisissez un nouveau dossier pour accueillir le dossier :</system:String>
     <system:String x:Key="BusinessSoftware">Logiciel métier bloquant les sauvegardes :</system:String>
     <system:String x:Key="ValidEnd">✔ Terminer</system:String>
+    <system:String x:Key="NoBusinessSoftware">Aucun logiciel métier de configuré.</system:String>
+    <system:String x:Key="SourcePathEmptyMessage">Le chemin source ne peut pas être vide.</system:String>
+    <system:String x:Key="DestinationPathEmptyMessage">Le chemin de destination ne peut pas être vide.</system:String>
+    <system:String x:Key="SaveNameEmptyMessage">Le nom de la sauvegarde ne peut pas être vide.</system:String>
+    <system:String x:Key="SourcePathWrongMessage">Le chemin source spécifié n'est pas valide.</system:String>
+    <system:String x:Key="DestinationPathWrongMessage">Le chemin de destination spécifié n'est pas valide.</system:String>
+    <system:String x:Key="DailyLogUnvalidMessage">Le dossier des logs journaliers n'est pas valide.</system:String>
+    <system:String x:Key="RealTimeLogUnvalidMessage">Le dossier des logs en temps réel n'est pas valide.</system:String>
 
 </ResourceDictionary>

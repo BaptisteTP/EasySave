@@ -34,4 +34,13 @@
     <system:String x:Key="EditPathRealTimeLog">To change the real-time log folder, choose a new folder to store it:</system:String>
     <system:String x:Key="BusinessSoftware">Business software blocking backups:</system:String>
     <system:String x:Key="ValidEnd">✔ Finish</system:String>
+    <system:String x:Key="NoBusinessSoftware">No business software configured.</system:String>
+    <system:String x:Key="SourcePathEmptyMessage">The source path cannot be empty.</system:String>
+    <system:String x:Key="DestinationPathEmptyMessage">The destination path cannot be empty.</system:String>
+    <system:String x:Key="SaveNameEmptyMessage">The backup name cannot be empty.</system:String>
+    <system:String x:Key="SourcePathWrongMessage">The specified source path is not valid.</system:String>
+    <system:String x:Key="DestinationPathWrongMessage">The specified destination path is not valid.</system:String>
+    <system:String x:Key="DailyLogUnvalidMessage">The daily log folder is not valid.</system:String>
+    <system:String x:Key="RealTimeLogUnvalidMessage">The real-time log folder is not valid.</system:String>
+
 </ResourceDictionary>

@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace EasySave2._0.ViewModels
@@ -64,7 +65,7 @@ namespace EasySave2._0.ViewModels
 
 				if(string.IsNullOrEmpty(DailyLogPath) || !Settings.UserHasRightPermissionInFolder(DailyLogPath))
 				{
-					AddError(nameof(DailyLogPath), "Le dossier des logs journaliers n'est pas valide.");
+					AddError(nameof(DailyLogPath), Application.Current.Resources["DailyLogUnvalidMessage"] as string);
 				}
 			}
 		}
@@ -80,9 +81,9 @@ namespace EasySave2._0.ViewModels
 				realTimeLogPath = value;
 				OnPropertyChanged();
 
-				if (string.IsNullOrEmpty(RealTimeLogPath) || !Settings.UserHasRightPermissionInFolder(RealTimeLogPath))
+                if (string.IsNullOrEmpty(RealTimeLogPath) || !Settings.UserHasRightPermissionInFolder(RealTimeLogPath))
 				{
-					AddError(nameof(RealTimeLogPath), "Le dossier des logs en temps réel n'est pas valide.");
+					AddError(nameof(RealTimeLogPath), Application.Current.Resources["RealTimeLogUnvalidMessage"] as string);
 				}
 			}
 		}
