@@ -29,24 +29,10 @@ namespace EasySave2._0
             InitializeComponent();
             SettingsViewModel viewModel = new SettingsViewModel();
 			viewModel.SettingsConfirmed += ViewModel_SettingsConfirmed;
+            LanguageSelector.LanguageChanged += viewModel.LanguageControl_LanguageChanged;
             DataContext = viewModel;
         }
-        public void ApplyLanguageSettings(string LanguageCode)
-        {
-            // Apply the language settings changes.
-            ResourceDictionary dictionary = new ResourceDictionary();
-            switch (LanguageCode)
-            {
-                case "en-US":
-                    dictionary.Source = new Uri("Resources/Languages/en-US.xaml", UriKind.Relative);
-                    break;
-                case "fr-FR":
-                    dictionary.Source = new Uri("Resources/Languages/fr-FR.xaml", UriKind.Relative);
-                    break;
-            }
-            this.Resources.MergedDictionaries.Add(dictionary);
-
-        }
+        
         private void ViewModel_SettingsConfirmed(object? sender, EventArgs e)
 		{
             NavigationService.GoBack();

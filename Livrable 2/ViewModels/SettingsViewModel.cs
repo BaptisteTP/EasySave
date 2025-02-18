@@ -5,11 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace EasySave2._0.ViewModels
 {
@@ -21,7 +24,7 @@ namespace EasySave2._0.ViewModels
 
 		public ICommand AddBuisnessSoftwareCommand { get; }
 
-		public ICommand SetAppLanguage { get; }
+		public ObservableCollection<LanguageItem> LanguageItems { get; } = new ObservableCollection<LanguageItem>(Creator.GetAvalaibleLanguages());
 
 		#region Attributes
 
@@ -39,17 +42,7 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-
-		private string selectedLanguage;
-		public string SelectedLanguage
-		{
-			get { return selectedLanguage; }
-			set 
-			{
-				selectedLanguage = value;
-				OnPropertyChanged();
-			}
-		}
+		public LanguageItem SelectedLanguage { get; private set; }
 
 		public string dailyLogPath = Creator.GetSettingsInstance().DailyLogPath!;
 
@@ -107,12 +100,11 @@ namespace EasySave2._0.ViewModels
 			ChangedLogPathCommand = new RelayCommand(ChangeViaFolderDialog);
 			ConfirmSettingsCommand = new RelayCommand(ConfirmSettings, CanConfirmSettings);
 			AddBuisnessSoftwareCommand = new RelayCommand(AddBuisnessSoftware, CanAddBuisness);
-			SetAppLanguage = new RelayCommand(SetApplicationLanguage, CanChangeLanguage);
 
 			Settings settings = Creator.GetSettingsInstance();
 
-
-			SelectedLanguage = settings.ActiveLanguage;
+			SelectedLanguage = Creator.GetAvalaibleLanguages().FirstOrDefault(lang => lang.Language == settings.ActiveLanguage)
+								?? Creator.GetAvalaibleLanguages().FirstOrDefault(lang => lang.Language == settings.FallBackLanguage);
 			DailyLogPath = settings.DailyLogPath;
 			RealTimeLogPath = settings.RealTimeLogPath;
 			BuisnessSoftwaresInterrupt = new ObservableCollection<string>(settings.BuisnessSoftwaresInterrupt);
@@ -125,7 +117,6 @@ namespace EasySave2._0.ViewModels
 			{
 				SelectedLogType = LogType.json;
 			}
-			
 		}
 
 		private void AddBuisnessSoftware(object obj)
@@ -144,25 +135,8 @@ namespace EasySave2._0.ViewModels
 			return BuisnessSoftwareToAdd != "";
 		}
 
-        private void SetApplicationLanguage(object language)
-        {
-            SelectedLanguage = (string)language;
-
-            Settings.ChangeSetting("ActiveLanguage", SelectedLanguage);
-            Settings.ApplyLanguageSettings();
-			
-        }
-
-		private bool CanChangeLanguage(object arg)
-		{
-			return true;
-		}
-
         private void ConfirmSettings(object obj)
 		{
-			Settings.ChangeSetting("ActiveLanguage", SelectedLanguage);
-			Settings.ApplyLanguageSettings();
-
 			Settings.ChangeSetting("DailyLogPath", dailyLogPath);
 			Creator.GetSettingsInstance().DailyLogPath = DailyLogPath;
 
@@ -209,6 +183,12 @@ namespace EasySave2._0.ViewModels
 				}
 
 			}
+		}
+
+		public void LanguageControl_LanguageChanged(object? sender, LanguageItem e)
+		{
+			Settings.ChangeSetting("ActiveLanguage", e.Language);
+			Settings.ApplyLanguageSettings();
 		}
 	}
 }

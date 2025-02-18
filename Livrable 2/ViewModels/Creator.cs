@@ -11,6 +11,7 @@ using System.Resources;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace EasySave2._0.ViewModels
 {
@@ -32,6 +33,7 @@ namespace EasySave2._0.ViewModels
         private static Settings _settingsInstance;
         private static Paster _pasterInstance;
         private static Logger _loggerInstance;
+        private static List<LanguageItem> _languages;
 
         // Returns a resource manager instance
 
@@ -91,6 +93,19 @@ namespace EasySave2._0.ViewModels
         }
 
 		#endregion
+
+        public static List<LanguageItem> GetAvalaibleLanguages()
+        {
+            if(_languages == null)
+            {
+                _languages = new List<LanguageItem>()
+                {
+					new LanguageItem() { Image = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "assets/images/FrenchButton.png"), UriKind.Absolute)) , Text = "Français", Language = "fr-FR" },
+			        new LanguageItem() { Image = new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "assets/images/EnglishButton.png"), UriKind.Absolute)), Text = "English", Language = "en-US" },
+				};
+            }
+            return _languages;
+        }
 
 		public static ResourceManager GetResourceManagerInstance()
         {
