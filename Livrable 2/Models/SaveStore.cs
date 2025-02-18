@@ -97,8 +97,11 @@ namespace EasySave2._0.ViewModels
 					saveToEdit.Type = (SaveType)newValue;
 					SaveEdited?.Invoke(this, EventArgs.Empty);
 					break;
-
-				default:
+				case 5:
+					saveToEdit.Encrypt = (bool)newValue;
+                    SaveEdited?.Invoke(this, EventArgs.Empty);
+                    break;
+                default:
 					return;
 			}
 		}
