@@ -52,7 +52,7 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-		public int CreateNewSave(string name, SaveType type, string sourcePath, string destinationPath)
+		public int CreateNewSave(string name, SaveType type, string sourcePath, string destinationPath, bool encrypt)
 		{
 			// Takes information from the user and creates a new save.
 			Save newSave = new Save( // Create a new save
@@ -60,7 +60,8 @@ namespace EasySave2._0.ViewModels
 				name,
 				sourcePath,
 				destinationPath,
-				type);
+				type,
+				encrypt);
 
 
 			Saves.Add(newSave);

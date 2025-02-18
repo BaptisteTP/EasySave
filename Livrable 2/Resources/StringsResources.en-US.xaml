@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <system:String x:Key="NoSaves">No saves recorded!</system:String>
+    <system:String x:Key="DailyLogFolder">To change the daily log folder, choose a new folder to store it:</system:String>
+    <system:String x:Key="OperationList">List of all backup operations:</system:String>
+    <system:String x:Key="RealTimeLogFolder">To change the real-time log folder, choose a new folder to store it:</system:String>
+    <system:String x:Key="ValidSave">✔ Save</system:String>
+    <system:String x:Key="WelcomeMessage">Welcome to Easy Save, choose your language:</system:String>
+    <system:String x:Key="NoSavesMessage">No save is configured.</system:String>
+    <system:String x:Key="ExecuteSaves">Execute backups</system:String>
+    <system:String x:Key="Add">+ Add</system:String>
+    <system:String x:Key="ExecutionMessage">Executing...</system:String>
+    <system:String x:Key="AddSave">Add a new backup:</system:String>
+    <system:String x:Key="TypeOfSave">Type:</system:String>
+    <system:String x:Key="TypeComplete">Complete</system:String>
+    <system:String x:Key="TypeDifferential">Differential</system:String>
+    <system:String x:Key="Source">Source:</system:String>
+    <system:String x:Key="Destination">Destination:</system:String>
+    <system:String x:Key="Encryption">Encryption:</system:String>
+    <system:String x:Key="Cancel">✖ Cancel</system:String>
+    <system:String x:Key="EncryptionSave">Encrypt backup</system:String>
+    <system:String x:Key="EditSave">Edit backup:</system:String>
+    <system:String x:Key="NameSave">Name:</system:String>
+    <system:String x:Key="ValidModification">✔ Modify</system:String>
+    <system:String x:Key="PathRealTimeLog">Real-time logs are currently stored in the following folder:</system:String>
+    <system:String x:Key="PathDailyLog">Daily logs are currently stored in the following folder:</system:String>
+    <system:String x:Key="ChoiceLogFormat">Logs in JSON or XML:</system:String>
+    <system:String x:Key="Json">JSON</system:String>
+    <system:String x:Key="Xml">XML</system:String>
+    <system:String x:Key="NextButton">Next -></system:String>
+    <system:String x:Key="ChooseLanguage">Choose your language:</system:String>
+    <system:String x:Key="EditPathDailyLog">To change the daily log folder, choose a new folder to store it:</system:String>
+    <system:String x:Key="EditPathRealTimeLog">To change the real-time log folder, choose a new folder to store it:</system:String>
+    <system:String x:Key="BusinessSoftware">Business software blocking backups:</system:String>
+    <system:String x:Key="ValidEnd">✔ Finish</system:String>
+</ResourceDictionary>

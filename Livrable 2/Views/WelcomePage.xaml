@@ -12,7 +12,7 @@
     <Grid>
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo1}"/>
 
-        <TextBlock x:Name="WelcomeText" Text="{x:Static language:Strings.WelcomeMessage}" HorizontalAlignment="Center" VerticalAlignment="Center"
+        <TextBlock x:Name="WelcomeText" Text="{DynamicResource WelcomeMessage}" HorizontalAlignment="Center" VerticalAlignment="Center"
                    FontSize="24" FontWeight="Bold" Margin="0,0,0,130"/>
 
         <Button x:Name="FrenchButton" Style="{StaticResource NoHighlightButton}" Width="149" Height="99" Margin="0,120,300,0" Cursor="Hand" Command="{Binding SetAppLanguage}" CommandParameter="fr-FR">
@@ -24,7 +24,7 @@
         </Button>
 
         <Button x:Name="NextButton" Style="{StaticResource NextButton}" VerticalAlignment="Bottom" Margin="0,0,0,100" Cursor="Hand" Command="{Binding GoNext}">
-            <TextBlock Text="Suivant ->" FontSize="22" FontWeight="Bold"/>
+            <TextBlock Text="{DynamicResource NextButton}" FontSize="22" FontWeight="Bold"/>
         </Button>
     </Grid>
 </Page>

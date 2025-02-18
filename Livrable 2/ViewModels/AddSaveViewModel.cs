@@ -81,8 +81,28 @@ namespace EasySave2._0.ViewModels
 				}
 			}
         }
+        private SaveType selectedSaveType = SaveType.Full;
 
+        public SaveType SelectedSaveType
+        {
+            get { return selectedSaveType; }
+            set
+            {
+                selectedSaveType = value;
+                OnPropertyChanged();
+            }
+        }
 
+        private bool _encrypt;
+        public bool Encrypt
+        {
+            get { return _encrypt; }
+            set
+            {
+                _encrypt = value;
+                OnPropertyChanged();
+            }
+        }
 
         public AddSaveViewModel()
         {
@@ -99,7 +119,7 @@ namespace EasySave2._0.ViewModels
 
         private void CreateSave()
         {
-			saveStore.CreateNewSave(SaveName, SaveType.Full, SourcePath, DestinationPath);
+			saveStore.CreateNewSave(SaveName, SelectedSaveType, SourcePath, DestinationPath, Encrypt);
             ClearFields();
             SaveCreated?.Invoke(this, EventArgs.Empty);
 		}
@@ -115,6 +135,7 @@ namespace EasySave2._0.ViewModels
 			DestinationPath = string.Empty;
 			ClearError(nameof(DestinationPath));
 
-		}
+            Encrypt = false;
+        }
 	}
 }

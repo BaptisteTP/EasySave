@@ -2,6 +2,7 @@
 using EasySave2._0.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -9,16 +10,18 @@ using System.Resources;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace EasySave2._0.Models
 {
-    public class Settings
-    {
+	public class Settings
+	{
 		public string? ActiveLanguage { get; set; }
 		public string? FallBackLanguage { get; set; }
 		public string? DailyLogPath { get; set; }
 		public string? RealTimeLogPath { get; set; }
 		public string? LogFormat { get; set; }
+		public List<string> BuisnessSoftwaresInterrupt { get; set; }
 
 		public static event EventHandler? LogFomatChanged;
 
@@ -33,7 +36,8 @@ namespace EasySave2._0.Models
 				FallBackLanguage = "en-US",
 				DailyLogPath = "",
 				RealTimeLogPath = "",
-				LogFormat = ""
+				LogFormat = "",
+				BuisnessSoftwaresInterrupt = new List<string>(),
 			};
 			WriteSettingsToJsonFile(baseSettings);
 
@@ -67,7 +71,7 @@ namespace EasySave2._0.Models
 			}
 		}
 
-		public static void ChangeSetting(string setting, string newValue)
+		public static void ChangeSetting(string setting, object newValue)
 		{
 			// Change a setting and write it to the json file.
 			Settings currentSettings = Creator.GetSettingsInstance();
@@ -75,21 +79,24 @@ namespace EasySave2._0.Models
 			switch (setting)
 			{
 				case "ActiveLanguage":
-					currentSettings.ActiveLanguage = newValue;
+					currentSettings.ActiveLanguage = (string)newValue;
 					break;
 				case "DailyLogPath":
-					currentSettings.DailyLogPath = newValue;
+					currentSettings.DailyLogPath = (string)newValue;
 					break;
 
 				case "RealTimeLogPath":
-					currentSettings.RealTimeLogPath = newValue;
+					currentSettings.RealTimeLogPath = (string)newValue;
 					break;
 
 				case "LogFormat":
-					currentSettings.LogFormat = newValue;
+					currentSettings.LogFormat = (string)newValue;
 					LogFomatChanged?.Invoke(null, EventArgs.Empty);
 					break;
 
+				case "BuisnessSoftwaresInterrupt":
+					currentSettings.BuisnessSoftwaresInterrupt = (List<string>)newValue;
+					break;
 				default:
 					return;
 			}
@@ -97,83 +104,25 @@ namespace EasySave2._0.Models
 			WriteSettingsToJsonFile(currentSettings);
 		}
 
-		public static void AskUserToChooseLanguage()
-		{
-			// Ask the user to choose a language.
-			bool isSelectedLangageValid = false;
-			Console.Clear();
-			Console.WriteLine("Welcome/Bienvenue!");
-
-			while (!isSelectedLangageValid)
-			{
-				Console.WriteLine();
-				Console.WriteLine("1- Press 1 if you want to use this application in english");
-				Console.WriteLine("2- Taper 2 si vous voulez utiliser cette application en français");
-				Console.WriteLine();
-
-				ConsoleKeyInfo keyChosen = Console.ReadKey();
-				Console.Clear();
-
-				if (keyChosen.KeyChar == '1')
-				{
-					ChangeSetting("ActiveLanguage", "en-US");
-					ApplyLanguageSettings();
-					break;
-				}
-				else if (keyChosen.KeyChar == '2')
-				{
-					ChangeSetting("ActiveLanguage", "fr-FR");
-					ApplyLanguageSettings();
-					break;
-				}
-				else
-				{
-					Console.WriteLine("The entered value is not valid/La valeur rentrée n'est pas valide !");
-				}
-			}
-		}
-
-		public static void ApplyLanguageSettings()
-		{
-			// Apply the language settings.
+        public static void ApplyLanguageSettings()
+        {
+            // Apply the language settings changes.
 			Settings settings = Creator.GetSettingsInstance();
-			if (settings.ActiveLanguage == "")
-			{
-				Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(settings.FallBackLanguage!);
-			}
-			else
-			{
-				Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(settings.ActiveLanguage!);
-			}
-		}
+            ResourceDictionary dictionary = new ResourceDictionary();
+            switch (settings.ActiveLanguage)
+            {
+                case "en-US":
+                    dictionary.Source = new Uri("../Resources/StringsResources.en-US.xaml", UriKind.Relative);
+                    break;
+                case "fr-FR":
+                    dictionary.Source = new Uri("../Resources/StringsResources.fr-FR.xaml", UriKind.Relative);
+                    break;
+            }
+            Application.Current.Resources.MergedDictionaries.Add(dictionary);
 
-		public static void AskUserToChangeDailyLogsFolder()
-		{
-			// Ask the user to change the daily logs folder.
-			Console.Clear();
-			string currentFolderForDailyLog = GetBaseSettings().DailyLogPath!;
+        }
 
-			string? newDailyLogFolderPath = string.Empty;
-			while (string.IsNullOrEmpty(newDailyLogFolderPath) || !Directory.Exists(newDailyLogFolderPath) || !UserHasRightPermissionInFolder(newDailyLogFolderPath))
-			{
-				Console.WriteLine(_ressourceManager.GetString("InforUserDailyLogFile"));
-				Console.WriteLine(currentFolderForDailyLog == "" ? _ressourceManager.GetString("NoFolder") : currentFolderForDailyLog);
-				Console.WriteLine();
-				Console.WriteLine(_ressourceManager.GetString("AskUser_NewDailyLogFolder"));
-				newDailyLogFolderPath = Console.ReadLine();
-
-				if (string.IsNullOrEmpty(newDailyLogFolderPath) || !Directory.Exists(newDailyLogFolderPath) || !UserHasRightPermissionInFolder(newDailyLogFolderPath))
-				{
-					Console.Clear();
-					Console.WriteLine(_ressourceManager.GetString("InforUserInvalidPath"));
-				}
-			}
-
-			GetBaseSettings().DailyLogPath = newDailyLogFolderPath;
-			ChangeSetting("DailyLogPath", newDailyLogFolderPath!);
-		}
-
-		public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
+        public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
 		{
 			// Check if the user has the right permissions in the folder.
 			if (!Directory.Exists(newDailyLogFolderPath)) {  return false; }
@@ -193,33 +142,6 @@ namespace EasySave2._0.Models
 			{
 				return false;
 			}
-		}
-
-
-		public static void AskUserToChangeRealTimeLogsFolder()
-		{
-			// Ask the user to change the real time logs folder.
-			Console.Clear();
-			string currentRealTimeLogPath = GetBaseSettings().RealTimeLogPath!;
-
-			string? newRealTimeLogPath = string.Empty;
-			while (string.IsNullOrEmpty(newRealTimeLogPath) || !Directory.Exists(newRealTimeLogPath) || !UserHasRightPermissionInFolder(newRealTimeLogPath))
-			{
-				Console.WriteLine(_ressourceManager.GetString("InforUserRealTimeLogFile"));
-				Console.WriteLine(currentRealTimeLogPath == "" ? _ressourceManager.GetString("NoFolder") : currentRealTimeLogPath);
-				Console.WriteLine();
-				Console.WriteLine(_ressourceManager.GetString("AskUser_NewRealtimeLogFolder"));
-				newRealTimeLogPath = Console.ReadLine();
-
-				if (string.IsNullOrEmpty(newRealTimeLogPath) || !Directory.Exists(newRealTimeLogPath) || !UserHasRightPermissionInFolder(newRealTimeLogPath))
-				{
-					Console.Clear();
-					Console.WriteLine(_ressourceManager.GetString("InforUserInvalidPath"));
-				}
-			}
-
-			GetBaseSettings().RealTimeLogPath = newRealTimeLogPath;
-			ChangeSetting("RealTimeLogPath", newRealTimeLogPath!);
 		}
 	}
 }

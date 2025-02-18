@@ -17,6 +17,7 @@ namespace EasySave2._0
 			//The app is lauched without any parameter (when double clicked on exe for example)
 			if (e.Args.Length == 0)
 			{
+				Settings.ApplyLanguageSettings();
 				MainWindow mainWindow = Creator.GetMainWindow();
 				mainWindow.Show();
 				mainWindow.StartAppNaviguation();

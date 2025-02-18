@@ -5,19 +5,59 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:EasySave2._0" d:DataContext="{d:DesignInstance Type=local:HomeViewModel}"
       xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
-      xmlns:language="clr-namespace:EasySave2._0.Resources"
       mc:Ignorable="d"
       Title="HomePage" Background="#fff" Height="720" Width="1280">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Page.Resources>
+
+    <Page.DataContext>
+        <local:HomeViewModel/>
+    </Page.DataContext>
     
     <Grid>
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}"/>
 
-        <TextBlock x:Name="Text" Text="{x:Static language:Strings.OperationList}"
-                   FontSize="24" FontWeight="Bold" Margin="90,150,0,0"/>
+        <TextBlock x:Name="Text" Text="{DynamicResource OperationList}"
+                   FontSize="24" FontWeight="Bold" Margin="90,150,0,0">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Items.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <TextBlock x:Name="NoSaveMessage" Text="{DynamicResource NoSaves}" FontSize="24" FontWeight="Bold" Foreground="Red" HorizontalAlignment="Center" Margin="0 150 0 0">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Items.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <Button Content="{DynamicResource ExecuteSaves}" Command="{Binding ExecuteAllSavesCommand}" Height="44" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 150 120 0" Width="270">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource GreenButtonStyle}">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Items.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
 
 
         <ListView ItemsSource="{Binding PagedItems}" Width="1090" Background="Transparent" BorderThickness="0"
@@ -73,7 +113,7 @@
                             </Grid>
                             
                             <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Visibility="{Binding IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <TextBlock Text="Executing..." FontWeight="Medium"/>
+                                <TextBlock Text="{DynamicResource ExecutionMessage}" FontWeight="Medium"/>
                                 <ProgressBar VerticalAlignment="Bottom" Height="4" Minimum="0" Maximum="100" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.SaveExecutionProgress}" />
                             </StackPanel>
                         </Grid>
@@ -83,6 +123,16 @@
         </ListView>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,100">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Items.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
             <Button Style="{StaticResource NoHighlightButton}" Command="{Binding PreviousPageCommand}" Padding="10,5" Width="25" Cursor="Hand">
                 <Image Source="../assets/images/Previous.png"/>
             </Button>
@@ -92,7 +142,7 @@
             </Button>
         </StackPanel>
 
-        <Button x:Name="CreateButton" Content="+ Ajouter" Click="CreateButton_Click" Style="{StaticResource GreenButtonStyle}" Width="170"
+        <Button x:Name="CreateButton" Content="{DynamicResource Add}" Click="CreateButton_Click" Style="{StaticResource GreenButtonStyle}" Width="170"
                 Height="44" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="100,0,0,100"/>
 
         <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" 

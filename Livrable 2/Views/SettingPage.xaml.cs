@@ -24,31 +24,32 @@ namespace EasySave2._0
     /// </summary>
     public partial class SettingPage : Page
     {
-        public SettingPage(SettingsViewModel _settingsViewModel)
+        public SettingPage()
         {
             InitializeComponent();
             SettingsViewModel viewModel = new SettingsViewModel();
 			viewModel.SettingsConfirmed += ViewModel_SettingsConfirmed;
             DataContext = viewModel;
         }
-        // ----- Methods -----
-        // Select Language in Settings View
-        /*public void updateSelectedLanguage()
+        public void ApplyLanguageSettings(string LanguageCode)
         {
-            if (this.settingsViewModel.model.settings.ActiveLanguage == "en-US")
+            // Apply the language settings changes.
+            ResourceDictionary dictionary = new ResourceDictionary();
+            switch (LanguageCode)
             {
-                EnglishButton.BorderBrush = Brushes.DodgerBlue;
-                FrenchButton.BorderBrush = null;
+                case "en-US":
+                    dictionary.Source = new Uri("Resources/Languages/en-US.xaml", UriKind.Relative);
+                    break;
+                case "fr-FR":
+                    dictionary.Source = new Uri("Resources/Languages/fr-FR.xaml", UriKind.Relative);
+                    break;
             }
-            else if (this.settingsViewModel.model.settings.ActiveLanguage == "fr-FR")
-            {
-                EnglishButton.BorderBrush = null;
-                FrenchButton.BorderBrush = Brushes.DodgerBlue;
-            }
-        }*/
+            this.Resources.MergedDictionaries.Add(dictionary);
+
+        }
         private void ViewModel_SettingsConfirmed(object? sender, EventArgs e)
 		{
-            NavigationService.Navigate(Creator.GetHomePageInstance());
+            NavigationService.GoBack();
 		}
     }
 }
