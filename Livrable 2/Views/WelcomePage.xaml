@@ -2,7 +2,6 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
-      xmlns:language="clr-namespace:EasySave2._0.Resources"
       Background="White" Height="720" Width="1280">
 
     <Page.DataContext>
