@@ -233,8 +233,8 @@ namespace EasySave2._0
                 Window popupWindow = new Window
                 {
                     Content = infoPopup,
-                    Width = 1000,
-                    Height = 700,
+                    Width = 800,
+                    Height = 400,
                     WindowStartupLocation = WindowStartupLocation.CenterScreen,
                     WindowStyle = WindowStyle.ToolWindow,
                     ResizeMode = ResizeMode.NoResize
