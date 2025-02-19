@@ -13,21 +13,17 @@ namespace EasySave2._0
     /// </summary>
     public partial class App : Application
     {
-        // Mutex pour empêcher plusieurs instances
         private static Mutex mutex = new Mutex(true, "{E32D87C6-33A6-4F9D-A8D2-3F2C0A00F4F3}");
 
         async void App_Startup(object sender, StartupEventArgs e)
         {
-            // Vérifier si l'application est déjà lancée
             if (!mutex.WaitOne(TimeSpan.Zero, true))
             {
-                // Si une instance est déjà en cours, afficher un message et fermer
                 MessageBox.Show("L'application est déjà en cours d'exécution.");
                 App.Current.Shutdown();
                 return;
             }
 
-            // L'application est lancée sans argument (par exemple, au double-clic)
             if (e.Args.Length == 0)
             {
                 Settings.ApplyLanguageSettings();
@@ -35,7 +31,6 @@ namespace EasySave2._0
                 mainWindow.Show();
                 mainWindow.StartAppNaviguation();
             }
-            // L'application a été lancée avec un argument (exécution via la ligne de commande)
             else if (e.Args.Length == 1)
             {
                 await HandleCommandLineExecution(e.Args);
@@ -103,8 +98,6 @@ namespace EasySave2._0
             }
             return numbers;
         }
-
-        // Libérer le mutex à la fermeture de l'application
         protected override void OnExit(ExitEventArgs e)
         {
             mutex.ReleaseMutex();
