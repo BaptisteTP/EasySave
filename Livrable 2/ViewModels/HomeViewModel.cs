@@ -36,9 +36,11 @@ namespace EasySave2._0
         public ICommand StartSaveCommand {  get; }
         public ICommand DeleteCommand { get; }
         public ICommand EditItemCommand { get; }
+        public ICommand InformationSaveCommand { get; }
 
         public ICommand ExecuteAllSavesCommand { get; }
         public event EventHandler<Save> SaveModify;
+        public event EventHandler<Save> SaveInfo;
 
         public string CurrentPageFormatted
         {
@@ -85,12 +87,22 @@ namespace EasySave2._0
                 StartSaveCommand = new RelayCommand(StartSave, CanInteract);
                 DeleteCommand = new RelayCommand(DeleteItem, CanInteract);
                 EditItemCommand = new RelayCommand(EditItem, CanInteract);
+                InformationSaveCommand = new RelayCommand(OpenInfoPopup, CanInteract);
                 ExecuteAllSavesCommand = new RelayCommand(ExecuteAllSaves, CanInteract);
+
 
                 UpdatePagedItems();
             }
 
-		    private async void ExecuteAllSaves(object obj)
+        private void InfoItem(object obj)
+        {
+            if (obj is Save save)
+            {
+                SaveInfo?.Invoke(this, save);
+            }
+        }
+
+        private async void ExecuteAllSaves(object obj)
 		    {
 			    foreach(Save save in Items)
                 {
@@ -208,6 +220,28 @@ namespace EasySave2._0
                 CurrentPage = 1;
                 UpdatePagedItems();
 			}
+        }
+        private void OpenInfoPopup(object obj)
+        {
+            if (obj is Save save)
+            {
+                InfoPopup infoPopup = new InfoPopup
+                {
+                    SaveToDisplay = save
+                };
+
+                Window popupWindow = new Window
+                {
+                    Content = infoPopup,
+                    Width = 1000,
+                    Height = 700,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    WindowStyle = WindowStyle.ToolWindow,
+                    ResizeMode = ResizeMode.NoResize
+                };
+
+                popupWindow.ShowDialog();
+            }
         }
     }
 }
