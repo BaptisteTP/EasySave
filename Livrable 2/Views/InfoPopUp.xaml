@@ -1,35 +1,44 @@
 <UserControl x:Class="EasySave2._0.InfoPopup"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Height="600" Width="900">
+             Height="319" Width="751">
 	<Border Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="10" Padding="10">
 		<StackPanel>
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="Nom de la sauvegarde :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
+			<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="Infos sur la sauvegarde" FontSize="16" FontWeight="Bold"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
+                <TextBlock Text="Nom :" FontSize="16"/>
+                <TextBlock Text="{Binding SaveName}" FontSize="16"/>
+            </StackPanel>
+            <Border Height="1" Background="Black" Margin="20,10,20,0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
+				<TextBlock Text="Chemin source :" FontSize="16"/>
+				<TextBlock Text="{Binding SourcePath}" FontSize="16"/>
 			</StackPanel>
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="Chemin source :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
+				<TextBlock Text="Chemin destination :" FontSize="16"/>
+				<TextBlock Text="{Binding DestinationPath}" FontSize="16"/>
 			</StackPanel>
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="Chemin destination :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
+            <Border Height="1" Background="Black" Margin="20,10,20,0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
+                <TextBlock Text="Type de sauvegarde :" FontSize="16"/>
+                <TextBlock Text="{Binding SelectedSaveType}" FontSize="16"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
+				<TextBlock Text="Crypter la sauvegarde :" FontSize="16"/>
+				<TextBlock Text="{Binding Encrypt}" FontSize="16"/>
 			</StackPanel>
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="Crypter la sauvegarde :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
+            <Border Height="1" Background="Black" Margin="20,10,20,0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="left" Margin="20,10,20,0">
+				<TextBlock Text="Nombre de fichier dans le dossier source :" FontSize="16"/>
+				<TextBlock Text="{Binding FileCount}" FontSize="16"/>
 			</StackPanel>
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="Nombre de fichier dans le dossier source :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
-			</StackPanel>
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="Taille du dossier :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
-			</StackPanel>
-
-			<Button Content="Fermer" Click="Fermer_Click" HorizontalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
+                <TextBlock Text="Taille du dossier :" FontSize="16"/>
+                <TextBlock Text="{Binding FormattedDirectorySize}" FontSize="16"/>
+            </StackPanel>
+            <Button Content="Fermer" Click="Fermer_Click" HorizontalAlignment="Center"/>
 		</StackPanel>
 	</Border>
 </UserControl>
