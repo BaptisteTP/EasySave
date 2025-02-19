@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Threading;
 
 namespace EasySave2._0
 {
@@ -12,84 +13,102 @@ namespace EasySave2._0
     /// </summary>
     public partial class App : Application
     {
-		async void App_Startup(object sender, StartupEventArgs e)
-		{
-			//The app is lauched without any parameter (when double clicked on exe for example)
-			if (e.Args.Length == 0)
-			{
-				Settings.ApplyLanguageSettings();
-				MainWindow mainWindow = Creator.GetMainWindow();
-				mainWindow.Show();
-				mainWindow.StartAppNaviguation();
-			}
-			//There are arguments (exe executed in command line)
-			else if (e.Args.Length == 1)
-			{
-				await HandleCommandLineExecution(e.Args);
-				App.Current.Shutdown();
-			}
-			else
-			{
-				Console.WriteLine("The specified parameters are not recongnized as valid.");
-				App.Current.Shutdown();
-			}
-		}
+        // Mutex pour empêcher plusieurs instances
+        private static Mutex mutex = new Mutex(true, "{E32D87C6-33A6-4F9D-A8D2-3F2C0A00F4F3}");
 
-		private static async Task HandleCommandLineExecution(string[] args)
-		{
-			string input = args[0];
-			if (Regex.IsMatch(input, @"^[1-9]\d*-\d+$"))
-			{
-				List<int> inputValues = GetInputValues(input);
-				try
-				{
-					await Creator.GetSaveStoreInstance().ExecuteSavesRange(inputValues[0], inputValues[1], OnSaveExecuted, OnFailedExecute);
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex.Message);
-				}
-			}
-			else if (Regex.IsMatch(input, @"^[1-9]\d*(;[1-9]\d*)*$"))
-			{
-				List<int> inputValues = GetInputValues(input);
-				try
-				{
-					await Creator.GetSaveStoreInstance().ExecuteSaves(inputValues, OnSaveExecuted, OnFailedExecute);
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex.Message);
-				}
-			}
-			else
-			{
-				Console.WriteLine($"Argmument {input} is not valid.");
-			}
-		}
+        async void App_Startup(object sender, StartupEventArgs e)
+        {
+            // Vérifier si l'application est déjà lancée
+            if (!mutex.WaitOne(TimeSpan.Zero, true))
+            {
+                // Si une instance est déjà en cours, afficher un message et fermer
+                MessageBox.Show("L'application est déjà en cours d'exécution.");
+                App.Current.Shutdown();
+                return;
+            }
 
-		private static void OnSaveExecuted(int i)
-		{
-			Console.WriteLine($"Executing save {i}.");
-		}
+            // L'application est lancée sans argument (par exemple, au double-clic)
+            if (e.Args.Length == 0)
+            {
+                Settings.ApplyLanguageSettings();
+                MainWindow mainWindow = Creator.GetMainWindow();
+                mainWindow.Show();
+                mainWindow.StartAppNaviguation();
+            }
+            // L'application a été lancée avec un argument (exécution via la ligne de commande)
+            else if (e.Args.Length == 1)
+            {
+                await HandleCommandLineExecution(e.Args);
+                App.Current.Shutdown();
+            }
+            else
+            {
+                Console.WriteLine("Les paramètres spécifiés ne sont pas reconnus comme valides.");
+                App.Current.Shutdown();
+            }
+        }
 
-		private static void OnFailedExecute(int i)
-		{
-			Console.WriteLine($"Failed to execute save {i}...");
-		}
+        private static async Task HandleCommandLineExecution(string[] args)
+        {
+            string input = args[0];
+            if (Regex.IsMatch(input, @"^[1-9]\d*-\d+$"))
+            {
+                List<int> inputValues = GetInputValues(input);
+                try
+                {
+                    await Creator.GetSaveStoreInstance().ExecuteSavesRange(inputValues[0], inputValues[1], OnSaveExecuted, OnFailedExecute);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            else if (Regex.IsMatch(input, @"^[1-9]\d*(;[1-9]\d*)*$"))
+            {
+                List<int> inputValues = GetInputValues(input);
+                try
+                {
+                    await Creator.GetSaveStoreInstance().ExecuteSaves(inputValues, OnSaveExecuted, OnFailedExecute);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"L'argument {input} n'est pas valide.");
+            }
+        }
 
-		private static List<int> GetInputValues(string input)
-		{
-			string pattern = @"\d+";
-			MatchCollection matches = Regex.Matches(input, pattern);
+        private static void OnSaveExecuted(int i)
+        {
+            Console.WriteLine($"Exécution du sauvegarde {i}.");
+        }
 
-			List<int> numbers = [];
-			foreach (Match match in matches)
-			{
-				numbers.Add(int.Parse(match.Value));
-			}
-			return numbers;
-		}
-	}
+        private static void OnFailedExecute(int i)
+        {
+            Console.WriteLine($"Échec de l'exécution de la sauvegarde {i}...");
+        }
 
+        private static List<int> GetInputValues(string input)
+        {
+            string pattern = @"\d+";
+            MatchCollection matches = Regex.Matches(input, pattern);
+
+            List<int> numbers = new List<int>();
+            foreach (Match match in matches)
+            {
+                numbers.Add(int.Parse(match.Value));
+            }
+            return numbers;
+        }
+
+        // Libérer le mutex à la fermeture de l'application
+        protected override void OnExit(ExitEventArgs e)
+        {
+            mutex.ReleaseMutex();
+            base.OnExit(e);
+        }
+    }
 }
