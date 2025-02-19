@@ -43,6 +43,14 @@
     <system:String x:Key="DailyLogUnvalidMessage">Le dossier des logs journaliers n'est pas valide.</system:String>
     <system:String x:Key="RealTimeLogUnvalidMessage">Le dossier des logs en temps réel n'est pas valide.</system:String>
     <system:String x:Key="SettingText">Paramètres</system:String>
+    <system:String x:Key="SaveInformationPopUp">Infos sur la sauvegarde</system:String>
+    <system:String x:Key="SourcePathPopUp">Chemin source :   </system:String>
+    <system:String x:Key="DestinationPathPopUp">Chemin destination :   </system:String>
+    <system:String x:Key="TypeSavePopUp">Type de sauvegarde :   </system:String>
+    <system:String x:Key="EncryptionPopUp">Crypter la sauvegarde :   </system:String>
+    <system:String x:Key="NumberFilePopUp">Nombre de fichier dans le dossier source :   </system:String>
+    <system:String x:Key="SizeFilePopUp">Taille du dossier :   </system:String>
+    <system:String x:Key="CloseButton">Fermer</system:String>
 
 
 </ResourceDictionary>

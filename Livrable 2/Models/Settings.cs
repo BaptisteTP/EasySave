@@ -108,7 +108,7 @@ namespace EasySave2._0.Models
         {
             // Apply the language settings changes.
 			Settings settings = Creator.GetSettingsInstance();
-            ResourceDictionary dictionary = new ResourceDictionary();
+			ResourceDictionary dictionary = new ResourceDictionary();
             switch (settings.ActiveLanguage)
             {
                 case "en-US":
@@ -116,6 +116,9 @@ namespace EasySave2._0.Models
                     break;
                 case "fr-FR":
                     dictionary.Source = new Uri("../Resources/StringsResources.fr-FR.xaml", UriKind.Relative);
+                    break;
+				default:
+                    dictionary.Source = new Uri("../Resources/StringsResources.en-US.xaml", UriKind.Relative);
                     break;
             }
             Application.Current.Resources.MergedDictionaries.Add(dictionary);

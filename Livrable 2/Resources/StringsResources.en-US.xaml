@@ -43,5 +43,14 @@
     <system:String x:Key="DailyLogUnvalidMessage">The daily log folder is not valid.</system:String>
     <system:String x:Key="RealTimeLogUnvalidMessage">The real-time log folder is not valid.</system:String>
     <system:String x:Key="SettingText">Settings</system:String>
+    <system:String x:Key="SaveInformationPopUp">Save information</system:String>
+    <system:String x:Key="SourcePathPopUp">Source path:   </system:String>
+    <system:String x:Key="DestinationPathPopUp">Destination path:   </system:String>
+    <system:String x:Key="TypeSavePopUp">Save type:   </system:String>
+    <system:String x:Key="EncryptionPopUp">Encrypt save:   </system:String>
+    <system:String x:Key="NumberFilePopUp">Number of files in the source folder:   </system:String>
+    <system:String x:Key="SizeFilePopUp">Folder size:   </system:String>
+    <system:String x:Key="CloseButton">Close</system:String>
+
 
 </ResourceDictionary>
