@@ -28,7 +28,7 @@
     <system:String x:Key="ChoiceLogFormat">Logs en JSON ou XML :</system:String>
     <system:String x:Key="Json">JSON</system:String>
     <system:String x:Key="Xml">XML</system:String>
-    <system:String x:Key="NextButton">Suivant -></system:String>
+    <system:String x:Key="Next">Suivant -></system:String>
     <system:String x:Key="ChooseLanguage">Choisissez votre langue :</system:String>
     <system:String x:Key="EditPathDailyLog">Pour changer le dossier des logs journalier choisissez un nouveau dossier pour accueillir le dossier :</system:String>
     <system:String x:Key="EditPathRealTimeLog">Pour changer le dossier des logs en temps réel choisissez un nouveau dossier pour accueillir le dossier :</system:String>

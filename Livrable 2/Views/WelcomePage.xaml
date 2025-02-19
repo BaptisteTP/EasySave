@@ -23,7 +23,7 @@
         </Button>
 
         <Button x:Name="NextButton" Style="{StaticResource NextButton}" VerticalAlignment="Bottom" Margin="0,0,0,100" Cursor="Hand" Command="{Binding GoNext}">
-            <TextBlock Text="{DynamicResource NextButton}" FontSize="22" FontWeight="Bold"/>
+            <TextBlock Text="{DynamicResource Next}" FontSize="22" FontWeight="Bold"/>
         </Button>
     </Grid>
 </Page>
