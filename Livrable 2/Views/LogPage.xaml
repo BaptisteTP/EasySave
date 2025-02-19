@@ -59,7 +59,7 @@
             
         </StackPanel>
         <Button x:Name="NextButton" Style="{StaticResource NextButton}" VerticalAlignment="Bottom" Margin="0,0,0,100" Command="{Binding GoNext}" Cursor="Hand">
-            <TextBlock Text="{DynamicResource NextButton}" FontSize="22" FontWeight="Bold"/>
+            <TextBlock Text="{DynamicResource Next}" FontSize="22" FontWeight="Bold"/>
         </Button>
     </Grid>
 </Page>
