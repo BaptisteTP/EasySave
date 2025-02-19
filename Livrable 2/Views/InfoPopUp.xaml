@@ -6,27 +6,31 @@
 		<StackPanel>
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Text="Nom de la sauvegarde :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
+				<TextBlock Text="{Binding SaveName}" FontSize="16" TextAlignment="Center" Width="452"/>
 			</StackPanel>
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Text="Chemin source :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
+				<TextBlock Text="{Binding SourcePath}" FontSize="16" TextAlignment="Center" Width="452"/>
 			</StackPanel>
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Text="Chemin destination :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
+				<TextBlock Text="{Binding DestinationPath}" FontSize="16" TextAlignment="Center" Width="452"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="Type de sauvegarde :" FontSize="16" TextAlignment="Center" Width="431"/>
+				<TextBlock Text="{Binding SelectedSaveType}" FontSize="16" TextAlignment="Center" Width="452"/>
 			</StackPanel>
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Text="Crypter la sauvegarde :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
+				<TextBlock Text="{Binding Encrypt}" FontSize="16" TextAlignment="Center" Width="452"/>
 			</StackPanel>
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Text="Nombre de fichier dans le dossier source :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
+				<TextBlock Text="{Binding FileCount}" FontSize="16" TextAlignment="Center" Width="452"/>
 			</StackPanel>
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Text="Taille du dossier :" FontSize="16" TextAlignment="Center" Width="431"/>
-				<TextBlock Text="" FontSize="16" TextAlignment="Center" Width="452"/>
+				<TextBlock Text="{Binding FormattedDirectorySize}" FontSize="16" TextAlignment="Center" Width="452"/>
 			</StackPanel>
 
 			<Button Content="Fermer" Click="Fermer_Click" HorizontalAlignment="Center"/>
