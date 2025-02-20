@@ -14,7 +14,7 @@ namespace EasySave2._0.Models.Logs_Related
 
 	public class SaveLog
 	{
-		[XmlAttribute("Save")]
+		[XmlAttribute("Id")]
 		public int Id { get; set; }
 
 		[XmlAttribute("Save")]
