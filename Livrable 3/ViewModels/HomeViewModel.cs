@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using EasySave2._0.CustomEventArgs;
-using EasySave2._0.ViewModels;
 using System.Windows.Navigation;
 using System.Diagnostics;
 
@@ -88,7 +87,7 @@ namespace EasySave2._0
                 DeleteCommand = new RelayCommand(DeleteItem, CanInteract);
                 EditItemCommand = new RelayCommand(EditItem, CanInteract);
                 InformationSaveCommand = new RelayCommand(OpenInfoPopup, CanInteract);
-                ExecuteAllSavesCommand = new RelayCommand(ExecuteAllSaves, CanInteract);
+                ExecuteAllSavesCommand = new RelayCommand(ExecuteAllSaves);
 
 
                 UpdatePagedItems();
@@ -102,17 +101,24 @@ namespace EasySave2._0
             }
         }
 
-        private async void ExecuteAllSaves(object obj)
+        private void ExecuteAllSaves(object obj)
 		    {
 			    foreach(Save save in Items)
                 {
-				    await ExecuteSaveAync(save);
+                    if (!save.IsExecuting)
+                    {
+				        ExecuteSaveAsync(save);
+                    }
                 }
 		    }
 
 		    private bool CanInteract(object arg)
             {
-                return !IsASaveExecuting;
+                if(arg is Save save)
+                {
+                    return !save.IsExecuting;
+                }
+                return false;
             }
 
             private void EditItem(object obj)
@@ -127,23 +133,16 @@ namespace EasySave2._0
 		    {
 			    if(obj is Save saveToExecute)
 			    {
-				    await ExecuteSaveAync(saveToExecute);
+				    await ExecuteSaveAsync(saveToExecute);
 			    }
 		    }
 
-		    private async Task ExecuteSaveAync(Save saveToExecute)
+		    private async Task ExecuteSaveAsync(Save saveToExecute)
 		    {
-			    IProgress<int> progress = new Progress<int>(progress =>
-			    {
-				    SaveExecutionProgress = progress;
-			    });
 			    bool executionSuccessful = false;
 			    try
 			    {
-				    IsASaveExecuting = true;
-				    await saveToExecute.Execute(progress);
-
-				    SaveExecutionProgress = 0;
+				    await saveToExecute.Execute();
 				    executionSuccessful = true;
 
 			    }

@@ -52,7 +52,16 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-        private bool encrypt;
+		private int progress;
+
+		public int Progress
+		{
+			get { return progress; }
+			set { progress = value; OnPropertyChanged(); }
+		}
+
+
+		private bool encrypt;
         public bool Encrypt
         {
             get { return encrypt; }
@@ -88,11 +97,15 @@ namespace EasySave2._0.ViewModels
 
 		}
 
-		public async Task Execute(IProgress<int>? progress = null)
+		public async Task Execute()
 		{
 			IsExecuting = true;
-			await Task.Run(() => Creator.GetPasterInstance().BeginCopyPaste(this, progress));
+			Progress = 0;
+
+			await Task.Run(() => Creator.GetPasterInstance().BeginCopyPaste(this));
+
 			IsExecuting = false;
+			Progress = 0;
 		}
 	}
 }
