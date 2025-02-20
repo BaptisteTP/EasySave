@@ -211,8 +211,31 @@ namespace EasySave2._0.Models
 
                 if (executedSave.Encrypt)
                 {
-                    var crypto = new CryptoManager(destinationPath, "Baptiste"); 
-                    crypto.EncryptFile();
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName = "CryptoSoft.exe",
+                        Arguments = $"{destinationPath} Baptiste",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    using (var process = new Process { StartInfo = startInfo })
+                    {
+                        process.Start();
+                        process.WaitForExit();
+
+                        // Optionally, you can capture the output and error messages
+                        string output = process.StandardOutput.ReadToEnd();
+                        string error = process.StandardError.ReadToEnd();
+
+						if (process.ExitCode != 0)
+						{
+							// Handle the error case
+							//throw new Exception($"CryptoSoft.exe a échoué avec le code de sortie {process.ExitCode}: {error}");
+						}
+					}
                 }
 
                 stopWatch.Stop();
@@ -227,22 +250,7 @@ namespace EasySave2._0.Models
             {
                 OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
             }
-            try
-            {
-                File.Copy(fileFullName, destinationPath, true);
-                stopWatch.Stop();
-                timeElapsed = stopWatch.Elapsed;
-
-            }
-            catch
-            {
-                stopWatch.Stop();
-                timeElapsed = null;
-            }
-            finally
-            {
-                OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
-            }
+           
         }
 
         private bool AreAnyBuisnessSoftwareUp()
