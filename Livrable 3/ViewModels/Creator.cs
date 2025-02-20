@@ -134,8 +134,8 @@ namespace EasySave2._0.ViewModels
 				_pasterInstance.SaveFinished += _loggerInstance.OnSaveFinished;
                 _pasterInstance.BuisnessSoftwareDetected += _loggerInstance.OnBuisnessSoftwareDetected;
 				_saveStoreInstance.SaveCreated += _loggerInstance.OnSaveCreated;
-				_saveStoreInstance.SaveDeleted += _loggerInstance.OnSaveEdited;
-				_saveStoreInstance.SaveEdited += _loggerInstance.OnSaveDeleted;
+				_saveStoreInstance.SaveEdited += _loggerInstance.OnSaveEdited;
+				_saveStoreInstance.SaveDeleted += _loggerInstance.OnSaveDeleted;
 				Settings.LogFomatChanged += _loggerInstance.OnSaveCreated;
 
 				_saveStoreInstance.LoadLoggedSaves();

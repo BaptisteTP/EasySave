@@ -22,7 +22,7 @@ namespace EasySave2._0.Models
 		public event EventHandler<Save>? SaveFinished;
 		public event EventHandler<Save>? BuisnessSoftwareDetected;
 
-		public bool BeginCopyPaste(Save executedSave, IProgress<int> progress)
+		public bool BeginCopyPaste(Save executedSave)
 		{
 			if (!Directory.Exists(executedSave.SourcePath)) { return false; }
 			if (AreAnyBuisnessSoftwareUp()) { BuisnessSoftwareDetected?.Invoke(this, executedSave);  return false; }
@@ -30,7 +30,7 @@ namespace EasySave2._0.Models
 			switch (executedSave.Type)
 			{
 				case SaveType.Full:
-					return BeginFullSave(executedSave, progress);
+					return BeginFullSave(executedSave);
 
 				case SaveType.Differential:
 					return BeginDifferentialSave(executedSave);
@@ -57,6 +57,14 @@ namespace EasySave2._0.Models
 				if (eligibleFiles.Contains(fileFullName))
 				{
 					string destinationPath = fileFullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+					try
+					{
+						executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
+					}
+					catch
+					{
+						executedSave.Progress = 0;
+					}
 					OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, fileFullName, destinationPath));
 					CopyFile(fileFullName, executedSave, destinationPath);
 					remainingFiles.Remove(fileFullName);
@@ -79,6 +87,14 @@ namespace EasySave2._0.Models
 
 						string destinationPath = file.FullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
 
+						try
+						{
+							executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
+						}
+						catch
+						{
+							executedSave.Progress = 0;
+						}
 						OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, file.FullName, destinationPath));
 						CopyFile(file.FullName, executedSave, destinationPath);
 						remainingFiles.Remove(file.FullName);
@@ -106,7 +122,7 @@ namespace EasySave2._0.Models
 			return result;
 		}
 
-		private bool BeginFullSave(Save executedSave, IProgress<int> progress)
+		private bool BeginFullSave(Save executedSave)
 		{
 			// Get all files in the source path
 			List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
@@ -117,7 +133,6 @@ namespace EasySave2._0.Models
 			}
 
 			SaveStarted?.Invoke(this, executedSave);
-			
 			List<string> remainingFiles = new List<string>(eligibleFiles);
 			foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
 			{
@@ -131,11 +146,11 @@ namespace EasySave2._0.Models
 				OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, newPath, destinationPath));
 				try
 				{
-					progress?.Report(Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100));
+					executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
 				}
 				catch
 				{
-                    progress?.Report(0);
+					executedSave.Progress = 0;
                 }
 				CopyFile(newPath, executedSave, destinationPath);
 				remainingFiles.Remove(newPath);
