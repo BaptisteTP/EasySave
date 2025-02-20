@@ -37,6 +37,19 @@ namespace EasySave2._0.ViewModels
                 {
                     SelectedSaveType = SaveType.Full;
                 }
+                Encrypt = saveToEdit.Encrypt;
+            }
+        }
+
+        private bool _encrypt;
+
+        public bool Encrypt
+        {
+            get { return _encrypt; }
+            set
+            {
+                _encrypt = value;
+                OnPropertyChanged();
             }
         }
 
@@ -133,6 +146,7 @@ namespace EasySave2._0.ViewModels
                 SaveToEdit.SourcePath = SourcePath;
                 SaveToEdit.DestinationPath = DestinationPath;
                 SaveToEdit.Type = SelectedSaveType;
+                SaveToEdit.Encrypt = Encrypt;
 
                 SaveEdit?.Invoke(this, EventArgs.Empty);
             }

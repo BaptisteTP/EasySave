@@ -5,10 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace EasySave2._0.ViewModels
 {
@@ -17,8 +21,10 @@ namespace EasySave2._0.ViewModels
 		public event EventHandler? SettingsConfirmed;
 		public ICommand ChangedLogPathCommand { get; }
 		public ICommand ConfirmSettingsCommand { get; }
-
 		public ICommand AddBuisnessSoftwareCommand { get; }
+		public ICommand DeleteBuisnessSoftwareCommand { get; }
+
+		public ObservableCollection<LanguageItem> LanguageItems { get; } = new ObservableCollection<LanguageItem>(Creator.GetAvalaibleLanguages());
 
 		#region Attributes
 
@@ -36,17 +42,7 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-
-		private string selectedLanguage;
-		public string SelectedLanguage
-		{
-			get { return selectedLanguage; }
-			set 
-			{
-				selectedLanguage = value;
-				OnPropertyChanged();
-			}
-		}
+		public LanguageItem SelectedLanguage { get; private set; }
 
 		public string dailyLogPath = Creator.GetSettingsInstance().DailyLogPath!;
 
@@ -62,7 +58,7 @@ namespace EasySave2._0.ViewModels
 
 				if(string.IsNullOrEmpty(DailyLogPath) || !Settings.UserHasRightPermissionInFolder(DailyLogPath))
 				{
-					AddError(nameof(DailyLogPath), "Le dossier des logs journaliers n'est pas valide.");
+					AddError(nameof(DailyLogPath), Application.Current.Resources["DailyLogUnvalidMessage"] as string);
 				}
 			}
 		}
@@ -78,9 +74,9 @@ namespace EasySave2._0.ViewModels
 				realTimeLogPath = value;
 				OnPropertyChanged();
 
-				if (string.IsNullOrEmpty(RealTimeLogPath) || !Settings.UserHasRightPermissionInFolder(RealTimeLogPath))
+                if (string.IsNullOrEmpty(RealTimeLogPath) || !Settings.UserHasRightPermissionInFolder(RealTimeLogPath))
 				{
-					AddError(nameof(RealTimeLogPath), "Le dossier des logs en temps réel n'est pas valide.");
+					AddError(nameof(RealTimeLogPath), Application.Current.Resources["RealTimeLogUnvalidMessage"] as string);
 				}
 			}
 		}
@@ -104,11 +100,12 @@ namespace EasySave2._0.ViewModels
 			ChangedLogPathCommand = new RelayCommand(ChangeViaFolderDialog);
 			ConfirmSettingsCommand = new RelayCommand(ConfirmSettings, CanConfirmSettings);
 			AddBuisnessSoftwareCommand = new RelayCommand(AddBuisnessSoftware, CanAddBuisness);
+			DeleteBuisnessSoftwareCommand = new RelayCommand(DeleteBuisnessSoftware, _ => true);
 
 			Settings settings = Creator.GetSettingsInstance();
 
-
-			SelectedLanguage = settings.ActiveLanguage;
+			SelectedLanguage = Creator.GetAvalaibleLanguages().FirstOrDefault(lang => lang.Language == settings.ActiveLanguage)
+								?? Creator.GetAvalaibleLanguages().FirstOrDefault(lang => lang.Language == settings.FallBackLanguage);
 			DailyLogPath = settings.DailyLogPath;
 			RealTimeLogPath = settings.RealTimeLogPath;
 			BuisnessSoftwaresInterrupt = new ObservableCollection<string>(settings.BuisnessSoftwaresInterrupt);
@@ -121,7 +118,19 @@ namespace EasySave2._0.ViewModels
 			{
 				SelectedLogType = LogType.json;
 			}
-			
+		}
+
+		private void DeleteBuisnessSoftware(object obj)
+		{
+			if(obj is string softwareToRemove)
+			{
+				Settings settings = Creator.GetSettingsInstance();
+
+				BuisnessSoftwaresInterrupt.Remove(softwareToRemove);
+
+				Settings.ChangeSetting("BuisnessSoftwaresInterrupt", new List<string>(BuisnessSoftwaresInterrupt));
+				settings.BuisnessSoftwaresInterrupt = new List<string>(BuisnessSoftwaresInterrupt);
+			}
 		}
 
 		private void AddBuisnessSoftware(object obj)
@@ -140,11 +149,8 @@ namespace EasySave2._0.ViewModels
 			return BuisnessSoftwareToAdd != "";
 		}
 
-		private void ConfirmSettings(object obj)
+        private void ConfirmSettings(object obj)
 		{
-			Settings.ChangeSetting("ActiveLanguage", SelectedLanguage);
-			Settings.ApplyLanguageSettings();
-
 			Settings.ChangeSetting("DailyLogPath", dailyLogPath);
 			Creator.GetSettingsInstance().DailyLogPath = DailyLogPath;
 
@@ -191,6 +197,12 @@ namespace EasySave2._0.ViewModels
 				}
 
 			}
+		}
+
+		public void LanguageControl_LanguageChanged(object? sender, LanguageItem e)
+		{
+			Settings.ChangeSetting("ActiveLanguage", e.Language);
+			Settings.ApplyLanguageSettings();
 		}
 	}
 }

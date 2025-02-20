@@ -10,17 +10,18 @@ using System.Resources;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace EasySave2._0.Models
 {
-    public class Settings
-    {
+	public class Settings
+	{
 		public string? ActiveLanguage { get; set; }
 		public string? FallBackLanguage { get; set; }
 		public string? DailyLogPath { get; set; }
 		public string? RealTimeLogPath { get; set; }
 		public string? LogFormat { get; set; }
-		public List<string> BuisnessSoftwaresInterrupt {  get; set; }
+		public List<string> BuisnessSoftwaresInterrupt { get; set; }
 
 		public static event EventHandler? LogFomatChanged;
 
@@ -103,21 +104,28 @@ namespace EasySave2._0.Models
 			WriteSettingsToJsonFile(currentSettings);
 		}
 
-		public static void ApplyLanguageSettings()
-		{
-			// Apply the language settings.
+        public static void ApplyLanguageSettings()
+        {
+            // Apply the language settings changes.
 			Settings settings = Creator.GetSettingsInstance();
-			if (settings.ActiveLanguage == "")
-			{
-				Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(settings.FallBackLanguage!);
-			}
-			else
-			{
-				Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(settings.ActiveLanguage!);
-			}
-		}
+			ResourceDictionary dictionary = new ResourceDictionary();
+            switch (settings.ActiveLanguage)
+            {
+                case "en-US":
+                    dictionary.Source = new Uri("../Resources/StringsResources.en-US.xaml", UriKind.Relative);
+                    break;
+                case "fr-FR":
+                    dictionary.Source = new Uri("../Resources/StringsResources.fr-FR.xaml", UriKind.Relative);
+                    break;
+				default:
+                    dictionary.Source = new Uri("../Resources/StringsResources.en-US.xaml", UriKind.Relative);
+                    break;
+            }
+            Application.Current.Resources.MergedDictionaries.Add(dictionary);
 
-		public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
+        }
+
+        public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
 		{
 			// Check if the user has the right permissions in the folder.
 			if (!Directory.Exists(newDailyLogFolderPath)) {  return false; }
