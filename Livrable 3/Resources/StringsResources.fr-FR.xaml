@@ -1,0 +1,56 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <system:String x:Key="NoSaves">Aucune sauvegarde enregistrée !</system:String>
+    <system:String x:Key="DailyLogFolder">Pour changer le dossier des logs journalier choisissez un nouveau dossier pour accueillir le dossier :</system:String>
+    <system:String x:Key="OperationList">Liste de toutes les opérations de sauvegarde :</system:String>
+    <system:String x:Key="RealTimeLogFolder">Pour changer le dossier des logs en temps réel choisissez un nouveau dossier pour accueillir le dossier :</system:String>
+    <system:String x:Key="ValidSave">✔ Sauvegarder</system:String>
+    <system:String x:Key="WelcomeMessage">Bienvenue sur Easy Save, choisissez votre langue :</system:String>
+    <system:String x:Key="NoSavesMessage">Aucune sauvegarde n'est configurée.</system:String>
+    <system:String x:Key="ExecuteSaves">Exécuter les sauvegardes</system:String>
+    <system:String x:Key="Add">+ Ajouter</system:String>
+    <system:String x:Key="ExecutionMessage">Execution...</system:String>
+    <system:String x:Key="AddSave">Ajouter une nouvelle sauvegarde :</system:String>
+    <system:String x:Key="TypeOfSave">Type :</system:String>
+    <system:String x:Key="TypeComplete">Complete</system:String>
+    <system:String x:Key="TypeDifferential">Differentielle</system:String>
+    <system:String x:Key="Source">Source :</system:String>
+    <system:String x:Key="Destination">Destination :</system:String>
+    <system:String x:Key="Encryption">Chiffrage :</system:String>
+    <system:String x:Key="Cancel">✖ Annuler</system:String>
+    <system:String x:Key="EncryptionSave">Chiffrer la sauvegarde</system:String>
+    <system:String x:Key="EditSave">Modifier la sauvegarde :</system:String>
+    <system:String x:Key="NameSave">Nom :</system:String>
+    <system:String x:Key="ValidModification">✔ Modifier</system:String>
+    <system:String x:Key="PathRealTimeLog">Les logs en temps réel sont actuellement stockées dans le dossier suivant :</system:String>
+    <system:String x:Key="PathDailyLog">Les logs journalier sont actuellement stockées dans le dossier suivant :</system:String>
+    <system:String x:Key="ChoiceLogFormat">Logs en JSON ou XML :</system:String>
+    <system:String x:Key="Json">JSON</system:String>
+    <system:String x:Key="Xml">XML</system:String>
+    <system:String x:Key="Next">Suivant -></system:String>
+    <system:String x:Key="ChooseLanguage">Choisissez votre langue :</system:String>
+    <system:String x:Key="EditPathDailyLog">Pour changer le dossier des logs journalier choisissez un nouveau dossier pour accueillir le dossier :</system:String>
+    <system:String x:Key="EditPathRealTimeLog">Pour changer le dossier des logs en temps réel choisissez un nouveau dossier pour accueillir le dossier :</system:String>
+    <system:String x:Key="BusinessSoftware">Logiciel métier bloquant les sauvegardes :</system:String>
+    <system:String x:Key="ValidEnd">✔ Terminer</system:String>
+    <system:String x:Key="NoBusinessSoftware">Aucun logiciel métier de configuré.</system:String>
+    <system:String x:Key="SourcePathEmptyMessage">Le chemin source ne peut pas être vide.</system:String>
+    <system:String x:Key="DestinationPathEmptyMessage">Le chemin de destination ne peut pas être vide.</system:String>
+    <system:String x:Key="SaveNameEmptyMessage">Le nom de la sauvegarde ne peut pas être vide.</system:String>
+    <system:String x:Key="SourcePathWrongMessage">Le chemin source spécifié n'est pas valide.</system:String>
+    <system:String x:Key="DestinationPathWrongMessage">Le chemin de destination spécifié n'est pas valide.</system:String>
+    <system:String x:Key="DailyLogUnvalidMessage">Le dossier des logs journaliers n'est pas valide.</system:String>
+    <system:String x:Key="RealTimeLogUnvalidMessage">Le dossier des logs en temps réel n'est pas valide.</system:String>
+    <system:String x:Key="SettingText">Paramètres</system:String>
+    <system:String x:Key="SaveInformationPopUp">Infos sur la sauvegarde</system:String>
+    <system:String x:Key="SourcePathPopUp">Chemin source :   </system:String>
+    <system:String x:Key="DestinationPathPopUp">Chemin destination :   </system:String>
+    <system:String x:Key="TypeSavePopUp">Type de sauvegarde :   </system:String>
+    <system:String x:Key="EncryptionPopUp">Crypter la sauvegarde :   </system:String>
+    <system:String x:Key="NumberFilePopUp">Nombre de fichier dans le dossier source :   </system:String>
+    <system:String x:Key="SizeFilePopUp">Taille du dossier :   </system:String>
+    <system:String x:Key="CloseButton">Fermer</system:String>
+
+
+</ResourceDictionary>
