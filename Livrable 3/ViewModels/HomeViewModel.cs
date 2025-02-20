@@ -36,6 +36,8 @@ namespace EasySave2._0
         public ICommand DeleteCommand { get; }
         public ICommand EditItemCommand { get; }
         public ICommand InformationSaveCommand { get; }
+        public ICommand StopCommand { get; }
+        public ICommand PauseCommand { get; }
 
         public ICommand ExecuteAllSavesCommand { get; }
         public event EventHandler<Save> SaveModify;
@@ -88,11 +90,27 @@ namespace EasySave2._0
                 EditItemCommand = new RelayCommand(EditItem, CanInteract);
                 InformationSaveCommand = new RelayCommand(OpenInfoPopup, CanInteract);
                 ExecuteAllSavesCommand = new RelayCommand(ExecuteAllSaves);
+                PauseCommand = new RelayCommand(PauseSave, CanPauseStop);
+                StopCommand = new RelayCommand(StopSave, CanPauseStop);
 
 
-                UpdatePagedItems();
+            UpdatePagedItems();
             }
-
+        public void PauseSave(object obj)
+        {
+            if (obj is Save save)
+            {
+                save.Pause();
+            }
+        }
+        public void StopSave(object obj)
+        {
+            if (obj is Save save)
+            {
+                
+            }
+        }
+        public bool CanPauseStop(object arg) => true;
         private void InfoItem(object obj)
         {
             if (obj is Save save)
@@ -101,18 +119,51 @@ namespace EasySave2._0
             }
         }
 
-        private void ExecuteAllSaves(object obj)
-		    {
-			    foreach(Save save in Items)
-                {
-                    if (!save.IsExecuting)
-                    {
-				        ExecuteSaveAsync(save);
-                    }
-                }
-		    }
+        private async void StartSave(object obj)
+        {
+            if (obj is Save saveToExecute)
+            {
+                Debug.WriteLine("StartSave command executed for Save ID: " + saveToExecute.Id);
+                await ExecuteSaveAsync(saveToExecute);
+            }
+        }
 
-		    private bool CanInteract(object arg)
+        private async Task ExecuteSaveAsync(Save saveToExecute)
+        {
+            bool executionSuccessful = false;
+            try
+            {
+                Debug.WriteLine("Executing save for Save ID: " + saveToExecute.Id);
+                await saveToExecute.Execute();
+                executionSuccessful = true;
+                Debug.WriteLine("Save execution successful for Save ID: " + saveToExecute.Id);
+            }
+            catch (Exception ex)
+            {
+                executionSuccessful = false;
+                Debug.WriteLine("Save execution failed for Save ID: " + saveToExecute.Id + " with exception: " + ex.Message);
+            }
+            finally
+            {
+                IsASaveExecuting = false;
+            }
+        }
+
+        private void ExecuteAllSaves(object obj)
+        {
+            Debug.WriteLine("ExecuteAllSaves command executed.");
+            foreach (Save save in Items)
+            {
+                if (!save.IsExecuting)
+                {
+                    Debug.WriteLine("Executing save for Save ID: " + save.Id);
+                    ExecuteSaveAsync(save);
+                }
+            }
+        }
+
+
+        private bool CanInteract(object arg)
             {
                 if(arg is Save save)
                 {
@@ -129,33 +180,33 @@ namespace EasySave2._0
                 }
             }
 
-		    private async void StartSave(object obj)
-		    {
-			    if(obj is Save saveToExecute)
-			    {
-				    await ExecuteSaveAsync(saveToExecute);
-			    }
-		    }
+		    //private async void StartSave(object obj)
+		    //{
+			   // if(obj is Save saveToExecute)
+			   // {
+				  //  await ExecuteSaveAsync(saveToExecute);
+			   // }
+		    //}
 
-		    private async Task ExecuteSaveAsync(Save saveToExecute)
-		    {
-			    bool executionSuccessful = false;
-			    try
-			    {
-				    await saveToExecute.Execute();
-				    executionSuccessful = true;
+		    //private async Task ExecuteSaveAsync(Save saveToExecute)
+		    //{
+			   // bool executionSuccessful = false;
+			   // try
+			   // {
+				  //  await saveToExecute.Execute();
+				  //  executionSuccessful = true;
 
-			    }
-			    catch
-			    {
-				    executionSuccessful = false;
+			   // }
+			   // catch
+			   // {
+				  //  executionSuccessful = false;
 
-			    }
-			    finally
-			    {
-				    IsASaveExecuting = false;
-			    }
-		    }
+			   // }
+			   // finally
+			   // {
+				  //  IsASaveExecuting = false;
+			   // }
+		    //}
 
 		    private void UpdatePagedItems()
             {
