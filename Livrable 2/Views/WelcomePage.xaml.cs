@@ -25,8 +25,7 @@ namespace EasySave2._0
         {
             InitializeComponent();
             var viewModel = new WelcomeViewModel();
-            LanguageSelector.LanguageChanged += viewModel.LanguageControl_LanguageChanged;
-            viewModel.NextPageButtonClicked += ViewModel_NextPageButtonClicked;
+			viewModel.NextPageButtonClicked += ViewModel_NextPageButtonClicked;
             DataContext = viewModel;
         }
 

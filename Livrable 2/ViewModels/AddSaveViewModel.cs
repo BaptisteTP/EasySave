@@ -11,7 +11,6 @@ using System.Windows.Navigation;
 using System.Xml.Linq;
 using System.Windows.Navigation;
 using EasySave2._0.Models;
-using System.Windows;
 
 namespace EasySave2._0.ViewModels
 {
@@ -33,7 +32,7 @@ namespace EasySave2._0.ViewModels
                 ClearError(nameof(SaveName));
                 if( _saveName == "")
                 {
-                    AddError(nameof(SaveName), Application.Current.Resources["SaveNameEmptyMessage"] as string);
+                    AddError(nameof(SaveName), "Le nom de la sauvegarde ne peut pas être vide.");
                 }
             }
         }
@@ -51,11 +50,11 @@ namespace EasySave2._0.ViewModels
 				ClearError(nameof(SourcePath));
 				if (_sourcePath == "")
 				{
-					AddError(nameof(SourcePath), Application.Current.Resources["SourcePathEmptyMessage"] as string);
-                }
+					AddError(nameof(SourcePath), "Le chemin source ne peut pas être vide.");
+				}
                 if (!Settings.UserHasRightPermissionInFolder(SourcePath))
                 {
-					AddError(nameof(SourcePath), Application.Current.Resources["SourcePathWrongMessage"] as string);
+					AddError(nameof(SourcePath), "Le chemin source spécifié n'est pas valide.");
 				}
 
 			}
@@ -74,11 +73,11 @@ namespace EasySave2._0.ViewModels
 				ClearError(nameof(DestinationPath));
 				if (_destinationPath == "")
 				{
-					AddError(nameof(DestinationPath), Application.Current.Resources["DestinationPathEmptyMessage"] as string);
+					AddError(nameof(DestinationPath), "Le chemin destination ne peut pas être vide.");
 				}
 				if (!Settings.UserHasRightPermissionInFolder(DestinationPath))
 				{
-					AddError(nameof(DestinationPath), Application.Current.Resources["DestinationPathWrongMessage"] as string);
+					AddError(nameof(DestinationPath), "Le chemin source spécifié n'est pas valide.");
 				}
 			}
         }

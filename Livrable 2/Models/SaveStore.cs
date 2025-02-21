@@ -97,11 +97,8 @@ namespace EasySave2._0.ViewModels
 					saveToEdit.Type = (SaveType)newValue;
 					SaveEdited?.Invoke(this, EventArgs.Empty);
 					break;
-				case 5:
-					saveToEdit.Encrypt = (bool)newValue;
-                    SaveEdited?.Invoke(this, EventArgs.Empty);
-                    break;
-                default:
+
+				default:
 					return;
 			}
 		}
@@ -244,35 +241,5 @@ namespace EasySave2._0.ViewModels
 					return new List<Save>();
 			}
 		}
-        public int CountFilesInDirectory(string directoryPath)
-        {
-            if (Directory.Exists(directoryPath))
-            {
-                return Directory.GetFiles(directoryPath, "*", SearchOption.AllDirectories).Length;
-            }
-            else
-            {
-                throw new DirectoryNotFoundException($"The directory '{directoryPath}' does not exist.");
-            }
-        }
-        public long GetDirectorySize(string directoryPath)
-        {
-            if (Directory.Exists(directoryPath))
-            {
-                long totalSize = 0;
-                string[] files = Directory.GetFiles(directoryPath, "*", SearchOption.AllDirectories);
-                foreach (string file in files)
-                {
-                    FileInfo fileInfo = new FileInfo(file);
-                    totalSize += fileInfo.Length;
-                }
-                return totalSize;
-            }
-            else
-            {
-                throw new DirectoryNotFoundException($"The directory '{directoryPath}' does not exist.");
-            }
-        }
-
-    }
+	}
 }
