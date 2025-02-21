@@ -157,6 +157,31 @@ namespace EasySave2._0.Models
         }
 
 
+						OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, file.FullName, destinationPath));
+                            CopyFile(file.FullName, executedSave, destinationPath);
+                            remainingFiles.Remove(file.FullName);
+                        }
+					}
+				}
+			executedSave.LastExecuteDate = DateTime.Now;
+			SaveFinished?.Invoke(this, executedSave);
+			return true;
+		}
+
+        private bool IsFileSizeWithinLimit(string fullName)
+        {
+            FileInfo fileInfo = new FileInfo(fullName);
+			Settings settings = Creator.GetSettingsInstance();
+			if (fileInfo.Length >= long.Parse(settings.FileSizeLimit)*1000)
+			{
+				return false; 
+			}
+			else 
+			{
+				return true;
+			}
+        }
+
         private List<string> GetNameOfFilesModifiedAfterLastExecution(Save executedSave)
 		{
 			List<string> result = new List<string>();
@@ -203,8 +228,15 @@ namespace EasySave2._0.Models
 				{
 					executedSave.Progress = 0;
                 }
-				CopyFile(newPath, executedSave, destinationPath);
-				remainingFiles.Remove(newPath);
+				if (IsFileSizeWithinLimit(newPath) == true)
+				{
+                    CopyFile(newPath, executedSave, destinationPath);
+                    remainingFiles.Remove(newPath);
+                }
+				else
+				{
+					HandleOverLimitSize(newPath, executedSave, destinationPath);
+				}
 			}
 
 			executedSave.LastExecuteDate = DateTime.Now;
@@ -212,7 +244,17 @@ namespace EasySave2._0.Models
 			return true;
 		}
 
-		private List<string> GetEligibleFilesFullSave(string sourcePath)
+        private readonly object _lock = new object();
+
+        private void HandleOverLimitSize(string filePath, Save executedSave, string destinationPath)
+        {
+                lock (_lock)
+                {
+                    CopyFile(filePath, executedSave, destinationPath);
+                }
+        }
+
+        private List<string> GetEligibleFilesFullSave(string sourcePath)
 		{
 			// Get all files in the source path
 			List<string> result = new List<string>();
