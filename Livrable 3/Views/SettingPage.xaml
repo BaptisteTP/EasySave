@@ -229,36 +229,12 @@
                                        FontSize="24" />
                             <RadioButton Content="{DynamicResource Json}"
                                          GroupName="LogFormat"
-                                         Margin="10 0 0 100"
                                          IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.json}}"
                                          Cursor="Hand" />
                             <RadioButton Content="{DynamicResource Xml}"
                                          GroupName="LogFormat"
-                                         Margin="10 0 0 100"
                                          IsChecked="{Binding SelectedLogType, Mode=TwoWay, Converter={StaticResource LogTypeToSelectedBool}, ConverterParameter={x:Static enums:LogType.xml}}"
                                          Cursor="Hand" />
-                        </StackPanel>
-                        <StackPanel Grid.Row="4"
-                                    Margin="0 80 0 0">
-                            <TextBlock FontSize="20"
-                                       TextWrapping="Wrap"
-                                       Text="{DynamicResource KoBlockLimit}" />
-                            <Grid Margin="0 0 0 0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <TextBox Grid.Column="0"
-                                         Style="{StaticResource ErrorTemplate}"
-                                         Text="{Binding FileSizeLimit, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-                                         HorizontalAlignment="Stretch"
-                                         Height="50"
-                                         FontSize="18"
-                                         Background="White"
-                                         Margin="0 0 4 0" 
-                                         MaxLength="9"/>
-                            </Grid>
                         </StackPanel>
 
                     </Grid>

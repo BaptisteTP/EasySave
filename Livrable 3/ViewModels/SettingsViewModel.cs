@@ -4,13 +4,10 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -84,20 +81,6 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-		public string _fileSizeLimit = Creator.GetSettingsInstance().FileSizeLimit;
-		public string FileSizeLimit
-		{
-            get => _fileSizeLimit;
-            set
-			{
-                if (_fileSizeLimit != value && Regex.IsMatch(value, "^\\d*$"))
-				{
-                    _fileSizeLimit = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
 		private LogType selectedLogType = LogType.json;
 
 		public LogType SelectedLogType
@@ -125,7 +108,6 @@ namespace EasySave2._0.ViewModels
 								?? Creator.GetAvalaibleLanguages().FirstOrDefault(lang => lang.Language == settings.FallBackLanguage);
 			DailyLogPath = settings.DailyLogPath;
 			RealTimeLogPath = settings.RealTimeLogPath;
-			FileSizeLimit = settings.FileSizeLimit;
 			BuisnessSoftwaresInterrupt = new ObservableCollection<string>(settings.BuisnessSoftwaresInterrupt);
 
 			if (Enum.IsDefined(typeof(LogType), settings.LogFormat))
@@ -178,9 +160,6 @@ namespace EasySave2._0.ViewModels
 			Settings.ChangeSetting("LogFormat", selectedLogType.ToString());
 			Creator.GetSettingsInstance().LogFormat = selectedLogType.ToString();
 
-			Settings.ChangeSetting("FileSizeLimit", FileSizeLimit);
-			Creator.GetSettingsInstance().FileSizeLimit = FileSizeLimit;
-
 			SettingsConfirmed?.Invoke(this, EventArgs.Empty);
 		}
 
@@ -220,7 +199,7 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-        public void LanguageControl_LanguageChanged(object? sender, LanguageItem e)
+		public void LanguageControl_LanguageChanged(object? sender, LanguageItem e)
 		{
 			Settings.ChangeSetting("ActiveLanguage", e.Language);
 			Settings.ApplyLanguageSettings();

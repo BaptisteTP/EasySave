@@ -9,34 +9,34 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
                 <TextBlock Text="{DynamicResource NameSave}" FontSize="16"/>
-                <TextBlock Text="{Binding SaveName}" FontSize="16" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding SaveName}" FontSize="16"/>
             </StackPanel>
             <Border Height="1" Background="Black" Margin="20,10,20,0"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
                 <TextBlock Text="{DynamicResource SourcePathPopUp}" FontSize="16"/>
-                <TextBlock Text="{Binding SourcePath}" FontSize="16" Margin="5,0,0,0"/>
+				<TextBlock Text="{Binding SourcePath}" FontSize="16"/>
 			</StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
                 <TextBlock Text="{DynamicResource DestinationPathPopUp}" FontSize="16"/>
-                <TextBlock Text="{Binding DestinationPath}" FontSize="16" Margin="5,0,0,0"/>
+				<TextBlock Text="{Binding DestinationPath}" FontSize="16"/>
 			</StackPanel>
             <Border Height="1" Background="Black" Margin="20,10,20,0"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
                 <TextBlock Text="{DynamicResource TypeSavePopUp}" FontSize="16"/>
-                <TextBlock Text="{Binding SelectedSaveType}" FontSize="16" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding SelectedSaveType}" FontSize="16"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
                 <TextBlock Text="{DynamicResource EncryptionPopUp}" FontSize="16"/>
-                <TextBlock Text="{Binding Encrypt}" FontSize="16" Margin="5,0,0,0"/>
+				<TextBlock Text="{Binding Encrypt}" FontSize="16"/>
 			</StackPanel>
             <Border Height="1" Background="Black" Margin="20,10,20,0"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="left" Margin="20,10,20,0">
                 <TextBlock Text="{DynamicResource NumberFilePopUp}" FontSize="16"/>
-                <TextBlock Text="{Binding FileCount}" FontSize="16" Margin="5,0,0,0"/>
+				<TextBlock Text="{Binding FileCount}" FontSize="16"/>
 			</StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10,20,0">
                 <TextBlock Text="{DynamicResource SizeFilePopUp}" FontSize="16"/>
-                <TextBlock Text="{Binding FormattedDirectorySize}" FontSize="16" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding FormattedDirectorySize}" FontSize="16"/>
             </StackPanel>
             <Button Content="{DynamicResource CloseButton}" Click="Fermer_Click" HorizontalAlignment="Center"/>
 		</StackPanel>

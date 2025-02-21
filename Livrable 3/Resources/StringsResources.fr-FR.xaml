@@ -47,11 +47,10 @@
     <system:String x:Key="SourcePathPopUp">Chemin source :   </system:String>
     <system:String x:Key="DestinationPathPopUp">Chemin destination :   </system:String>
     <system:String x:Key="TypeSavePopUp">Type de sauvegarde :   </system:String>
-    <system:String x:Key="EncryptionPopUp">Chiffrer la sauvegarde :   </system:String>
+    <system:String x:Key="EncryptionPopUp">Crypter la sauvegarde :   </system:String>
     <system:String x:Key="NumberFilePopUp">Nombre de fichier dans le dossier source :   </system:String>
     <system:String x:Key="SizeFilePopUp">Taille du dossier :   </system:String>
     <system:String x:Key="CloseButton">Fermer</system:String>
-    <system:String x:Key="KoBlockLimit">Choisissez une limite d'espace de transfert des fichiers (en Ko) : </system:String>
 
 
 </ResourceDictionary>
