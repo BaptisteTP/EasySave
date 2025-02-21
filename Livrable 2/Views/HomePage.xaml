@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:EasySave2._0" d:DataContext="{d:DesignInstance Type=local:HomeViewModel}"
       xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
       mc:Ignorable="d"
-      Title="HomePage" Background="#fff" Height="720" Width="1280">
+      Title="HomePage" Background="#fff">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -19,7 +19,7 @@
     <Grid>
         <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}"/>
 
-        <TextBlock x:Name="Text" Text="Liste de toutes les opérations de sauvegarde :"
+        <TextBlock x:Name="Text" Text="{DynamicResource OperationList}"
                    FontSize="24" FontWeight="Bold" Margin="90,150,0,0">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
@@ -33,7 +33,7 @@
             </TextBlock.Style>
         </TextBlock>
 
-        <TextBlock Text="Aucune sauvegarde n'est configurée." FontSize="24" FontWeight="Bold" Foreground="Red" HorizontalAlignment="Center" Margin="0 150 0 0">
+        <TextBlock x:Name="NoSaveMessage" Text="{DynamicResource NoSaves}" FontSize="24" FontWeight="Bold" Foreground="Red" HorizontalAlignment="Center" Margin="0 150 0 0">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -45,8 +45,8 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        
-        <Button Content="Exécuter les sauvegardes" Command="{Binding ExecuteAllSavesCommand}" Height="44" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 150 120 0" Width="270">
+
+        <Button Content="{DynamicResource ExecuteSaves}" Command="{Binding ExecuteAllSavesCommand}" Height="44" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 150 120 0" Width="270">
             <Button.Style>
                 <Style TargetType="Button" BasedOn="{StaticResource GreenButtonStyle}">
                     <Setter Property="Visibility" Value="Visible"/>
@@ -98,6 +98,12 @@
                                         <Image Source="../assets/images/PlayButton.png" Width="24" Height="24"/>
                                     </Button>
                                     <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" 
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.InformationSaveCommand}" Cursor="Hand"
+                                            CommandParameter="{Binding}"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Image Source="../assets/images/information.png" Width="24" Height="24"/>
+                                    </Button>
+                                    <Button Margin="10,0,0,0" Style="{StaticResource NoHighlightButton}" 
                                             Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.EditItemCommand}" Cursor="Hand"
                                             CommandParameter="{Binding}"
                                             HorizontalAlignment="Right" VerticalAlignment="Center">
@@ -113,7 +119,7 @@
                             </Grid>
                             
                             <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Visibility="{Binding IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <TextBlock Text="Executing..." FontWeight="Medium"/>
+                                <TextBlock Text="{DynamicResource ExecutionMessage}" FontWeight="Medium"/>
                                 <ProgressBar VerticalAlignment="Bottom" Height="4" Minimum="0" Maximum="100" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.SaveExecutionProgress}" />
                             </StackPanel>
                         </Grid>
@@ -142,7 +148,7 @@
             </Button>
         </StackPanel>
 
-        <Button x:Name="CreateButton" Content="+ Ajouter" Click="CreateButton_Click" Style="{StaticResource GreenButtonStyle}" Width="170"
+        <Button x:Name="CreateButton" Content="{DynamicResource Add}" Click="CreateButton_Click" Style="{StaticResource GreenButtonStyle}" Width="170"
                 Height="44" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="100,0,0,100"/>
 
         <Button x:Name="OptionButton" Style="{StaticResource OptionButton}" Cursor="Hand" HorizontalAlignment="Right" 
