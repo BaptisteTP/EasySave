@@ -105,7 +105,7 @@ namespace EasySave2._0.ViewModels
             LastExecuteDate = lastExecutedDate;
             pauseEvent = new ManualResetEventSlim(true);
         }
-
+        // Create a save method for other classes to use.
         public Save()
         {
             pauseEvent = new ManualResetEventSlim(true);
