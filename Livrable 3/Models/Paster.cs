@@ -22,62 +22,140 @@ namespace EasySave2._0.Models
 		public event EventHandler<Save>? SaveFinished;
 		public event EventHandler<Save>? BuisnessSoftwareDetected;
 
-		public bool BeginCopyPaste(Save executedSave, IProgress<int> progress)
-		{
-			if (!Directory.Exists(executedSave.SourcePath)) { return false; }
-			if (AreAnyBuisnessSoftwareUp()) { BuisnessSoftwareDetected?.Invoke(this, executedSave);  return false; }
+        public bool BeginCopyPaste(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
+        {
+            if (!Directory.Exists(executedSave.SourcePath)) { return false; }
+            if (AreAnyBuisnessSoftwareUp()) { BuisnessSoftwareDetected?.Invoke(this, executedSave); return false; }
 
-			switch (executedSave.Type)
-			{
-				case SaveType.Full:
-					return BeginFullSave(executedSave, progress);
+            switch (executedSave.Type)
+            {
+                case SaveType.Full:
+                    return BeginFullSave(executedSave, cancellationToken, pauseEvent);
 
-				case SaveType.Differential:
-					return BeginDifferentialSave(executedSave);
+                case SaveType.Differential:
+                    return BeginDifferentialSave(executedSave, cancellationToken, pauseEvent);
 
-				default:
-					return false;
-			}
-		}
+                default:
+                    return false;
+            }
+        }
 
-		private bool BeginDifferentialSave(Save executedSave)
-		{
-			// Get all files that have been modified since the last execution
-			List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
+        private bool BeginDifferentialSave(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
+        {
+            List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
 
-			if (eligibleFiles.Count == 0)
-			{
-				return false;
-			}
+            if (eligibleFiles.Count == 0)
+            {
+                return false;
+            }
 
-			SaveStarted?.Invoke(this, executedSave);
-			List<string> remainingFiles = new List<string>(eligibleFiles);
-			foreach (string fileFullName in Directory.GetFiles(executedSave.SourcePath))
-			{
-				if (eligibleFiles.Contains(fileFullName))
-				{
-					string destinationPath = fileFullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
-					OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, fileFullName, destinationPath));
-					CopyFile(fileFullName, executedSave, destinationPath);
-					remainingFiles.Remove(fileFullName);
-				}
-			}
+            SaveStarted?.Invoke(this, executedSave);
+            List<string> remainingFiles = new List<string>(eligibleFiles);
+            foreach (string fileFullName in Directory.GetFiles(executedSave.SourcePath))
+            {
+                if (cancellationToken.IsCancellationRequested) return false;
+                pauseEvent.Wait(cancellationToken);
 
-			foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
-			{
-				DirectoryInfo directoryInfo = new DirectoryInfo(directorySourcePath);
-				// Create the directory in the destination path and copy the files
-				foreach (FileInfo file in directoryInfo.GetFiles())
-				{
-					string destPath = directorySourcePath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
-					if (eligibleFiles.Contains(file.FullName))
-					{
-						if (!Directory.Exists(destPath))
-						{
-							CopyDirectory(executedSave, destPath);
-						}
+                if (eligibleFiles.Contains(fileFullName))
+                {
+                    string destinationPath = fileFullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+                    try
+                    {
+                        executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
+                    }
+                    catch
+                    {
+                        executedSave.Progress = 0;
+                    }
+                    OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, fileFullName, destinationPath));
+                    CopyFile(fileFullName, executedSave, destinationPath);
+                    remainingFiles.Remove(fileFullName);
+                }
+            }
 
-						string destinationPath = file.FullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+            foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
+            {
+                if (cancellationToken.IsCancellationRequested) return false;
+                pauseEvent.Wait(cancellationToken);
+
+                DirectoryInfo directoryInfo = new DirectoryInfo(directorySourcePath);
+                foreach (FileInfo file in directoryInfo.GetFiles())
+                {
+                    if (cancellationToken.IsCancellationRequested) return false;
+                    pauseEvent.Wait(cancellationToken);
+
+                    string destPath = directorySourcePath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+                    if (eligibleFiles.Contains(file.FullName))
+                    {
+                        if (!Directory.Exists(destPath))
+                        {
+                            CopyDirectory(executedSave, destPath);
+                        }
+
+                        string destinationPath = file.FullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+
+                        try
+                        {
+                            executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
+                        }
+                        catch
+                        {
+                            executedSave.Progress = 0;
+                        }
+                        OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, file.FullName, destinationPath));
+                        CopyFile(file.FullName, executedSave, destinationPath);
+                        remainingFiles.Remove(file.FullName);
+                    }
+                }
+            }
+            executedSave.LastExecuteDate = DateTime.Now;
+            SaveFinished?.Invoke(this, executedSave);
+            return true;
+        }
+
+        private bool BeginFullSave(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
+        {
+            List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
+
+            if (eligibleFiles.Count == 0)
+            {
+                return false;
+            }
+
+            SaveStarted?.Invoke(this, executedSave);
+            List<string> remainingFiles = new List<string>(eligibleFiles);
+            foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
+            {
+                if (cancellationToken.IsCancellationRequested) return false;
+                pauseEvent.Wait(cancellationToken);
+
+                CopyDirectory(executedSave, directorySourcePath.Replace(executedSave.SourcePath, executedSave.DestinationPath));
+            }
+            foreach (string newPath in Directory.GetFiles(executedSave.SourcePath, "*.*", SearchOption.AllDirectories))
+            {
+                if (cancellationToken.IsCancellationRequested) return false;
+                pauseEvent.Wait(cancellationToken);
+
+                string destinationPath = newPath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+
+                OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, newPath, destinationPath));
+                try
+                {
+                    executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
+                }
+                catch
+                {
+                    executedSave.Progress = 0;
+                }
+                CopyFile(newPath, executedSave, destinationPath);
+                remainingFiles.Remove(newPath);
+            }
+
+            executedSave.LastExecuteDate = DateTime.Now;
+            SaveFinished?.Invoke(this, executedSave);
+            return true;
+        }
+
 
 						OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, file.FullName, destinationPath));
                             CopyFile(file.FullName, executedSave, destinationPath);
@@ -120,7 +198,7 @@ namespace EasySave2._0.Models
 			return result;
 		}
 
-		private bool BeginFullSave(Save executedSave, IProgress<int> progress)
+		private bool BeginFullSave(Save executedSave)
 		{
 			// Get all files in the source path
 			List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
@@ -131,7 +209,6 @@ namespace EasySave2._0.Models
 			}
 
 			SaveStarted?.Invoke(this, executedSave);
-			
 			List<string> remainingFiles = new List<string>(eligibleFiles);
 			foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
 			{
@@ -145,11 +222,11 @@ namespace EasySave2._0.Models
 				OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, newPath, destinationPath));
 				try
 				{
-					progress?.Report(Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100));
+					executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
 				}
 				catch
 				{
-                    progress?.Report(0);
+					executedSave.Progress = 0;
                 }
 				if (IsFileSizeWithinLimit(newPath) == true)
 				{
@@ -227,8 +304,31 @@ namespace EasySave2._0.Models
 
                 if (executedSave.Encrypt)
                 {
-                    var crypto = new CryptoManager(destinationPath, "Baptiste"); 
-                    crypto.EncryptFile();
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName = "CryptoSoft.exe",
+                        Arguments = $"{destinationPath} Baptiste",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    using (var process = new Process { StartInfo = startInfo })
+                    {
+                        process.Start();
+                        process.WaitForExit();
+
+                        // Optionally, you can capture the output and error messages
+                        string output = process.StandardOutput.ReadToEnd();
+                        string error = process.StandardError.ReadToEnd();
+
+						if (process.ExitCode != 0)
+						{
+							// Handle the error case
+							//throw new Exception($"CryptoSoft.exe a échoué avec le code de sortie {process.ExitCode}: {error}");
+						}
+					}
                 }
 
                 stopWatch.Stop();
@@ -243,22 +343,7 @@ namespace EasySave2._0.Models
             {
                 OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
             }
-            try
-            {
-                File.Copy(fileFullName, destinationPath, true);
-                stopWatch.Stop();
-                timeElapsed = stopWatch.Elapsed;
-
-            }
-            catch
-            {
-                stopWatch.Stop();
-                timeElapsed = null;
-            }
-            finally
-            {
-                OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
-            }
+           
         }
 
         private bool AreAnyBuisnessSoftwareUp()

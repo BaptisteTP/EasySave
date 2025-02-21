@@ -14,6 +14,9 @@ namespace EasySave2._0.Models.Logs_Related
 
 	public class SaveLog
 	{
+		[XmlAttribute("Id")]
+		public int Id { get; set; }
+
 		[XmlAttribute("Save")]
 		public string Savename { get; set; }
 
@@ -22,8 +25,9 @@ namespace EasySave2._0.Models.Logs_Related
 		public List<DirectoryCopyLog> CopiedDirectories { get; set; } = new List<DirectoryCopyLog>();
 		public List<FileCopyLog> CopiedFiles { get; set; } = new List<FileCopyLog>();
 
-		public SaveLog(string savename)
+		public SaveLog(int id, string savename)
 		{
+			Id = id;
 			Savename = savename;
 		}
 

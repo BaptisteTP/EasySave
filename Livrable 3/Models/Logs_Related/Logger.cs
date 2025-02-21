@@ -15,6 +15,9 @@ namespace EasySave2._0.Models.Logs_Related
 {
 	public class Logger
 	{
+		private object _dailyLogLock = new object();
+		private object _RealTimeLock = new object();
+
 		// This class is responsible for logging the events.
 		private LogLib.Logger LogLibLogger;
 		public Logger()
@@ -22,205 +25,244 @@ namespace EasySave2._0.Models.Logs_Related
 			LogLibLogger = new LogLib.Logger();
 		}
 
-		#region EventHandlers
+		#region Save Execution Handlers
 
+		/// <summary>
+		/// Handle the copied diretory event.
+		/// Writes the information of the copied directory in the daily logs.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="eventArgs"></param>
 		public void OnCopyDirectory(object sender, CopyDirectoryEventArgs eventArgs)
 		{
-			string pathToDailLog = Creator.GetSettingsInstance().DailyLogPath;
-			string extension = "." + Creator.GetSettingsInstance().LogFormat;
+			lock (_dailyLogLock)
+			{
+				string pathToDailLog = Creator.GetSettingsInstance().DailyLogPath;
+				string extension = "." + Creator.GetSettingsInstance().LogFormat;
 
-			//Get the precedings daily logs
-			Dailylog daylylog = GetDaylyLogs(pathToDailLog, extension);
+				//Get the precedings daily logs
+				Dailylog daylylog = GetDaylyLogs(pathToDailLog, extension);
 
-			//Create the new directory log object with its attributes
-			DirectoryCopyLog log = new DirectoryCopyLog(name: eventArgs.ExecutedSave.Name,
-														directoryTransferTime: eventArgs.CreationTimeSpan.ToString() ?? "-1",
-														time: eventArgs.CopyDate);
+				//Create the new directory log object with its attributes
+				DirectoryCopyLog log = new DirectoryCopyLog(name: eventArgs.ExecutedSave.Name,
+															directoryTransferTime: eventArgs.CreationTimeSpan.ToString() ?? "-1",
+															time: eventArgs.CopyDate);
 
-			//Add it to the copied directories list of the current save being made (the added last)
-			daylylog.Saves.Last().CopiedDirectories.Add(log);
+				//Add it to the copied directories list of the current save being made (the added last)
+				daylylog.Saves.Last(savelog => savelog.Id == eventArgs.ExecutedSave.Id).CopiedDirectories.Add(log);
 
-			//Get the new string for the daily log
-			string stringTolog = SerializeLogObject(daylylog);
+				//Get the new string for the daily log
+				string stringTolog = SerializeLogObject(daylylog);
 
-			//Log with logger lib
-			LogLibLogger.OverwrtieDailyLog(stringTolog, pathToDailLog, extension: "." + Creator.GetSettingsInstance().LogFormat);
+				//Log with logger lib
+				WriteToDailyLog(stringTolog, pathToDailLog,"." + Creator.GetSettingsInstance().LogFormat);
+			}
 		}
 
-
+		/// <summary>
+		/// Handle the copied file event.
+		/// Write the information of the copied file in the daily logs.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="eventArgs"></param>
 		public void OnCopyFile(object sender, FileCopyEventArgs eventArgs)
 		{
-			string pathToDailLog = Creator.GetSettingsInstance().DailyLogPath;
-			string extension = "." + Creator.GetSettingsInstance().LogFormat;
+			lock (_dailyLogLock)
+			{
+				string pathToDailLog = Creator.GetSettingsInstance().DailyLogPath;
+				string extension = "." + Creator.GetSettingsInstance().LogFormat;
 
-			//Get the precedings daily logs
-			Dailylog daylyLog = GetDaylyLogs(pathToDailLog, extension);
+				//Get the precedings daily logs
+				Dailylog daylyLog = GetDaylyLogs(pathToDailLog, extension);
 
-			//Create the new file log object with its attributes
-			FileCopyLog log = new FileCopyLog(name: eventArgs.ExecutedSave.Name,
-											  fileSource: eventArgs.SourceFile.FullName,
-											  fileTarget: eventArgs.DestinationPath,
-											  fileSize: eventArgs.FileSize,
-											  fileTransferTime: eventArgs.TransferTime.ToString() ?? "-1",
-											  time: eventArgs.CopyDate);
+				//Create the new file log object with its attributes
+				FileCopyLog log = new FileCopyLog(name: eventArgs.ExecutedSave.Name,
+												  fileSource: eventArgs.SourceFile.FullName,
+												  fileTarget: eventArgs.DestinationPath,
+												  fileSize: eventArgs.FileSize,
+												  fileTransferTime: eventArgs.TransferTime.ToString() ?? "-1",
+												  time: eventArgs.CopyDate);
 
-			//Add it to the copied files list of the current save being made (the added last)
-			daylyLog.Saves.Last().CopiedFiles.Add(log);
+				//Add it to the copied files list of the current save being made (the added last)
+				daylyLog.Saves.Last(savelog => savelog.Id == eventArgs.ExecutedSave.Id).CopiedFiles.Add(log);
 
-			//Get the new string for the daily log
-			string stringToLog = SerializeLogObject(daylyLog);
+				//Get the new string for the daily log
+				string stringToLog = SerializeLogObject(daylyLog);
 
-			//Log with logger lib
-			LogLibLogger.OverwrtieDailyLog(stringToLog, pathToDailLog, extension);
+				//Log with logger lib
+				WriteToDailyLog(stringToLog, pathToDailLog, extension);
+			}
 		}
 
+		/// <summary>
+		/// Handle the copy preview event.
+		/// Write all the preview information in the real time log.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="eventArgs"></param>
 		public void OnCopyFilePreview(object sender, FileCopyPreviewEventArgs eventArgs)
 		{
-			// Write on json file for time log
-			string pathToRealTimeLog = Path.Combine(Creator.GetSettingsInstance().RealTimeLogPath, "realTimeLog.json");
-			string logString = File.ReadAllText(pathToRealTimeLog);
+			lock (_RealTimeLock)
+			{
+				// Write on json file for time log
+				string pathToRealTimeLog = Path.Combine(Creator.GetSettingsInstance().RealTimeLogPath, "realTimeLog.json");
+				List<FileCopyPreviewLog> logList = DeserializeLog(pathToRealTimeLog);
 
-			List<FileCopyPreviewLog> logList = DeserializeLog(logString);
+				FileCopyPreviewLog? logToUpdate = logList.FirstOrDefault(log => log.Id == eventArgs.ExecutedSave.Id);
 
-			FileCopyPreviewLog? logToUpdate = logList.FirstOrDefault(log => log.Id == eventArgs.ExecutedSave.Id);
+				if (logToUpdate == null) { return; }
 
-			if (logToUpdate == null) { return; }
+				int index = logList.IndexOf(logToUpdate);
+				logList[index] = new FileCopyPreviewLog(id: eventArgs.ExecutedSave.Id,
+																name: eventArgs.ExecutedSave.Name,
+																sourceFilePath: eventArgs.CurrentFileSourcePath,
+																targetFilePath: eventArgs.CurrentFileDestinationPath,
+																state: eventArgs.State,
+																totalFileToCopy: eventArgs.EligibleFiles.Count,
+																totalFileSize: GetTotalFileSize(eventArgs.EligibleFiles),
+																nbFilesLeftToDo: eventArgs.RemainingFiles.Count - 1,
+																progression: eventArgs.ExecutedSave.Progress.ToString() + "%");
 
-			int index = logList.IndexOf(logToUpdate);
+				string stringToLog = SerializeLogObject(logList);
+				string pathToWriteTo = Creator.GetSettingsInstance().RealTimeLogPath;
 
-			double progression = Math.Round((1 - (double)(eventArgs.RemainingFiles.Count - 1) / (double)(eventArgs.EligibleFiles.Count - 1)) * 100, 2);
-			logList[index] = new FileCopyPreviewLog(id: eventArgs.ExecutedSave.Id,
-															name: eventArgs.ExecutedSave.Name,
-															sourceFilePath: eventArgs.CurrentFileSourcePath,
-															targetFilePath: eventArgs.CurrentFileDestinationPath,
-															state: eventArgs.State,
-															totalFileToCopy: eventArgs.EligibleFiles.Count,
-															totalFileSize: GetTotalFileSize(eventArgs.EligibleFiles),
-															nbFilesLeftToDo: eventArgs.RemainingFiles.Count - 1,
-															progression: progression.ToString() + "%");
+				//Log with logger lib
+				WriteLog(stringToLog, pathToWriteTo);
 
-			string stringToLog = SerializeLogObject(logList);
-			string pathToWriteTo = Creator.GetSettingsInstance().RealTimeLogPath;
-
-			//Log with logger lib
-			LogLibLogger.WriteLog(stringToLog, pathToWriteTo);
-
-			//Thread.Sleep(500);
+				//Thread.Sleep(300);
+			}
 		}
 
+		/// <summary>
+		/// Handle the save started event.
+		/// Create the started save log in the daily log.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="save"></param>
+		public void OnSaveStarted(object sender, Save save)
+		{
+			lock (_dailyLogLock)
+			{
+				Settings settings = Creator.GetSettingsInstance();
+				string pathToDailLog = settings.DailyLogPath;
+				string extension = "." + settings.LogFormat;
+
+				Dailylog daylyLog = DeserializeDailyLogs(Path.Combine(pathToDailLog, "save-log", $"{DateTime.Now:yyyy-MM-dd}" + extension));
+
+				daylyLog.Saves.Add(new SaveLog(save.Id, save.Name));
+
+				string stringToLog = SerializeLogObject(daylyLog);
+				string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
+
+				//Log with logger lib
+				WriteToDailyLog(stringToLog, pathToWriteTo, extension);
+			}
+		}
+
+		/// <summary>
+		/// Handle the save finished event.
+		/// Swap the state of the finished save to 'INACTIVE' in the real time log.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="save"></param>
+		public void OnSaveFinished(object sender, Save save)
+		{
+			lock (_RealTimeLock)
+			{
+				Settings settings = Creator.GetSettingsInstance();
+				string pathToWriteTo = settings.RealTimeLogPath;
+
+				// Change the status json file
+				string pathToRealTimeLog = Path.Combine(settings.RealTimeLogPath, "realTimeLog.json");
+				List<FileCopyPreviewLog> logList = DeserializeLog(pathToRealTimeLog);
+
+				FileCopyPreviewLog? logToUpdate = logList.FirstOrDefault(log => log.Id == save.Id);
+
+				if (logToUpdate == null) { return; }
+
+				int index = logList.IndexOf(logToUpdate);
+
+				logList[index] = new FileCopyPreviewLog(id: save.Id,
+														name: save.Name,
+														sourceFilePath: "",
+														targetFilePath: "",
+														state: "INACTIVE",
+														totalFileToCopy: 0,
+														totalFileSize: 0,
+														nbFilesLeftToDo: 0,
+														progression: "0");
+
+				string jsonToLog = SerializeLogObject(logList);
+				//Log to real time
+				WriteLog(jsonToLog, pathToWriteTo);
+			}
+		}
+
+		public void OnBuisnessSoftwareDetected(object sender, Save save)
+		{
+			lock (_dailyLogLock)
+			{
+				Settings settings = Creator.GetSettingsInstance();
+				string pathToDailLog = settings.DailyLogPath;
+				string extension = "." + settings.LogFormat;
+
+				Dailylog daylyLog = DeserializeDailyLogs(Path.Combine(pathToDailLog, "save-log", $"{DateTime.Now:yyyy-MM-dd}" + extension));
+
+				SaveLog savelog = new SaveLog(save.Id, save.Name);
+				savelog.State = "Buisness Software Detected";
+				daylyLog.Saves.Add(savelog);
+
+				string stringToLog = SerializeLogObject(daylyLog);
+				string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
+
+				//Log with logger lib
+				WriteToDailyLog(stringToLog, pathToWriteTo, extension);
+			}
+		}
+
+		#endregion
+
+		#region Save CRUD Handlers
 		public void OnSaveCreated(object sender, EventArgs eventArgs)
 		{
 			List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
 			WriteSavesInLog(saves);
 
-			// Change the status json file
-			List<FileCopyPreviewLog> logList = new List<FileCopyPreviewLog>();
-			foreach (Save save in saves)
+			lock (_RealTimeLock)
 			{
-				logList.Add(new FileCopyPreviewLog(id: save.Id,
-													name: save.Name,
-													sourceFilePath: "",
-													targetFilePath: "",
-													state: "INACTIVE",
-													totalFileToCopy: 0,
-													totalFileSize: 0,
-													nbFilesLeftToDo: 0,
-													progression: "0"));
+				// Change the status json file
+				List<FileCopyPreviewLog> logList = new List<FileCopyPreviewLog>();
+				foreach (Save save in saves)
+				{
+					logList.Add(new FileCopyPreviewLog(id: save.Id,
+														name: save.Name,
+														sourceFilePath: "",
+														targetFilePath: "",
+														state: "INACTIVE",
+														totalFileToCopy: 0,
+														totalFileSize: 0,
+														nbFilesLeftToDo: 0,
+														progression: "0"));
+				}
+
+				string stringToLog = SerializeLogObject(logList);
+				string pathToWriteTo = Creator.GetSettingsInstance().RealTimeLogPath;
+
+				//Log to real time
+				WriteLog(stringToLog, pathToWriteTo);
 			}
-
-			string stringToLog = SerializeLogObject(logList);
-			string pathToWriteTo = Creator.GetSettingsInstance().RealTimeLogPath;
-
-			//Log to real time
-			LogLibLogger.WriteLog(stringToLog, pathToWriteTo);
 		}
-
-		private void WriteSavesInLog(List<Save> saves)
+		public void OnSaveEdited(object sender, EventArgs eventargs)
 		{
-			string saveLog = SerializeLogObject(saves);
-			LogLibLogger.OverwriteLog(saveLog, "saves." + Creator.GetSettingsInstance().LogFormat, "saves/");
+			List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
+			WriteSavesInLog(saves);
 		}
-
 		public void OnSaveDeleted(object sender, EventArgs eventargs)
 		{
 			List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
 			WriteSavesInLog(saves);
 		}
 
-		public void OnSaveEdited(object sender, EventArgs eventargs)
-		{
-			List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
-			WriteSavesInLog(saves);
-		}
-
-		public void OnBuisnessSoftwareDetected(object sender, Save save)
-		{
-			Settings settings = Creator.GetSettingsInstance();
-			string pathToDailLog = settings.DailyLogPath;
-			string extension = "." + settings.LogFormat;
-
-			Dailylog daylyLog = DeserializeDailyLogs(Path.Combine(pathToDailLog, "save-log", $"{DateTime.Now:yyyy-MM-dd}" + extension));
-
-			SaveLog savelog = new SaveLog(save.Name);
-			savelog.State = "Buisness Software Detected";
-			daylyLog.Saves.Add(savelog);
-
-			string stringToLog = SerializeLogObject(daylyLog);
-			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
-
-			//Log with logger lib
-			LogLibLogger.OverwrtieDailyLog(stringToLog, pathToWriteTo, extension);
-		}
-
-		public void OnSaveStarted(object sender, Save save)
-		{
-			Settings settings = Creator.GetSettingsInstance();
-			string pathToDailLog = settings.DailyLogPath;
-			string extension = "." + settings.LogFormat;
-
-			Dailylog daylyLog = DeserializeDailyLogs(Path.Combine(pathToDailLog, "save-log", $"{DateTime.Now:yyyy-MM-dd}" + extension));
-
-			daylyLog.Saves.Add(new SaveLog(save.Name));
-
-
-			string stringToLog = SerializeLogObject(daylyLog);
-			string pathToWriteTo = Creator.GetSettingsInstance().DailyLogPath;
-
-			//Log with logger lib
-			LogLibLogger.OverwrtieDailyLog(stringToLog, pathToWriteTo, extension);
-
-		}
-
-		public void OnSaveFinished(object sender, Save save)
-		{
-			Settings settings = Creator.GetSettingsInstance();
-			string pathToWriteTo = settings.RealTimeLogPath;
-
-			// Change the status json file
-			string pathToRealTimeLog = Path.Combine(settings.RealTimeLogPath, "realTimeLog.json");
-			string logString = File.ReadAllText(pathToRealTimeLog);
-			List<FileCopyPreviewLog> logList = DeserializeLog(logString);
-
-			FileCopyPreviewLog? logToUpdate = logList.FirstOrDefault(log => log.Id == save.Id);
-
-			if (logToUpdate == null) { return; }
-
-			int index = logList.IndexOf(logToUpdate);
-
-			logList[index] = new FileCopyPreviewLog(id: save.Id,
-													name: save.Name,
-													sourceFilePath: "",
-													targetFilePath: "",
-													state: "INACTIVE",
-													totalFileToCopy: 0,
-													totalFileSize: 0,
-													nbFilesLeftToDo: 0,
-													progression: "0");
-
-			string jsonToLog = SerializeLogObject(logList);
-			//Log to real time
-			LogLibLogger.WriteLog(jsonToLog, pathToWriteTo);
-		}
 
 		#endregion
 
@@ -305,10 +347,10 @@ namespace EasySave2._0.Models.Logs_Related
 			}
 		}
 
-		private List<FileCopyPreviewLog> DeserializeLog(string logString)
+		private List<FileCopyPreviewLog> DeserializeLog(string pathToLog)
 		{
 			string? logFormat = Creator.GetSettingsInstance().LogFormat;
-
+			string logString = File.ReadAllText(pathToLog);
 			switch (logFormat)
 			{
 				case "xml":
@@ -328,6 +370,24 @@ namespace EasySave2._0.Models.Logs_Related
 
 		#endregion
 
+		#region Utilities
+
+		private void WriteSavesInLog(List<Save> saves)
+		{
+			string saveLog = SerializeLogObject(saves);
+			LogLibLogger.OverwriteLog(saveLog, "saves." + Creator.GetSettingsInstance().LogFormat, "saves/");
+		}
+
+		private void WriteLog(string stringToLog, string pathToWriteTo)
+		{
+			LogLibLogger.WriteLog(stringToLog, pathToWriteTo);
+		}
+
+		private void WriteToDailyLog(string stringToLog, string pathToDailLog, string extension)
+		{
+			LogLibLogger.OverwrtieDailyLog(stringToLog, pathToDailLog, extension);
+		}
+
 		private long GetTotalFileSize(List<string> eligibleFiles)
 		{
 			// Get the total size of the files to copy
@@ -342,5 +402,7 @@ namespace EasySave2._0.Models.Logs_Related
 		{
 			return DeserializeDailyLogs(Path.Combine(pathToDailLog, "save-log", $"{DateTime.Now:yyyy-MM-dd}" + extension));
 		}
+
+		#endregion
 	}
 }
