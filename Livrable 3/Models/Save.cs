@@ -66,6 +66,16 @@ namespace EasySave2._0.ViewModels
             set { encrypt = value; OnPropertyChanged(); }
         }
 
+        private bool isPaused;
+
+        public bool IsPaused
+        {
+            get { return isPaused; }
+            set { isPaused = value; OnPropertyChanged(); }
+        }
+
+
+
         public SaveType Type { get; set; }
         public DateTime? LastExecuteDate { get; set; }
 
@@ -116,6 +126,7 @@ namespace EasySave2._0.ViewModels
 
             IsExecuting = false;
             Progress = 0;
+            IsPaused = false;
 
             Debug.WriteLine("Save execution finished for Save ID: " + Id);
         }
@@ -123,12 +134,14 @@ namespace EasySave2._0.ViewModels
 
         public void Resume()
         {
+            IsPaused = false;
             pauseEvent.Set();
         }
 
         public void Pause()
         {
             pauseEvent.Reset();
+            IsPaused = true;
         }
 
         public void Stop()

@@ -38,6 +38,7 @@ namespace EasySave2._0
         public ICommand InformationSaveCommand { get; }
         public ICommand StopCommand { get; }
         public ICommand PauseCommand { get; }
+        public ICommand ResumeCommand { get; }
 
         public ICommand ExecuteAllSavesCommand { get; }
         public event EventHandler<Save> SaveModify;
@@ -92,6 +93,7 @@ namespace EasySave2._0
                 ExecuteAllSavesCommand = new RelayCommand(ExecuteAllSaves);
                 PauseCommand = new RelayCommand(PauseSave, CanPauseStop);
                 StopCommand = new RelayCommand(StopSave, CanPauseStop);
+            ResumeCommand = new RelayCommand(ResumeSave, CanResume);
 
 
             UpdatePagedItems();
@@ -103,13 +105,21 @@ namespace EasySave2._0
                 save.Pause();
             }
         }
+        public void ResumeSave(object obj)
+        {
+            if (obj is Save save)
+            {
+                save.Resume();
+            }
+        }
         public void StopSave(object obj)
         {
             if (obj is Save save)
             {
-                
+                save.Stop(); 
             }
         }
+        public bool CanResume(object arg) => true;
         public bool CanPauseStop(object arg) => true;
         private void InfoItem(object obj)
         {

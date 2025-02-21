@@ -179,6 +179,18 @@
                                                Width="24"
                                                Height="24" />
                                     </Button>
+                                    <Button Margin="10,0,0,0"
+                                            Style="{StaticResource NoHighlightButton}"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.ResumeCommand}"
+                                            CommandParameter="{Binding}"
+                                            Cursor="Hand"
+                                            HorizontalAlignment="Right"
+                                            Visibility="{Binding IsPaused, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                            VerticalAlignment="Center">
+                                        <Image Source="../assets/images/PlayButton.png"
+                                               Width="24"
+                                               Height="24" />
+                                    </Button>
                                     <Button Margin="10,0,30,0"
                                             Style="{StaticResource NoHighlightButton}"
                                             Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.StopCommand}"
