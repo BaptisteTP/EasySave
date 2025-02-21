@@ -146,9 +146,15 @@ namespace EasySave2._0.ViewModels
 
         public void Stop()
         {
+            // Cancel the ongoing operation
             cancellationTokenSource?.Cancel();
+
+            pauseEvent.Set();
+
+            // Reset the state properties
             IsExecuting = false;
             Progress = 0;
+            IsPaused = false;
         }
     }
 }

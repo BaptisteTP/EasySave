@@ -4,14 +4,16 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:EasySave2._0"
-      d:DataContext="{d:DesignInstance Type=local:HomeViewModel}"
       xmlns:viewmodels="clr-namespace:EasySave2._0.ViewModels"
+      xmlns:converters="clr-namespace:EasySave2._0.ValueConverters"
+      d:DataContext="{d:DesignInstance Type=local:HomeViewModel}"
       mc:Ignorable="d"
       Title="HomePage"
       Background="#fff">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:BooleanAndConverter x:Key="BooleanAndConverter" />
     </Page.Resources>
 
     <Page.DataContext>
@@ -173,8 +175,13 @@
                                             CommandParameter="{Binding}"
                                             Cursor="Hand"
                                             HorizontalAlignment="Right"
-                                            Visibility="{Binding IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}"
                                             VerticalAlignment="Center">
+                                        <Button.Visibility>
+                                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                                <Binding Path="IsExecuting" />
+                                                <Binding Path="IsPaused" />
+                                            </MultiBinding>
+                                        </Button.Visibility>
                                         <Image Source="../assets/images/PauseButton.png"
                                                Width="24"
                                                Height="24" />
