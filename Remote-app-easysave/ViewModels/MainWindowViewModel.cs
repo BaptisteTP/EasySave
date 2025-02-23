@@ -63,6 +63,24 @@ namespace Remote_app_easysave.ViewModels
 			set { errorMessage = value; OnPropertyChanged(); }
 		}
 
+		private string ip = "127.0.0.1";
+
+		public string Ip
+		{
+			get { return ip; }
+			set { ip = value; OnPropertyChanged(); }
+		}
+
+		private int port = 8888;
+
+		public int Port
+		{
+			get { return port; }
+			set { port = value; OnPropertyChanged(); }
+		}
+
+
+
 		#endregion
 
 		public MainWindowViewModel()
@@ -80,15 +98,15 @@ namespace Remote_app_easysave.ViewModels
 
 		private async void ConnectToServer(object obj)
 		{
-			ConnectionCloseTokenSource = new CancellationTokenSource();
-			_clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-			IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8888);
-
-			ErrorMessage = string.Empty;
-			ConnectionState = connectingString;
-
 			try
 			{
+				ConnectionCloseTokenSource = new CancellationTokenSource();
+				_clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+				IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse(Ip), Port);
+
+				ErrorMessage = string.Empty;
+				ConnectionState = connectingString;
+
 				await _clientSocket.ConnectAsync(serverEndPoint);
 				ListenToServer();
 				AskServerForSaves();

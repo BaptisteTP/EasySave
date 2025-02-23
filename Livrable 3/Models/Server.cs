@@ -23,7 +23,6 @@ namespace EasySave2._0.Models
 		private Socket? _serverSocket;
 		private int _maxNumerOfConcurrentClients = 10;
 		private const int _port = 8888;
-		private const int _chunkSize = 1024;
 		private SaveStore _saveStore;
 
 		#region Singleton 

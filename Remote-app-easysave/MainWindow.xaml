@@ -11,7 +11,8 @@
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450"
-        Width="800">
+        Width="800"
+        MinWidth="400">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -28,99 +29,134 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0"
-                Background="WhiteSmoke"
+        <Border Background="WhiteSmoke"
+                HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}"
                 Padding="8"
                 BorderThickness="0 0 0 1"
                 BorderBrush="Black">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <Expander Grid.Row="0">
+                <Expander.Header>
+                    <Grid HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="1"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                    <Ellipse Width="12"
-                             Height="12"
-                             Margin="4 0">
-                        <Ellipse.Style>
-                            <Style TargetType="Ellipse">
-                                <Setter Property="Fill"
-                                        Value="Red" />
-                                <Setter Property="Visibility"
-                                        Value="Visible" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ConnectionState}"
-                                                 Value="Connected">
+                        <StackPanel Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                            <Ellipse Width="12"
+                                     Height="12"
+                                     Margin="4 0">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
                                         <Setter Property="Fill"
-                                                Value="ForestGreen" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding ConnectionState}"
-                                                 Value="Connecting..">
+                                                Value="Red" />
                                         <Setter Property="Visibility"
-                                                Value="Collapsed" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Ellipse.Style>
-                    </Ellipse>
+                                                Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ConnectionState}"
+                                                         Value="Connected">
+                                                <Setter Property="Fill"
+                                                        Value="ForestGreen" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}"
+                                                         Value="Connecting..">
+                                                <Setter Property="Visibility"
+                                                        Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
 
-                    <custom:LoadingSpinner Diameter="12"
-                                           Thickness="2"
-                                           Color="ForestGreen"
-                                           Margin="4 0">
-                        <custom:LoadingSpinner.Style>
-                            <Style TargetType="custom:LoadingSpinner">
-                                <Setter Property="IsLoading"
-                                        Value="False" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ConnectionState}"
-                                                 Value="Connecting..">
+                            <custom:LoadingSpinner Diameter="12"
+                                                   Thickness="2"
+                                                   Color="ForestGreen"
+                                                   Margin="4 0">
+                                <custom:LoadingSpinner.Style>
+                                    <Style TargetType="custom:LoadingSpinner">
                                         <Setter Property="IsLoading"
-                                                Value="True" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </custom:LoadingSpinner.Style>
-                    </custom:LoadingSpinner>
-
-                    <TextBlock Text="{Binding ConnectionState}"
-                               VerticalAlignment="Center" />
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal">
-                    <Button Grid.Column="0"
-                            Command="{Binding ConnectionCommand}"
-                            Padding="4"
-                            Margin="0 0 4 0">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Content"
-                                        Value="Connect" />
-                                <Setter Property="IsEnabled"
-                                        Value="True" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ConnectionState}"
-                                                 Value="Connected">
-                                        <Setter Property="Content"
-                                                Value="Disconnect" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding ConnectionState}"
-                                                 Value="Connecting..">
-                                        <Setter Property="IsEnabled"
                                                 Value="False" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                    <TextBlock Text="{Binding ErrorMessage}"
-                               Foreground="Red"
-                               VerticalAlignment="Center" />
-                </StackPanel>
-            </Grid>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ConnectionState}"
+                                                         Value="Connecting..">
+                                                <Setter Property="IsLoading"
+                                                        Value="True" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </custom:LoadingSpinner.Style>
+                            </custom:LoadingSpinner>
+
+                            <TextBlock Text="{Binding ConnectionState}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0"
+                                    Orientation="Horizontal">
+                            <Button Command="{Binding ConnectionCommand}"
+                                    Padding="4"
+                                    Margin="0 0 4 0">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Content"
+                                                Value="Connect" />
+                                        <Setter Property="IsEnabled"
+                                                Value="True" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ConnectionState}"
+                                                         Value="Connected">
+                                                <Setter Property="Content"
+                                                        Value="Disconnect" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}"
+                                                         Value="Connecting..">
+                                                <Setter Property="IsEnabled"
+                                                        Value="False" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                            <TextBlock Text="{Binding ErrorMessage}"
+                                       Foreground="Red"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Expander.Header>
+
+                <UniformGrid Columns="2"
+                             Margin="0 4 0 0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   Text="IP : " />
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Ip}"
+                                 MinWidth="80" />
+                    </Grid>
+
+                    <Grid Margin="4 0 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   Text="Port : " />
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Port}"
+                                 MinWidth="80" />
+                    </Grid>
+                </UniformGrid>
+
+
+            </Expander>
         </Border>
 
         <TextBlock Grid.Row="1"
