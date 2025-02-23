@@ -18,9 +18,13 @@ namespace EasySave2._0.ViewModels
 		// It can create, edit, delete, display and execute saves.
 
 		private List<Save> Saves = [];
-		public event EventHandler? SaveCreated;
-		public event EventHandler? SaveDeleted;
-		public event EventHandler? SaveEdited;
+		public event EventHandler<Save>? SaveCreated;
+		public event EventHandler<Save>? SaveDeleted;
+		public event EventHandler<Save>? SaveEdited;
+		public event EventHandler<Save>? SavePaused;
+		public event EventHandler<Save>? SaveResumed;
+		public event EventHandler<Save>? SaveStopped;
+		public event EventHandler? SavesLoaded;
 		public bool CanAddSave => NumberOfSaves < MaximumNumberOfSave;
 		public bool CanExecuteSave => NumberOfSaves > 0;
 		public int NumberOfSaves => Saves.Count;
@@ -37,7 +41,7 @@ namespace EasySave2._0.ViewModels
 			Saves.Clear();
 			Saves = DeserializeSaves();
 			GetAvailableSaveId();
-			SaveCreated?.Invoke(this, EventArgs.Empty);
+			SavesLoaded?.Invoke(this, EventArgs.Empty);
 		}
 
 		private void GetAvailableSaveId()
@@ -65,7 +69,7 @@ namespace EasySave2._0.ViewModels
 
 
 			Saves.Add(newSave);
-			SaveCreated?.Invoke(this, EventArgs.Empty);
+			SaveCreated?.Invoke(this, newSave);
 
 			return CurrentAvailableID++;
 		}
@@ -80,26 +84,26 @@ namespace EasySave2._0.ViewModels
 				// Look for the save with the given id and change the property to the new value.
 				case 1:
 					saveToEdit.Name = (string)newValue;
-					SaveEdited?.Invoke(this, EventArgs.Empty);
+					SaveEdited?.Invoke(this, saveToEdit);
 					break;
 
 				case 2:
 					saveToEdit.SourcePath = (string)newValue;
-					SaveEdited?.Invoke(this, EventArgs.Empty);
+					SaveEdited?.Invoke(this, saveToEdit);
 					break;
 
 				case 3:
 					saveToEdit.DestinationPath = (string)newValue;
-					SaveEdited?.Invoke(this, EventArgs.Empty);
+					SaveEdited?.Invoke(this, saveToEdit);
 					break;
 
 				case 4:
 					saveToEdit.Type = (SaveType)newValue;
-					SaveEdited?.Invoke(this, EventArgs.Empty);
+					SaveEdited?.Invoke(this, saveToEdit);
 					break;
 				case 5:
 					saveToEdit.Encrypt = (bool)newValue;
-                    SaveEdited?.Invoke(this, EventArgs.Empty);
+                    SaveEdited?.Invoke(this, saveToEdit);
                     break;
                 default:
 					return;
@@ -112,7 +116,7 @@ namespace EasySave2._0.ViewModels
 			if (saveToDelete == null) { return; }
 
 			Saves.Remove(saveToDelete);
-			SaveDeleted?.Invoke(this, EventArgs.Empty);
+			SaveDeleted?.Invoke(this, saveToDelete);
 		}
 		// Look for the save with the given id and execute it
 		public void ExecuteSave(int id) { Saves.Find(s => s.Id == id).Execute(); }
@@ -160,6 +164,23 @@ namespace EasySave2._0.ViewModels
 				}
 
 			}
+		}
+
+		public void PauseSave(int id)
+		{
+			GetSave(id).Pause();
+			SavePaused?.Invoke(this, GetSave(id));
+		}
+
+		public void StopSave(int id)
+		{
+			GetSave(id).Stop();
+			SaveStopped?.Invoke(this, GetSave(id));
+		}
+		public void ResumeSave(int id)
+		{
+			GetSave(id).Resume();
+			SaveResumed?.Invoke(this, GetSave(id));
 		}
 
 		// Look for the save with the given id and return it

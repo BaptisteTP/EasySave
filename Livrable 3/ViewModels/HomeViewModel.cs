@@ -29,7 +29,6 @@ namespace EasySave2._0
 
         public ObservableCollection<Save> PagedItems { get; set; } = new ObservableCollection<Save>();
 
-
 		public ICommand NextPageCommand { get; }
         public ICommand PreviousPageCommand { get; }
         public ICommand StartSaveCommand {  get; }
@@ -102,23 +101,23 @@ namespace EasySave2._0
         {
             if (obj is Save save)
             {
-                save.Pause();
+                saveStore.PauseSave(save.Id);
             }
         }
         public void ResumeSave(object obj)
         {
             if (obj is Save save)
             {
-                save.Resume();
+                saveStore.ResumeSave(save.Id);
             }
         }
         public void StopSave(object obj)
         {
             if (obj is Save save)
             {
-                save.Stop(); 
-            }
-        }
+				saveStore.StopSave(save.Id);
+			}
+		}
         public bool CanResume(object arg) => true;
         public bool CanPauseStop(object arg) => true;
         private void InfoItem(object obj)
