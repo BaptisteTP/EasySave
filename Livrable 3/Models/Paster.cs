@@ -71,12 +71,12 @@ namespace EasySave2._0.Models
                     if (IsFileSizeWithinLimit(fileFullName) == true)
                     {
                         CopyFile(fileFullName, executedSave, destinationPath);
-                        remainingFiles.Remove(fileFullName);
                     }
                     else
                     {
                         HandleOverLimitSize(fileFullName, executedSave, destinationPath);
                     }
+                    remainingFiles.Remove(fileFullName);
                 }
             }
 
@@ -113,12 +113,12 @@ namespace EasySave2._0.Models
                         if (IsFileSizeWithinLimit(file.FullName) == true)
                         {
                             CopyFile(file.FullName, executedSave, destinationPath);
-                            remainingFiles.Remove(file.FullName);
                         }
                         else
                         {
                             HandleOverLimitSize(file.FullName, executedSave, destinationPath);
                         }
+                        remainingFiles.Remove(file.FullName);
                     }
                 }
             }
