@@ -95,8 +95,10 @@ namespace EasySave2._0.Models
 					currentSettings.LogFormat = (string)newValue;
 					LogFomatChanged?.Invoke(null, EventArgs.Empty);
 					break;
-
-				case "BuisnessSoftwaresInterrupt":
+                case "FileSizeLimit":
+                    currentSettings.FileSizeLimit = (string)newValue;
+                    break;
+                case "BuisnessSoftwaresInterrupt":
 					currentSettings.BuisnessSoftwaresInterrupt = (List<string>)newValue;
 					break;
 				default:
