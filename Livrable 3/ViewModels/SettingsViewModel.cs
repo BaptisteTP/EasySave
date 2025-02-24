@@ -8,6 +8,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -81,7 +82,21 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-		private LogType selectedLogType = LogType.json;
+        public string _fileSizeLimit = Creator.GetSettingsInstance().FileSizeLimit;
+        public string FileSizeLimit
+        {
+            get => _fileSizeLimit;
+            set
+            {
+                if (_fileSizeLimit != value && Regex.IsMatch(value, "^\\d*$"))
+                {
+                    _fileSizeLimit = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private LogType selectedLogType = LogType.json;
 
 		public LogType SelectedLogType
 		{
@@ -108,7 +123,8 @@ namespace EasySave2._0.ViewModels
 								?? Creator.GetAvalaibleLanguages().FirstOrDefault(lang => lang.Language == settings.FallBackLanguage);
 			DailyLogPath = settings.DailyLogPath;
 			RealTimeLogPath = settings.RealTimeLogPath;
-			BuisnessSoftwaresInterrupt = new ObservableCollection<string>(settings.BuisnessSoftwaresInterrupt);
+            FileSizeLimit = settings.FileSizeLimit;
+            BuisnessSoftwaresInterrupt = new ObservableCollection<string>(settings.BuisnessSoftwaresInterrupt);
 
 			if (Enum.IsDefined(typeof(LogType), settings.LogFormat))
 			{
@@ -160,7 +176,10 @@ namespace EasySave2._0.ViewModels
 			Settings.ChangeSetting("LogFormat", selectedLogType.ToString());
 			Creator.GetSettingsInstance().LogFormat = selectedLogType.ToString();
 
-			SettingsConfirmed?.Invoke(this, EventArgs.Empty);
+            Settings.ChangeSetting("FileSizeLimit", FileSizeLimit);
+            Creator.GetSettingsInstance().FileSizeLimit = FileSizeLimit;
+
+            SettingsConfirmed?.Invoke(this, EventArgs.Empty);
 		}
 
 		private bool CanConfirmSettings(object arg)
