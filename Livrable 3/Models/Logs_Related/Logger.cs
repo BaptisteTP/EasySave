@@ -1,15 +1,9 @@
 ﻿using EasySave2._0.ViewModels;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Xml;
 using EasySave2._0.CustomEventArgs;
-using System.Windows;
 
 namespace EasySave2._0.Models.Logs_Related
 {
@@ -223,7 +217,7 @@ namespace EasySave2._0.Models.Logs_Related
 		#endregion
 
 		#region Save CRUD Handlers
-		public void OnSaveCreated(object sender, EventArgs eventArgs)
+		public void OnSavesLoaded(object sender, EventArgs eventArgs)
 		{
 			List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
 			WriteSavesInLog(saves);
@@ -252,12 +246,42 @@ namespace EasySave2._0.Models.Logs_Related
 				WriteLog(stringToLog, pathToWriteTo);
 			}
 		}
-		public void OnSaveEdited(object sender, EventArgs eventargs)
+
+		public void OnSaveCreated(object sender, Save saveCreated)
+		{
+			List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
+			WriteSavesInLog(saves);
+
+			lock (_RealTimeLock)
+			{
+				// Change the status json file
+				List<FileCopyPreviewLog> logList = new List<FileCopyPreviewLog>();
+				foreach (Save save in saves)
+				{
+					logList.Add(new FileCopyPreviewLog(id: save.Id,
+														name: save.Name,
+														sourceFilePath: "",
+														targetFilePath: "",
+														state: "INACTIVE",
+														totalFileToCopy: 0,
+														totalFileSize: 0,
+														nbFilesLeftToDo: 0,
+														progression: "0"));
+				}
+
+				string stringToLog = SerializeLogObject(logList);
+				string pathToWriteTo = Creator.GetSettingsInstance().RealTimeLogPath;
+
+				//Log to real time
+				WriteLog(stringToLog, pathToWriteTo);
+			}
+		}
+		public void OnSaveEdited(object sender, Save savedEdited)
 		{
 			List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
 			WriteSavesInLog(saves);
 		}
-		public void OnSaveDeleted(object sender, EventArgs eventargs)
+		public void OnSaveDeleted(object sender, Save saveDeleted)
 		{
 			List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
 			WriteSavesInLog(saves);
