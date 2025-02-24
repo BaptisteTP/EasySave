@@ -16,6 +16,9 @@ using Remote_app_easysave.Enums;
 using Remote_app_easysave.Models;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using Microsoft.VisualBasic;
+using System.Windows.Data;
 
 namespace Remote_app_easysave.ViewModels
 {
@@ -39,13 +42,29 @@ namespace Remote_app_easysave.ViewModels
 		public ICommand ResumeSaveCommand { get; }
 		public ICommand CancelSaveCommand { get; }
 
+		public ICollectionView FilteredSaves
+		{
+			get
+			{
+				var source = CollectionViewSource.GetDefaultView(Saves);
+				source.Filter = save => FilterSaveByName((Save)save);
+				return source;
+			}
+		}
+
 		public ObservableCollection<Save> Saves { get; private set; } = new ObservableCollection<Save>();
 
 		private const string connectedString = "Connected";
 		private const string connectingString = "Connecting..";
-		private const string disconnectingString = "Disconnecting..";
 		private const string notConnectedString = "Not connected";
 
+		private string filterString = "";
+
+		public string FilterString
+		{
+			get { return filterString; }
+			set { filterString = value; OnPropertyChanged(); OnPropertyChanged("FilteredSaves"); }
+		}
 
 		private string connectionState;
 
@@ -176,7 +195,7 @@ namespace Remote_app_easysave.ViewModels
 				case ServerResponses.Send_save:
 					App.Current.Dispatcher.Invoke(() =>
 					{
-						Saves.Add(receivedSave);
+						SaveAdd(receivedSave);
 					});
 					break;
 				case ServerResponses.Save_started:
@@ -193,7 +212,7 @@ namespace Remote_app_easysave.ViewModels
 				case ServerResponses.Save_created:
 					App.Current.Dispatcher.Invoke(() =>
 					{
-						Saves.Add(receivedSave);
+						SaveAdd(receivedSave);
 					});
 					break;
 
@@ -342,6 +361,16 @@ namespace Remote_app_easysave.ViewModels
 		#endregion
 
 		#region Utilities
+		private void SaveAdd(Save save)
+		{
+			Saves.Add(save);
+			OnPropertyChanged("FilteredSaves");
+		}
+
+		private bool FilterSaveByName(Save save)
+		{
+			return FilterString == "" || save.Name.Contains(FilterString);
+		}
 
 		public byte[] SerializeMessage(object objToSerialize)
 		{
