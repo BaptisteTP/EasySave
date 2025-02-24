@@ -51,6 +51,7 @@
     <system:String x:Key="NumberFilePopUp">Nombre de fichier dans le dossier source :   </system:String>
     <system:String x:Key="SizeFilePopUp">Taille du dossier :   </system:String>
     <system:String x:Key="CloseButton">Fermer</system:String>
+    <system:String x:Key="KoBlockLimit">Choisissez une limite d'espace de transfert des fichiers (en Ko) :</system:String>
 
 
 </ResourceDictionary>
