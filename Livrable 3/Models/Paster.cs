@@ -110,8 +110,15 @@ namespace EasySave2._0.Models
                             executedSave.Progress = 0;
                         }
                         OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, file.FullName, destinationPath));
-                        CopyFile(file.FullName, executedSave, destinationPath);
-                        remainingFiles.Remove(file.FullName);
+                        if (IsFileSizeWithinLimit(file.FullName) == true)
+                        {
+                            CopyFile(file.FullName, executedSave, destinationPath);
+                            remainingFiles.Remove(file.FullName);
+                        }
+                        else
+                        {
+                            HandleOverLimitSize(file.FullName, executedSave, destinationPath);
+                        }
                     }
                 }
             }
