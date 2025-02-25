@@ -29,6 +29,7 @@ namespace Remote_app_easysave.ViewModels
 
 		private Socket _clientSocket;
 		private CancellationTokenSource ConnectionCloseTokenSource;
+		private object _lockMessageSend = new object();
 
 		private ICommand connectionCommand;
 		public ICommand ConnectionCommand
@@ -288,9 +289,7 @@ namespace Remote_app_easysave.ViewModels
 			ConnectionCloseTokenSource.Cancel();
 
 			ClientPacket clientPacket = new ClientPacket() { ClientRequest = ClientRequests.Disconnect, Payload = null };
-			byte[] data = SerializeMessage(clientPacket);
-			_clientSocket.Send(BitConverter.GetBytes(data.Length));
-			_clientSocket.Send(data);
+			SendMessageToServer(clientPacket);
 			_clientSocket.Close();
 
 			ConnectionState = notConnectedString;
@@ -306,10 +305,7 @@ namespace Remote_app_easysave.ViewModels
 		{
 			Saves.Clear();
 			ClientPacket clientPacket = new ClientPacket() { ClientRequest = ClientRequests.Saves_request, Payload = null };
-			byte[] data = SerializeMessage(clientPacket);
-
-			_clientSocket.Send(BitConverter.GetBytes(data.Length));
-			_clientSocket.Send(data);
+			SendMessageToServer(clientPacket);
 		}
 
 		private void ResumeSave(object obj)
@@ -317,10 +313,7 @@ namespace Remote_app_easysave.ViewModels
 			if (obj is Save saveToResume)
 			{
 				ClientPacket clientPacket = new ClientPacket() { ClientRequest = ClientRequests.Save_resume, Payload = SerializeMessage(saveToResume) };
-				byte[] data = SerializeMessage(clientPacket);
-
-				_clientSocket.Send(BitConverter.GetBytes(data.Length));
-				_clientSocket.Send(data);
+				SendMessageToServer(clientPacket);
 			}
 		}
 
@@ -329,10 +322,7 @@ namespace Remote_app_easysave.ViewModels
 			if (obj is Save saveToPause)
 			{
 				ClientPacket clientPacket = new ClientPacket() { ClientRequest = ClientRequests.Save_pause, Payload = SerializeMessage(saveToPause) };
-				byte[] data = SerializeMessage(clientPacket);
-
-				_clientSocket.Send(BitConverter.GetBytes(data.Length));
-				_clientSocket.Send(data);
+				SendMessageToServer(clientPacket);
 			}
 		}
 
@@ -341,10 +331,7 @@ namespace Remote_app_easysave.ViewModels
 			if (obj is Save saveToCancel)
 			{
 				ClientPacket clientPacket = new ClientPacket() { ClientRequest = ClientRequests.Save_cancel, Payload = SerializeMessage(saveToCancel) };
-				byte[] data = SerializeMessage(clientPacket);
-
-				_clientSocket.Send(BitConverter.GetBytes(data.Length));
-				_clientSocket.Send(data);
+				SendMessageToServer(clientPacket);
 			}
 		}
 
@@ -353,16 +340,24 @@ namespace Remote_app_easysave.ViewModels
 			if (obj is Save saveToStart)
 			{
 				ClientPacket clientPacket = new ClientPacket() { ClientRequest = ClientRequests.Save_start, Payload = SerializeMessage(saveToStart) };
-				byte[] data = SerializeMessage(clientPacket);
-
-				_clientSocket.Send(BitConverter.GetBytes(data.Length));
-				_clientSocket.Send(data);
+				SendMessageToServer(clientPacket);
 			}
 		}
 
 		#endregion
 
 		#region Utilities
+
+		private void SendMessageToServer(ClientPacket clientPacket)
+		{
+			lock (_lockMessageSend)
+			{
+				byte[] data = SerializeMessage(clientPacket);
+				_clientSocket.Send(BitConverter.GetBytes(data.Length));
+				_clientSocket.Send(data);
+			}
+		}
+
 		private void SaveAdd(Save save)
 		{
 			Saves.Add(save);

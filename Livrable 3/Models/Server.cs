@@ -24,6 +24,7 @@ namespace EasySave2._0.Models
 		private int _maxNumerOfConcurrentClients = 10;
 		private const int _port = 8888;
 		private SaveStore _saveStore;
+		private object _lockMessageSend = new object();
 
 		#region Singleton 
 
@@ -187,9 +188,12 @@ namespace EasySave2._0.Models
 
 		private void SendMessageToClient(ServerPacket serverPacket, Socket _clientSocket)
 		{
-			byte[] serverPacketData = SerializeMessage(serverPacket);
-			_clientSocket.Send(BitConverter.GetBytes(serverPacketData.Length));
-			_clientSocket.Send(serverPacketData);
+			lock (_lockMessageSend)
+			{
+				byte[] serverPacketData = SerializeMessage(serverPacket);
+				_clientSocket.Send(BitConverter.GetBytes(serverPacketData.Length));
+				_clientSocket.Send(serverPacketData);
+			}
 		}
 
 		#region Event Handler
