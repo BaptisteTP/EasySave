@@ -59,6 +59,8 @@
     <system:String x:Key="DecryptKey">Clés de déchiffrage :</system:String>
     <system:String x:Key="Decrypt">Déchiffrer</system:String>
     <system:String x:Key="KoBlockLimit">Choisissez une limite d'espace de transfert des fichiers (en Ko) :</system:String>
+    <system:String x:Key="TextPriorityExtension">Extension Prioritaire</system:String>
+    <system:String x:Key="NoPriorityExtension">Pas d'extenstion de fichier prioritaire</system:String>
 
     <!--#region Notification Messages-->
 

@@ -125,10 +125,7 @@
         <ScrollViewer Grid.Row="2"
                       ScrollViewer.VerticalScrollBarVisibility="Auto">
 
-            <WrapPanel Margin="16 0 0 0"
-                       Orientation="Horizontal"
-                       VerticalAlignment="Center">
-
+            <UniformGrid Margin="16 0 0 0" Columns="3">
                 <Border Style="{StaticResource BorderStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -364,7 +361,108 @@
                         </StackPanel>
                     </Grid>
                 </Border>
-            </WrapPanel>
+                <Border Style="{StaticResource BorderStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Text="{DynamicResource TextPriorityExtension}"
+                                   FontSize="24"
+                                   FontWeight="SemiBold"
+                                   Margin="0 0 0 8" />
+
+                        <TextBlock Grid.Row="1"
+                                   Foreground="Red"
+                                   Text="{DynamicResource NoPriorityExtension}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding PriorityExtension.Count}"
+                                                     Value="0">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <ItemsControl Grid.Row="1"
+                                      ItemsSource="{Binding PriorityExtension}"
+                                      MaxHeight="400"
+                                      HorizontalAlignment="Stretch">
+                            <ItemsControl.Template>
+                                <ControlTemplate TargetType="ItemsControl">
+                                    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <ItemsPresenter />
+                                    </ScrollViewer>
+                                </ControlTemplate>
+                            </ItemsControl.Template>
+                            <ItemsControl.Style>
+                                <Style TargetType="ItemsControl">
+                                    <Setter Property="Visibility"
+                                            Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding PriorityExtension.Count}"
+                                                     Value="0">
+                                            <Setter Property="Visibility"
+                                                    Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ItemsControl.Style>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="3"
+                                            Background="LightGray"
+                                            Margin="4">
+                                        <Grid>
+                                            <TextBlock Text="{Binding}"
+                                                       HorizontalAlignment="Left"
+                                                       Padding="4" />
+
+                                            <Button HorizontalAlignment="Right"
+                                                    Margin="4"
+                                                    Cursor="Hand"
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.DeletePriorityExtensionCommand}"
+                                                    CommandParameter="{Binding}">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Grid Background="Transparent">
+                                                            <Viewbox Width="15"
+                                                                     Height="15">
+                                                                <Path x:Name="Path"
+                                                                      Stretch="Fill"
+                                                                      Fill="DarkSlateGray"
+                                                                      Data="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                                                            </Viewbox>
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <StackPanel Grid.Row="2"
+                                    Margin="0 8 0 0">
+                            <TextBox Text="{Binding PriorityExtensionToAdd}"
+                                     Margin="5 0" />
+                            <Button Content="Ajouter"
+                                    Margin="5,0"
+                                    Command="{Binding AddPriorityExtensionCommand}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </UniformGrid>
         </ScrollViewer>
 
         <Button Grid.Row="3"

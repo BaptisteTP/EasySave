@@ -23,8 +23,9 @@ namespace EasySave2._0.Models
 		public string? LogFormat { get; set; }
         public string? FileSizeLimit { get; set; }
         public List<string> BuisnessSoftwaresInterrupt { get; set; }
+		public List<string> PriorityExtension { get; set; }
 
-		public static event EventHandler? LogFomatChanged;
+        public static event EventHandler? LogFomatChanged;
 
 		public static object _writeLock = new object();
 
@@ -40,7 +41,8 @@ namespace EasySave2._0.Models
 				LogFormat = "",
                 FileSizeLimit = "0",
                 BuisnessSoftwaresInterrupt = new List<string>(),
-			};
+                PriorityExtension = new List<string>()
+            };
 			WriteSettingsToJsonFile(baseSettings);
 
 			return baseSettings;
@@ -104,7 +106,10 @@ namespace EasySave2._0.Models
                 case "BuisnessSoftwaresInterrupt":
 					currentSettings.BuisnessSoftwaresInterrupt = (List<string>)newValue;
 					break;
-				default:
+                case "PriorityExtension":
+                    currentSettings.PriorityExtension = (List<string>)newValue;
+					break;
+                default:
 					return;
 			}
 

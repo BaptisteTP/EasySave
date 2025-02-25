@@ -24,8 +24,10 @@ namespace EasySave2._0.ViewModels
 		public ICommand ConfirmSettingsCommand { get; }
 		public ICommand AddBuisnessSoftwareCommand { get; }
 		public ICommand DeleteBuisnessSoftwareCommand { get; }
+		public ICommand DeletePriorityExtensionCommand { get; }
+		public ICommand AddPriorityExtensionCommand { get; }
 
-		public ObservableCollection<LanguageItem> LanguageItems { get; } = new ObservableCollection<LanguageItem>(Creator.GetAvalaibleLanguages());
+        public ObservableCollection<LanguageItem> LanguageItems { get; } = new ObservableCollection<LanguageItem>(Creator.GetAvalaibleLanguages());
 
 		#region Attributes
 
@@ -43,7 +45,21 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-		public LanguageItem SelectedLanguage { get; private set; }
+		public ObservableCollection<string> PriorityExtension { get; }
+
+        private string _priorityExtensionToAdd = "";
+
+		public string PriorityExtensionToAdd
+		{
+			get { return _priorityExtensionToAdd; }
+            set
+			{
+				_priorityExtensionToAdd = value;
+				OnPropertyChanged();
+			}
+		}
+
+        public LanguageItem SelectedLanguage { get; private set; }
 
 		public string dailyLogPath = Creator.GetSettingsInstance().DailyLogPath!;
 
@@ -115,7 +131,9 @@ namespace EasySave2._0.ViewModels
 			ChangedLogPathCommand = new RelayCommand(ChangeViaFolderDialog);
 			ConfirmSettingsCommand = new RelayCommand(ConfirmSettings, CanConfirmSettings);
 			AddBuisnessSoftwareCommand = new RelayCommand(AddBuisnessSoftware, CanAddBuisness);
+			AddPriorityExtensionCommand = new RelayCommand(AddPriorityExtension, CanAddPriorityExtension);
 			DeleteBuisnessSoftwareCommand = new RelayCommand(DeleteBuisnessSoftware, _ => true);
+			DeletePriorityExtensionCommand = new RelayCommand(DeletePriorityExtension, _ => true);
 
 			Settings settings = Creator.GetSettingsInstance();
 
@@ -125,8 +143,9 @@ namespace EasySave2._0.ViewModels
 			RealTimeLogPath = settings.RealTimeLogPath;
             FileSizeLimit = settings.FileSizeLimit;
             BuisnessSoftwaresInterrupt = new ObservableCollection<string>(settings.BuisnessSoftwaresInterrupt);
+            PriorityExtension = new ObservableCollection<string>(settings.PriorityExtension);
 
-			if (Enum.IsDefined(typeof(LogType), settings.LogFormat))
+            if (Enum.IsDefined(typeof(LogType), settings.LogFormat))
 			{
 				SelectedLogType = (LogType)Enum.Parse(typeof(LogType), settings.LogFormat);
 			}
@@ -159,10 +178,37 @@ namespace EasySave2._0.ViewModels
 			Settings.ChangeSetting("BuisnessSoftwaresInterrupt", new List<string>(BuisnessSoftwaresInterrupt));
 			settings.BuisnessSoftwaresInterrupt = new List<string>(BuisnessSoftwaresInterrupt);
 		}
+		private void DeletePriorityExtension(object obj)
+		{
+			if(obj is string priorityExtensionToRemove)
+			{
+				Settings settings = Creator.GetSettingsInstance();
+
+				PriorityExtension.Remove(priorityExtensionToRemove);
+
+				Settings.ChangeSetting("PriorityExtension", new List<string>(PriorityExtension));
+				settings.PriorityExtension = new List<string>(PriorityExtension);
+			}
+		}
+
+		private void AddPriorityExtension(object obj)
+		{
+			Settings settings = Creator.GetSettingsInstance();
+
+            PriorityExtension.Add(PriorityExtensionToAdd);
+			PriorityExtensionToAdd = "";
+
+			Settings.ChangeSetting("PriorityExtension", new List<string>(PriorityExtension));
+			settings.PriorityExtension = new List<string>(PriorityExtension);
+		}
 
 		private bool CanAddBuisness(object arg)
 		{
 			return BuisnessSoftwareToAdd != "";
+		}
+		private bool CanAddPriorityExtension(object arg)
+		{
+			return PriorityExtensionToAdd != "";
 		}
 
         private void ConfirmSettings(object obj)
