@@ -74,6 +74,8 @@ namespace EasySave2._0.ViewModels
             set { isPaused = value; OnPropertyChanged(); }
         }
 
+        public bool WasSavePausedByUser { get; set; }
+
 
 
         public SaveType Type { get; set; }
@@ -153,8 +155,8 @@ namespace EasySave2._0.ViewModels
 
             // Reset the state properties
             IsExecuting = false;
-            Progress = 0;
             IsPaused = false;
+            Progress = 0;
         }
     }
 }

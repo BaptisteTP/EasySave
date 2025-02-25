@@ -171,7 +171,7 @@ namespace EasySave2._0.Models
 
 					if (concernedSave.IsPaused == false)
 					{
-						_saveStore.PauseSave(concernedSave.Id);
+						_saveStore.PauseSave(concernedSave.Id, true);
 					}
 					else
 					{

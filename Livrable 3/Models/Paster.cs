@@ -15,6 +15,7 @@ namespace EasySave2._0.Models
 {
     public class Paster
     {
+        private static Paster? _pasterInstance;
 		public event EventHandler<CopyDirectoryEventArgs>? OnDirectoryCopied;
 		public event EventHandler<FileCopyPreviewEventArgs>? OnFileCopyPreview;
 		public event EventHandler<FileCopyEventArgs>? OnFileCopied;
@@ -22,12 +23,19 @@ namespace EasySave2._0.Models
 		public event EventHandler<Save>? SaveFinished;
 		public event EventHandler<Save>? BuisnessSoftwareDetected;
 
-        public bool BeginCopyPaste(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
+        private Paster() { }
+
+        public static Paster GetPasterInstance()
+        {
+            return _pasterInstance ??= new Paster();
+
+		}
+
+		public bool BeginCopyPaste(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
         {
             if (!Directory.Exists(executedSave.SourcePath)) { return false; }
-            if (AreAnyBuisnessSoftwareUp()) { BuisnessSoftwareDetected?.Invoke(this, executedSave); return false; }
 
-            switch (executedSave.Type)
+			switch (executedSave.Type)
             {
                 case SaveType.Full:
                     return BeginFullSave(executedSave, cancellationToken, pauseEvent);
@@ -40,9 +48,32 @@ namespace EasySave2._0.Models
             }
         }
 
-        private bool BeginDifferentialSave(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
+		private void OnBuisnessSoftwareDetected(Save executedSave)
+		{
+			if (executedSave.IsExecuting == true && executedSave.IsPaused == false)
+			{
+				Creator.GetSaveStoreInstance().PauseSave(executedSave.Id,
+                                                         wasSavePausedByUser: false);
+			}
+		}
+
+		private void OnAllBuisnessSoftwareClosed(Save executedSave)
+		{
+			if(executedSave.IsPaused == true && executedSave.WasSavePausedByUser == false)
+            {
+                Creator.GetSaveStoreInstance().ResumeSave(executedSave.Id);
+            }
+		}
+
+		private bool BeginDifferentialSave(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
         {
-            List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
+			EventHandler BSDetected = (sender, e) => OnBuisnessSoftwareDetected(executedSave);
+			EventHandler AllBSClosed = (sender, e) => OnAllBuisnessSoftwareClosed(executedSave);
+
+			ProcessObserver.BuisnessSoftwareDetected += BSDetected;
+			ProcessObserver.AllBuisnessProcessClosed += AllBSClosed;
+
+			List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
 
             if (eligibleFiles.Count == 0)
             {
@@ -124,7 +155,10 @@ namespace EasySave2._0.Models
             }
             executedSave.LastExecuteDate = DateTime.Now;
             SaveFinished?.Invoke(this, executedSave);
-            return true;
+			ProcessObserver.BuisnessSoftwareDetected -= BSDetected;
+			ProcessObserver.AllBuisnessProcessClosed -= AllBSClosed;
+
+			return true;
         }
         private bool IsFileSizeWithinLimit(string fullName)
         {
@@ -142,7 +176,13 @@ namespace EasySave2._0.Models
 
         private bool BeginFullSave(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
         {
-            List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
+			EventHandler BSDetected = (sender, e) => OnBuisnessSoftwareDetected(executedSave);
+			EventHandler AllBSClosed = (sender, e) => OnAllBuisnessSoftwareClosed(executedSave);
+
+			ProcessObserver.BuisnessSoftwareDetected += BSDetected;
+			ProcessObserver.AllBuisnessProcessClosed += AllBSClosed;
+
+			List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
 
             if (eligibleFiles.Count == 0)
             {
@@ -187,7 +227,10 @@ namespace EasySave2._0.Models
 
             executedSave.LastExecuteDate = DateTime.Now;
             SaveFinished?.Invoke(this, executedSave);
-            return true;
+			ProcessObserver.BuisnessSoftwareDetected -= BSDetected;
+			ProcessObserver.AllBuisnessProcessClosed -= AllBSClosed;
+
+			return true;
         }
 
 
@@ -346,24 +389,6 @@ namespace EasySave2._0.Models
                 OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
             }
            
-        }
-
-        private bool AreAnyBuisnessSoftwareUp()
-        {
-            Settings settings = Creator.GetSettingsInstance();
-            Process[] processes = Process.GetProcesses();
-
-            foreach (string buisnessSoftware in settings.BuisnessSoftwaresInterrupt)
-            {
-                foreach (var process in processes)
-                {
-                    if (process.ProcessName == buisnessSoftware)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
     }
 }
