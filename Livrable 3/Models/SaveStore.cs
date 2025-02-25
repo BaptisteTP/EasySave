@@ -1,4 +1,5 @@
 ﻿using EasySave2._0.Enums;
+using EasySave2._0.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -166,21 +167,33 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-		public void PauseSave(int id)
+		public void PauseSave(int id, bool wasSavePausedByUser)
 		{
-			GetSave(id).Pause();
+			Save saveToPause = GetSave(id);
+			saveToPause.Pause();
+			saveToPause.WasSavePausedByUser = wasSavePausedByUser;
+
 			SavePaused?.Invoke(this, GetSave(id));
 		}
 
 		public void StopSave(int id)
 		{
-			GetSave(id).Stop();
+			Save saveToPause = GetSave(id);
+			saveToPause.Stop();
+
 			SaveStopped?.Invoke(this, GetSave(id));
 		}
 		public void ResumeSave(int id)
 		{
-			GetSave(id).Resume();
-			SaveResumed?.Invoke(this, GetSave(id));
+			ProcessObserver processObserver = Creator.GetProcessObserverInstance();
+
+			if (!processObserver.AnyBSOpened)
+			{
+				Save saveToResume = GetSave(id);
+				saveToResume.Resume();
+
+				SaveResumed?.Invoke(this, GetSave(id));
+			}
 		}
 
 		// Look for the save with the given id and return it

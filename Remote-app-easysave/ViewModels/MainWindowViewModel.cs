@@ -186,7 +186,9 @@ namespace Remote_app_easysave.ViewModels
 
 		private void HandleServerResponse(byte[] buffer)
 		{
-			ServerPacket serverPacket = DeserializeServerResponse(buffer);
+			ServerPacket? serverPacket = DeserializeServerResponse(buffer);
+			if(serverPacket == null) { return; }
+
 			Save receivedSave = DeserializeSave(serverPacket.Payload);
 			Save concernedSave;
 
@@ -377,12 +379,20 @@ namespace Remote_app_easysave.ViewModels
 			return JsonSerializer.SerializeToUtf8Bytes(objToSerialize);
 		}
 
-		private ServerPacket DeserializeServerResponse(byte[] data)
+		private ServerPacket? DeserializeServerResponse(byte[] data)
 		{
-			string json = Encoding.UTF8.GetString(data);
-			ServerPacket serverPacket = JsonSerializer.Deserialize<ServerPacket>(json);
+			try
+			{
+				string json = Encoding.UTF8.GetString(data);
+				ServerPacket serverPacket = JsonSerializer.Deserialize<ServerPacket>(json);
 
-			return serverPacket;
+				return serverPacket;
+			}
+			catch
+			{
+				return null;
+			}
+
 		}
 
 		private Save DeserializeSave(byte[] data)

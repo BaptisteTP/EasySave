@@ -30,7 +30,7 @@ namespace EasySave2._0
                 MainWindow mainWindow = Creator.GetMainWindow();
                 mainWindow.Show();
                 mainWindow.StartAppNaviguation();
-            }
+			}
             else if (e.Args.Length == 1)
             {
                 await HandleCommandLineExecution(e.Args);

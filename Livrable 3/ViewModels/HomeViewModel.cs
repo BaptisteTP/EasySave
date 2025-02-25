@@ -101,7 +101,8 @@ namespace EasySave2._0
         {
             if (obj is Save save)
             {
-                saveStore.PauseSave(save.Id);
+                saveStore.PauseSave(save.Id,
+                                    wasSavePausedByUser: true);
             }
         }
         public void ResumeSave(object obj)
