@@ -25,4 +25,9 @@
     <PackageReference Include="LoadingSpinner.WPF" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="UserControl_Library">
+      <HintPath>..\Livrable 3\UserControl_Library.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

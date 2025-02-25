@@ -9,6 +9,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using UserControl_Library;
 
 namespace Remote_app_easysave
 {
@@ -20,7 +22,26 @@ namespace Remote_app_easysave
 		public MainWindow()
 		{
 			InitializeComponent();
-			DataContext = new MainWindowViewModel();
+			MainWindowViewModel viewModel = new MainWindowViewModel();
+			viewModel.NotificationAdded += ViewModel_NotificationAdded;
+			DataContext = viewModel;
+		}
+
+		private void ViewModel_NotificationAdded(object? sender, Notification_UC e)
+		{
+			NotificationGrid.Children.Add(e);
+			e.StartAnimation();
+
+			DispatcherTimer timer = new DispatcherTimer();
+			timer.Interval = new TimeSpan(0,0,4);
+			timer.Tick += (sender, args) => DeleteNotification(timer, e);
+			timer.Start();
+		}
+
+		private void DeleteNotification(DispatcherTimer timer, Notification_UC e)
+		{
+			timer.Stop();
+			NotificationGrid.Children.Remove(e);
 		}
 	}
 }
