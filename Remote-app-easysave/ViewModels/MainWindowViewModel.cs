@@ -273,36 +273,45 @@ namespace Remote_app_easysave.ViewModels
 					break;
 
 				case ServerResponses.Save_already_paused:
-					notification = new Notification_UC()
+					App.Current.Dispatcher.Invoke(() =>
 					{
-						NotificationTitle = "Erreur",
-						NotificationType = 0,
-						ContentText = "La sauvegarde n'a pas pu être mise en pause car elle l'est déjà."
-					};
+						notification = new Notification_UC()
+						{
+							NotificationTitle = "Erreur",
+							NotificationType = 0,
+							ContentText = "La sauvegarde n'a pas pu être mise en pause car elle l'est déjà."
+						};
 
-					ShowNotification(notification);
+						ShowNotification(notification);
+					});
 					break;
 
 				case ServerResponses.Save_already_canceled:
-					notification = new Notification_UC()
+					App.Current.Dispatcher.Invoke(() =>
 					{
-						NotificationTitle = "Erreur",
-						NotificationType = 0,
-						ContentText = "La sauvegarde n'a pas pu être annulé car elle l'est déjà."
-					};
+						notification = new Notification_UC()
+						{
+							NotificationTitle = "Erreur",
+							NotificationType = 0,
+							ContentText = "La sauvegarde n'a pas pu être annulé car elle l'est déjà."
+						};
 
-					ShowNotification(notification);
+						ShowNotification(notification);
+					});
 					break;
 
 				case ServerResponses.Save_already_resumed:
-					notification = new Notification_UC()
+					App.Current.Dispatcher.Invoke(() =>
 					{
-						NotificationTitle = "Erreur",
-						NotificationType = 0,
-						ContentText = "La sauvegarde n'a pas pu être reprise : elle a déjà été reprise."
-					};
+						notification = new Notification_UC()
+						{
+							NotificationTitle = "Erreur",
+							NotificationType = 0,
+							ContentText = "La sauvegarde n'a pas pu être reprise : elle a déjà été reprise."
+						};
 
-					ShowNotification(notification);
+						ShowNotification(notification);
+					});
 					break;
 
 				case ServerResponses.Save_already_deleted:
