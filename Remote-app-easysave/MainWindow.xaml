@@ -449,5 +449,8 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center" />
         </Grid>
+
+        <Grid x:Name="NotificationGrid" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+        
     </Grid>
 </Window>

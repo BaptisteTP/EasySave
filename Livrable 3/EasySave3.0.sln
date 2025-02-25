@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogLib", "..\LogLib\LogLib.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote-app-easysave", "..\Remote-app-easysave\Remote-app-easysave.csproj", "{3A3289AE-5220-46A6-A71A-8C1DF6D3DBD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserControl_Library", "..\UserControl_Library\UserControl_Library.csproj", "{B86D07C9-94B4-4728-94D1-FD135B2C88B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3A3289AE-5220-46A6-A71A-8C1DF6D3DBD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A3289AE-5220-46A6-A71A-8C1DF6D3DBD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A3289AE-5220-46A6-A71A-8C1DF6D3DBD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B86D07C9-94B4-4728-94D1-FD135B2C88B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B86D07C9-94B4-4728-94D1-FD135B2C88B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B86D07C9-94B4-4728-94D1-FD135B2C88B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B86D07C9-94B4-4728-94D1-FD135B2C88B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

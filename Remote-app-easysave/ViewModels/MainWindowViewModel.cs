@@ -19,6 +19,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Microsoft.VisualBasic;
 using System.Windows.Data;
+using UserControl_Library;
 
 namespace Remote_app_easysave.ViewModels
 {
@@ -30,6 +31,8 @@ namespace Remote_app_easysave.ViewModels
 		private Socket _clientSocket;
 		private CancellationTokenSource ConnectionCloseTokenSource;
 		private object _lockMessageSend = new object();
+
+		public event EventHandler<Notification_UC>? NotificationAdded;
 
 		private ICommand connectionCommand;
 		public ICommand ConnectionCommand
@@ -192,6 +195,7 @@ namespace Remote_app_easysave.ViewModels
 
 			Save receivedSave = DeserializeSave(serverPacket.Payload);
 			Save concernedSave;
+			Notification_UC notification;
 
 			switch (serverPacket.ServerResponse)
 			{
@@ -260,19 +264,36 @@ namespace Remote_app_easysave.ViewModels
 					break;
 
 				case ServerResponses.Save_already_paused:
-					concernedSave = Saves.First(save => save.Id == receivedSave.Id);
-					concernedSave.IsPaused = true;
+					notification = new Notification_UC()
+					{
+						NotificationTitle = "Erreur",
+						NotificationType = 0,
+						ContentText = "La sauvegarde n'a pas pu être mise en pause car elle l'est déjà."
+					};
+
+					ShowNotification(notification);
 					break;
 
 				case ServerResponses.Save_already_canceled:
-					concernedSave = Saves.First(save => save.Id == receivedSave.Id);
-					concernedSave.IsExecuting = false;
-					concernedSave.Progress = 0;
+					notification = new Notification_UC()
+					{
+						NotificationTitle = "Erreur",
+						NotificationType = 0,
+						ContentText = "La sauvegarde n'a pas pu être annulé car elle l'est déjà."
+					};
+
+					ShowNotification(notification);
 					break;
 
 				case ServerResponses.Save_already_resumed:
-					concernedSave = Saves.First(save => save.Id == receivedSave.Id);
-					concernedSave.IsPaused = false;
+					notification = new Notification_UC()
+					{
+						NotificationTitle = "Erreur",
+						NotificationType = 0,
+						ContentText = "La sauvegarde n'a pas pu être reprise : elle a déjà été reprise."
+					};
+
+					ShowNotification(notification);
 					break;
 
 				case ServerResponses.Save_already_deleted:
@@ -281,6 +302,11 @@ namespace Remote_app_easysave.ViewModels
 				default:
 					break;
 			}
+		}
+
+		private void ShowNotification(Notification_UC notification)
+		{
+			NotificationAdded?.Invoke(this, notification);
 		}
 
 		private void DisconnectFromServer(object obj)
