@@ -314,7 +314,18 @@ namespace Remote_app_easysave.ViewModels
 					});
 					break;
 
-				case ServerResponses.Save_already_deleted:
+				case ServerResponses.Cannot_resume_save:
+					App.Current.Dispatcher.Invoke(() =>
+					{
+						notification = new Notification_UC()
+						{
+							NotificationTitle = "Erreur",
+							NotificationType = 0,
+							ContentText = "La sauvegarde ne peut pas être reprise. (Une application métier est lancée)"
+						};
+
+						ShowNotification(notification);
+					});
 					break;
 
 				default:

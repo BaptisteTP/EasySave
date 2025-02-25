@@ -20,10 +20,11 @@ namespace Remote_app_easysave.Enums
 		Save_resumed,
 		Save_stopped,
 
-		Save_already_deleted,
 		Save_already_started,
 		Save_already_paused,
 		Save_already_resumed,
 		Save_already_canceled,
+
+		Cannot_resume_save,
 	}
 }

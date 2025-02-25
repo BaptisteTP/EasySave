@@ -157,7 +157,15 @@ namespace EasySave2._0.Models
 
 					if (concernedSave.IsPaused == true)
 					{
-						_saveStore.ResumeSave(concernedSave.Id);
+						if (_saveStore.CanResumeSaves)
+						{
+							_saveStore.ResumeSave(concernedSave.Id);
+						}
+						else
+						{
+							serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Cannot_resume_save, Payload = SerializeMessage(saveReceived) };
+							SendMessageToClient(serverPacket, _clientSocket);
+						}
 					}
 					else
 					{

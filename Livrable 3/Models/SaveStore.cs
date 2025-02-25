@@ -28,6 +28,7 @@ namespace EasySave2._0.ViewModels
 		public event EventHandler? SavesLoaded;
 		public bool CanAddSave => NumberOfSaves < MaximumNumberOfSave;
 		public bool CanExecuteSave => NumberOfSaves > 0;
+		public bool CanResumeSaves => !Creator.GetProcessObserverInstance().AnyBSOpened;
 		public int NumberOfSaves => Saves.Count;
 		private int CurrentAvailableID { get; set; } = 1;
 		private int MaximumNumberOfSave { get; } = 5;
@@ -185,9 +186,7 @@ namespace EasySave2._0.ViewModels
 		}
 		public void ResumeSave(int id)
 		{
-			ProcessObserver processObserver = Creator.GetProcessObserverInstance();
-
-			if (!processObserver.AnyBSOpened)
+			if (CanResumeSaves)
 			{
 				Save saveToResume = GetSave(id);
 				saveToResume.Resume();
