@@ -133,6 +133,8 @@ namespace EasySave2._0.Models
 					{
 						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_already_started, Payload = SerializeMessage(saveReceived) };
 						SendMessageToClient(serverPacket, _clientSocket);
+						ReSendSave(concernedSave, _clientSocket);
+
 					}
 					break;
 
@@ -148,6 +150,8 @@ namespace EasySave2._0.Models
 					{
 						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_already_canceled, Payload = SerializeMessage(saveReceived) };
 						SendMessageToClient(serverPacket, _clientSocket);
+						ReSendSave(concernedSave, _clientSocket);
+
 					}
 					break;
 
@@ -171,6 +175,8 @@ namespace EasySave2._0.Models
 					{
 						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_already_resumed, Payload = SerializeMessage(saveReceived) };
 						SendMessageToClient(serverPacket, _clientSocket);
+						ReSendSave(concernedSave, _clientSocket);
+
 					}
 					break;
 
@@ -186,6 +192,7 @@ namespace EasySave2._0.Models
 					{
 						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_already_paused, Payload = SerializeMessage(saveReceived) };
 						SendMessageToClient(serverPacket, _clientSocket);
+						ReSendSave(concernedSave, _clientSocket);
 					}
 					break;
 
@@ -202,6 +209,12 @@ namespace EasySave2._0.Models
 				_clientSocket.Send(BitConverter.GetBytes(serverPacketData.Length));
 				_clientSocket.Send(serverPacketData);
 			}
+		}
+
+		private void ReSendSave(Save save, Socket _clientSocket)
+		{
+			ServerPacket serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_error_detected, Payload = SerializeMessage(save) };
+			SendMessageToClient(serverPacket, _clientSocket);
 		}
 
 		#region Event Handler
