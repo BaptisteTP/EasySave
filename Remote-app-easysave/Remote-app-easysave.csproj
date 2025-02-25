@@ -27,8 +27,7 @@
 
   <ItemGroup>
     <Reference Include="UserControl_Library">
-      <HintPath>..\UserControl_Library\bin\Debug\net8.0-windows\UserControl_Library.dll</HintPath>
+      <HintPath>..\Livrable 3\UserControl_Library.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 </Project>
