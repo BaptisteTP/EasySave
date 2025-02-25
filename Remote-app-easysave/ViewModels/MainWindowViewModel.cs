@@ -259,8 +259,14 @@ namespace Remote_app_easysave.ViewModels
 					break;
 
 				case ServerResponses.Save_already_started:
-					concernedSave = Saves.First(save => save.Id == receivedSave.Id);
-					concernedSave.IsExecuting = true;
+					notification = new Notification_UC()
+					{
+						NotificationTitle = "Erreur",
+						NotificationType = 0,
+						ContentText = "La sauvegarde n'a pas pu être lancé car elle l'est déjà."
+					};
+
+					ShowNotification(notification);
 					break;
 
 				case ServerResponses.Save_already_paused:
