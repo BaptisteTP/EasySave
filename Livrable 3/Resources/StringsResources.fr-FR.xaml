@@ -53,5 +53,16 @@
     <system:String x:Key="CloseButton">Fermer</system:String>
     <system:String x:Key="KoBlockLimit">Choisissez une limite d'espace de transfert des fichiers (en Ko) :</system:String>
 
+    <!--#region Notification Messages-->
+
+    <!--#region HomeView-->
+
+    <system:String x:Key="GlobalExecutionTitle">Une éxécution globale a commencé</system:String>
+    <system:String x:Key="GlobalExecutionContent">{0} sauvegardes ont été lancé.</system:String>
+
+    <!--#endregion-->
+
+    <!--#endregion-->
+
 
 </ResourceDictionary>

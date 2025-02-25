@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using EasySave2._0.CustomEventArgs;
 using System.Windows.Navigation;
 using System.Diagnostics;
+using EasySave2._0.Models.Notifications_Related;
 
 namespace EasySave2._0
 {
@@ -162,16 +163,25 @@ namespace EasySave2._0
         private void ExecuteAllSaves(object obj)
         {
             Debug.WriteLine("ExecuteAllSaves command executed.");
+            int nbExecutedSaves = 0;
             foreach (Save save in Items)
             {
                 if (!save.IsExecuting)
                 {
                     Debug.WriteLine("Executing save for Save ID: " + save.Id);
                     ExecuteSaveAsync(save);
-                }
+                    nbExecutedSaves++;
+
+				}
+            }
+
+            if(nbExecutedSaves > 0)
+            {
+                NotificationHelper.CreateNotifcation(title: Application.Current.Resources["GlobalExecutionTitle"] as string,
+                                                     content: string.Format(Application.Current.Resources["GlobalExecutionContent"] as string, nbExecutedSaves),
+                                                     type: 2);
             }
         }
-
 
         private bool CanInteract(object arg)
             {
