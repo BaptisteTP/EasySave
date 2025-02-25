@@ -210,6 +210,7 @@ namespace Remote_app_easysave.ViewModels
 			Save receivedSave = DeserializeSave(serverPacket.Payload);
 			Save concernedSave;
 			Notification_UC notification;
+			int index;
 
 			switch (serverPacket.ServerResponse)
 			{
@@ -247,7 +248,7 @@ namespace Remote_app_easysave.ViewModels
 
 				case ServerResponses.Save_edited:
 					concernedSave = Saves.First(save => save.Id == receivedSave.Id);
-					int index = Saves.IndexOf(concernedSave);
+					index = Saves.IndexOf(concernedSave);
 
 					App.Current.Dispatcher.Invoke(() =>
 					{
@@ -363,7 +364,7 @@ namespace Remote_app_easysave.ViewModels
 
 				case ServerResponses.Save_error_detected:
 					concernedSave = Saves.First(save => save.Id == receivedSave.Id);
-					int index = Saves.IndexOf(concernedSave);
+					index = Saves.IndexOf(concernedSave);
 
 					App.Current.Dispatcher.Invoke(() =>
 					{
