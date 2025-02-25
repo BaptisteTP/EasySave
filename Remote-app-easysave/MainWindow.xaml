@@ -41,10 +41,44 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="1"
+                        <Button Grid.Column="0"
+                                Command="{Binding ConnectionCommand}"
+                                Padding="4"
+                                Margin="0 0 4 0">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Content"
+                                            Value="Connect" />
+                                    <Setter Property="IsEnabled"
+                                            Value="True" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ConnectionState}"
+                                                     Value="Connected">
+                                            <Setter Property="Content"
+                                                    Value="Disconnect" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}"
+                                                     Value="Connecting..">
+                                            <Setter Property="IsEnabled"
+                                                    Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding ErrorMessage}"
+                                   Foreground="Red"
+                                   VerticalAlignment="Center" 
+                                   TextWrapping="Wrap"/>
+
+                        <StackPanel Grid.Column="2"
                                     HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
                                     Orientation="Horizontal">
                             <Ellipse Width="12"
                                      Height="12"
@@ -91,37 +125,6 @@
                             </custom:LoadingSpinner>
 
                             <TextBlock Text="{Binding ConnectionState}"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="0"
-                                    Orientation="Horizontal">
-                            <Button Command="{Binding ConnectionCommand}"
-                                    Padding="4"
-                                    Margin="0 0 4 0">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Content"
-                                                Value="Connect" />
-                                        <Setter Property="IsEnabled"
-                                                Value="True" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ConnectionState}"
-                                                         Value="Connected">
-                                                <Setter Property="Content"
-                                                        Value="Disconnect" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding ConnectionState}"
-                                                         Value="Connecting..">
-                                                <Setter Property="IsEnabled"
-                                                        Value="False" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                            <TextBlock Text="{Binding ErrorMessage}"
-                                       Foreground="Red"
                                        VerticalAlignment="Center" />
                         </StackPanel>
                     </Grid>
@@ -197,7 +200,8 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <TextBox Padding="16" Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Padding="16"
+                         Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="Rechercher une sauvegarde"
                            Margin="20 0 0 0"
                            VerticalAlignment="Center"
@@ -255,7 +259,7 @@
                                         <Condition Binding="{Binding FilteredSaves.Count}"
                                                    Value="0" />
                                         <Condition Binding="{Binding FilterString, Converter={StaticResource EmptyStringToBooleanConverter}}"
-                                                   Value="False" /> 
+                                                   Value="False" />
                                     </MultiDataTrigger.Conditions>
                                     <Setter Property="Visibility"
                                             Value="Visible" />
@@ -450,7 +454,10 @@
                        VerticalAlignment="Center" />
         </Grid>
 
-        <Grid x:Name="NotificationGrid" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
-        
+        <Grid x:Name="NotificationGrid"
+              Grid.Row="1"
+              VerticalAlignment="Bottom"
+              HorizontalAlignment="Right" />
+
     </Grid>
 </Window>
