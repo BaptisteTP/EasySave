@@ -247,9 +247,12 @@ namespace Remote_app_easysave.ViewModels
 
 				case ServerResponses.Save_edited:
 					concernedSave = Saves.First(save => save.Id == receivedSave.Id);
+					int index = Saves.IndexOf(concernedSave);
+
 					App.Current.Dispatcher.Invoke(() =>
 					{
-						concernedSave = receivedSave;
+						Saves.RemoveAt(index);
+						Saves.Insert(index, receivedSave);
 					});
 					break;
 
@@ -355,6 +358,17 @@ namespace Remote_app_easysave.ViewModels
 						};
 
 						ShowNotification(notification);
+					});
+					break;
+
+				case ServerResponses.Save_error_detected:
+					concernedSave = Saves.First(save => save.Id == receivedSave.Id);
+					int index = Saves.IndexOf(concernedSave);
+
+					App.Current.Dispatcher.Invoke(() =>
+					{
+						Saves.RemoveAt(index);
+						Saves.Insert(index, receivedSave);
 					});
 					break;
 

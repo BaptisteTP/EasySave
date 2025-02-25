@@ -26,5 +26,7 @@ namespace EasySave2._0.Enums
 		Save_already_canceled,
 
 		Cannot_resume_save,
+
+		Save_error_detected,
 	}
 }
