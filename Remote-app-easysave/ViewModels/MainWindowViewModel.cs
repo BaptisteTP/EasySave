@@ -1,25 +1,15 @@
-﻿using Remote_app_easysave.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Navigation;
-using System.Windows;
-using System.Data;
-using System.IO;
 using System.Text.Json;
 using Remote_app_easysave.Enums;
 using Remote_app_easysave.Models;
-using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using Microsoft.VisualBasic;
 using System.Windows.Data;
 using UserControl_Library;
+using System.Windows.Controls;
 
 namespace Remote_app_easysave.ViewModels
 {
@@ -34,6 +24,8 @@ namespace Remote_app_easysave.ViewModels
 
 		public event EventHandler<Notification_UC>? NotificationAdded;
 
+		#region Commands
+
 		private ICommand connectionCommand;
 		public ICommand ConnectionCommand
 		{
@@ -46,6 +38,13 @@ namespace Remote_app_easysave.ViewModels
 		public ICommand ResumeSaveCommand { get; }
 		public ICommand CancelSaveCommand { get; }
 
+		public ICommand StartAllSavesCommand { get; }
+		public ICommand PauseAllSavesCommand { get; }
+		public ICommand ResumeAllSavesCommand { get; }
+		public ICommand CancelAllSavesCommand { get; }
+
+		#endregion
+
 		public ICollectionView FilteredSaves
 		{
 			get
@@ -55,8 +54,13 @@ namespace Remote_app_easysave.ViewModels
 				return source;
 			}
 		}
-
 		public ObservableCollection<Save> Saves { get; private set; } = new ObservableCollection<Save>();
+
+		public bool AnySaveIdle => CollectionViewSource.GetDefaultView(FilteredSaves).Cast<Save>().Any(save => !save.IsExecuting);
+		public bool AnySaveExecuting => CollectionViewSource.GetDefaultView(FilteredSaves).Cast<Save>().Any(save => save.IsExecuting && !save.IsPaused);
+		public bool AnySavePaused => CollectionViewSource.GetDefaultView(FilteredSaves).Cast<Save>().Any(save => save.IsPaused);
+		public bool AnySaveToCancel => CollectionViewSource.GetDefaultView(FilteredSaves).Cast<Save>().Any(save => save.IsExecuting);
+
 
 		private const string connectedString = "Connected";
 		private const string connectingString = "Connecting..";
@@ -67,7 +71,12 @@ namespace Remote_app_easysave.ViewModels
 		public string FilterString
 		{
 			get { return filterString; }
-			set { filterString = value; OnPropertyChanged(); OnPropertyChanged("FilteredSaves"); }
+			set
+			{
+				filterString = value;
+				OnPropertyChanged();
+				UpdateToolbarButtons();
+			}
 		}
 
 		private string connectionState;
@@ -112,6 +121,11 @@ namespace Remote_app_easysave.ViewModels
 			CancelSaveCommand = new RelayCommand(CancelSave);
 			PauseSaveCommand = new RelayCommand(PauseSave);
 			ResumeSaveCommand = new RelayCommand(ResumeSave);
+
+			StartAllSavesCommand = new RelayCommand(StartAllSaves);
+			PauseAllSavesCommand = new RelayCommand(PauseAllSaves);
+			ResumeAllSavesCommand = new RelayCommand(ResumeAllSaves);
+			CancelAllSavesCommand = new RelayCommand(CancelAllSaves);
 
 			ConnectionState = notConnectedString;
 			ConnectionCommand = new RelayCommand(ConnectToServer);
@@ -191,7 +205,7 @@ namespace Remote_app_easysave.ViewModels
 		private void HandleServerResponse(byte[] buffer)
 		{
 			ServerPacket? serverPacket = DeserializeServerResponse(buffer);
-			if(serverPacket == null) { return; }
+			if (serverPacket == null) { return; }
 
 			Save receivedSave = DeserializeSave(serverPacket.Payload);
 			Save concernedSave;
@@ -204,16 +218,22 @@ namespace Remote_app_easysave.ViewModels
 					{
 						SaveAdd(receivedSave);
 					});
+
+					UpdateToolbarButtons();
 					break;
 				case ServerResponses.Save_started:
 					Saves.First(save => save.Id == receivedSave.Id).IsExecuting = true;
+
+					UpdateToolbarButtons();
 					break;
-					
+
 				case ServerResponses.Save_finished:
 					concernedSave = Saves.First(save => save.Id == receivedSave.Id);
 
 					concernedSave.IsExecuting = false;
 					concernedSave.Progress = 0;
+
+					UpdateToolbarButtons();
 					break;
 
 				case ServerResponses.Save_created:
@@ -221,6 +241,8 @@ namespace Remote_app_easysave.ViewModels
 					{
 						SaveAdd(receivedSave);
 					});
+
+					UpdateToolbarButtons();
 					break;
 
 				case ServerResponses.Save_edited:
@@ -237,14 +259,20 @@ namespace Remote_app_easysave.ViewModels
 					{
 						Saves.Remove(concernedSave);
 					});
+
+					UpdateToolbarButtons();
 					break;
 
 				case ServerResponses.Save_paused:
 					Saves.First(save => save.Id == receivedSave.Id).IsPaused = true;
+
+					UpdateToolbarButtons();
 					break;
 
 				case ServerResponses.Save_resumed:
 					Saves.First(save => save.Id == receivedSave.Id).IsPaused = false;
+
+					UpdateToolbarButtons();
 					break;
 
 				case ServerResponses.Save_stopped:
@@ -252,6 +280,8 @@ namespace Remote_app_easysave.ViewModels
 					concernedSave.IsExecuting = false;
 					concernedSave.IsPaused = false;
 					concernedSave.Progress = 0;
+
+					UpdateToolbarButtons();
 					break;
 
 				case ServerResponses.Save_progress_update:
@@ -356,6 +386,53 @@ namespace Remote_app_easysave.ViewModels
 
 		#region Saves actions
 
+		private void StartAllSaves(object obj)
+		{
+			foreach(Save save in CollectionViewSource.GetDefaultView(FilteredSaves))
+			{
+				if (!save.IsExecuting)
+				{
+					ClientPacket clientPacket = new ClientPacket() { ClientRequest = ClientRequests.Save_start, Payload = SerializeMessage(save) };
+					SendMessageToServer(clientPacket);
+				}
+			}
+		}
+
+		private void PauseAllSaves(object obj)
+		{
+			foreach (Save save in CollectionViewSource.GetDefaultView(FilteredSaves))
+			{
+				if (!save.IsPaused)
+				{
+					ClientPacket clientPacket = new ClientPacket() { ClientRequest = ClientRequests.Save_pause, Payload = SerializeMessage(save) };
+					SendMessageToServer(clientPacket);
+				}
+			}
+		}
+
+		private void ResumeAllSaves(object obj)
+		{
+			foreach (Save save in CollectionViewSource.GetDefaultView(FilteredSaves))
+			{
+				if (save.IsPaused)
+				{
+					ClientPacket clientPacket = new ClientPacket() { ClientRequest = ClientRequests.Save_resume, Payload = SerializeMessage(save) };
+					SendMessageToServer(clientPacket);
+				}
+			}
+		}
+		private void CancelAllSaves(object obj)
+		{
+			foreach (Save save in CollectionViewSource.GetDefaultView(FilteredSaves))
+			{
+				if (save.IsExecuting)
+				{
+					ClientPacket clientPacket = new ClientPacket() { ClientRequest = ClientRequests.Save_cancel, Payload = SerializeMessage(save) };
+					SendMessageToServer(clientPacket);
+				}
+			}
+		}
+
 		private void AskServerForSaves()
 		{
 			Saves.Clear();
@@ -402,6 +479,14 @@ namespace Remote_app_easysave.ViewModels
 		#endregion
 
 		#region Utilities
+		private void UpdateToolbarButtons()
+		{
+			OnPropertyChanged(nameof(FilteredSaves));
+			OnPropertyChanged(nameof(AnySaveIdle));
+			OnPropertyChanged(nameof(AnySaveExecuting));
+			OnPropertyChanged(nameof(AnySavePaused));
+			OnPropertyChanged(nameof(AnySaveToCancel));
+		}
 
 		private void SendMessageToServer(ClientPacket clientPacket)
 		{
@@ -416,7 +501,8 @@ namespace Remote_app_easysave.ViewModels
 		private void SaveAdd(Save save)
 		{
 			Saves.Add(save);
-			OnPropertyChanged("FilteredSaves");
+			OnPropertyChanged(nameof(FilteredSaves));
+			
 		}
 
 		private bool FilterSaveByName(Save save)
