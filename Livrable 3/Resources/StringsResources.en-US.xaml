@@ -44,13 +44,19 @@
     <system:String x:Key="RealTimeLogUnvalidMessage">The real-time log folder is not valid.</system:String>
     <system:String x:Key="SettingText">Settings</system:String>
     <system:String x:Key="SaveInformationPopUp">Save information</system:String>
-    <system:String x:Key="SourcePathPopUp">Source path:   </system:String>
-    <system:String x:Key="DestinationPathPopUp">Destination path:   </system:String>
-    <system:String x:Key="TypeSavePopUp">Save type:   </system:String>
-    <system:String x:Key="EncryptionPopUp">Encrypt save:   </system:String>
-    <system:String x:Key="NumberFilePopUp">Number of files in the source folder:   </system:String>
-    <system:String x:Key="SizeFilePopUp">Folder size:   </system:String>
+    <system:String x:Key="SourcePathPopUp">Source path:</system:String>
+    <system:String x:Key="DestinationPathPopUp">Destination path:</system:String>
+    <system:String x:Key="TypeSavePopUp">Save type:</system:String>
+    <system:String x:Key="EncryptionPopUp">Encrypt save:</system:String>
+    <system:String x:Key="NumberFilePopUp">Number of files in the source folder:</system:String>
+    <system:String x:Key="SizeFilePopUp">Folder size:</system:String>
     <system:String x:Key="CloseButton">Close</system:String>
-
+    <system:String x:Key="Pass">Decrypt</system:String>
+    <system:String x:Key="mdp">Password :</system:String>
+    <system:String x:Key="Validate">Validate</system:String>
+    <system:String x:Key="IncorrectPassword">Incorrect password</system:String>
+    <system:String x:Key="FileToDecrypt">Path to decrypt :</system:String>
+    <system:String x:Key="DecryptKey">Decryption keys :</system:String>
+    <system:String x:Key="Decrypt">Decrypt</system:String>
 
 </ResourceDictionary>

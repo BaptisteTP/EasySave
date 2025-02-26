@@ -51,6 +51,12 @@
     <system:String x:Key="NumberFilePopUp">Nombre de fichier dans le dossier source :   </system:String>
     <system:String x:Key="SizeFilePopUp">Taille du dossier :   </system:String>
     <system:String x:Key="CloseButton">Fermer</system:String>
-
+    <system:String x:Key="Pass">Déchiffrer</system:String>
+    <system:String x:Key="mdp">Mot de passe : </system:String>
+    <system:String x:Key="Validate">Valider</system:String>
+    <system:String x:Key="IncorrectPassword">Mot de passe incorrect</system:String>
+    <system:String x:Key="FileToDecrypt">Dossier à déchiffrer :</system:String>
+    <system:String x:Key="DecryptKey">Clés de déchiffrage :</system:String>
+    <system:String x:Key="Decrypt">Déchiffrer</system:String>
 
 </ResourceDictionary>

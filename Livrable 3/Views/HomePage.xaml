@@ -314,6 +314,16 @@
                 VerticalAlignment="Bottom"
                 Margin="100,0,0,100" />
 
+        <Button x:Name="PasswordButton"
+                Content="{DynamicResource Pass}"
+                Click="PasswordButton_Click"
+                Style="{StaticResource BlueButtonStyle}"
+                Width="170"
+                Height="44"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Margin="440,0,0,100" />
+
         <Button x:Name="OptionButton"
                 Style="{StaticResource OptionButton}"
                 Cursor="Hand"

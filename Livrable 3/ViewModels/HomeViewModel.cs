@@ -93,7 +93,7 @@ namespace EasySave2._0
                 ExecuteAllSavesCommand = new RelayCommand(ExecuteAllSaves);
                 PauseCommand = new RelayCommand(PauseSave, CanPauseStop);
                 StopCommand = new RelayCommand(StopSave, CanPauseStop);
-            ResumeCommand = new RelayCommand(ResumeSave, CanResume);
+                ResumeCommand = new RelayCommand(ResumeSave, CanResume);
 
 
             UpdatePagedItems();
