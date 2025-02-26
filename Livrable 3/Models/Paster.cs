@@ -5,6 +5,7 @@ using EasySave2._0.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
@@ -272,7 +273,9 @@ namespace EasySave2._0.Models
 			}
 			else if(saveFilesInCriticalFiles.Count > 0)
             {
-			   foreach (string file in saveFilesInCriticalFiles)
+                int count = saveFilesInCriticalFiles.Count;
+
+               foreach (string file in saveFilesInCriticalFiles)
                {
                     FileInfo fileInfo = new FileInfo(file);
 
@@ -281,10 +284,9 @@ namespace EasySave2._0.Models
 
                     string newPath = fileInfo.FullName;
                     string destinationPath = fileInfo.FullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
-
-					try
-					{
-						executedSave.Progress = Convert.ToInt32((1 - (double)(saveFilesInCriticalFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
+                    try
+                    {
+						executedSave.Progress = Convert.ToInt32((1 - (double)(count -1) / (double)(eligibleFiles.Count -1)) * 100);
 					}
 					catch
 					{
@@ -301,7 +303,9 @@ namespace EasySave2._0.Models
 					}
 
 					RemoveCriticalFileFromList(file);
-			    }
+                    count--;
+
+                }
                 executedSave.IsCopyingCriticalFile = false;
             }                
         }
@@ -344,7 +348,7 @@ namespace EasySave2._0.Models
 
                 if(wasCriticalFileAdded)
 				{
-                    foreach(string file in CriticalFilesAddedList)
+                    foreach(string file in detectedCriticalFiles)
                     {
                         eligibleFiles.Remove(file);
                     }
