@@ -323,6 +323,7 @@ namespace EasySave2._0.Models
 
                 Settings settings = Creator.GetSettingsInstance();
                 List<string> ExtensionPriority = settings.PriorityExtension;
+                List<string> CriticalFilesAddedList = [];
                 bool wasCriticalFileAdded = false;
 
                 foreach (string file in eligibleFiles)
@@ -332,7 +333,7 @@ namespace EasySave2._0.Models
                         if (file.EndsWith(extension))
                         {
                             CriticalFiles.Add(file);
-                            eligibleFiles.Remove(file);
+							CriticalFilesAddedList.Add(file);
 
 							wasCriticalFileAdded = true;
 						}
@@ -341,6 +342,11 @@ namespace EasySave2._0.Models
 
                 if(wasCriticalFileAdded)
 				{
+                    foreach(string file in CriticalFilesAddedList)
+                    {
+                        eligibleFiles.Remove(file);
+                    }
+
                     executedSave.IsCopyingCriticalFile = true;
                     CriticalFilesAdded?.Invoke(this, EventArgs.Empty);
                 }
