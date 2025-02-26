@@ -36,13 +36,15 @@ namespace EasySave2._0.Models
 					Settings settings = Creator.GetSettingsInstance();
 					List<string> runningProcesses = Process.GetProcesses().Select(process => process.ProcessName).ToList();
 
+					var tmp = new List<string>(DetectedBS);
+
 					DetectedBS = settings.BuisnessSoftwaresInterrupt.Intersect(runningProcesses).ToList();
 					
-					if(DetectedBS.Count > 0)
+					if(DetectedBS.Count > 0 && tmp.Count != DetectedBS.Count)
 					{
 						BuisnessSoftwareDetected?.Invoke(this, EventArgs.Empty);
 					}
-					else
+					else if(DetectedBS.Count == 0 && tmp.Count != DetectedBS.Count)
 					{
 						AllBuisnessProcessClosed?.Invoke(this, EventArgs.Empty);
 					}
