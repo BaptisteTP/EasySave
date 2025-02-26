@@ -26,7 +26,7 @@ namespace EasySave2._0.Models
 
 		public static event EventHandler? LogFomatChanged;
 
-		private static ResourceManager _ressourceManager = Creator.GetResourceManagerInstance();
+		public static object _writeLock = new object();
 
 		public static Settings CreateBaseSettings()
 		{
@@ -49,12 +49,15 @@ namespace EasySave2._0.Models
 		private static void WriteSettingsToJsonFile(Settings settings)
 		{
 			// Write the settings to a json file.
-			var options = new JsonSerializerOptions { WriteIndented = true };
-			string baseSttingsJson = JsonSerializer.Serialize<Settings>(settings, options);
-
-			using (StreamWriter sw = File.CreateText("appsettings.json"))
+			lock (_writeLock)
 			{
-				sw.WriteLine(baseSttingsJson);
+				var options = new JsonSerializerOptions { WriteIndented = true };
+				string baseSttingsJson = JsonSerializer.Serialize<Settings>(settings, options);
+
+				using (StreamWriter sw = File.CreateText("appsettings.json"))
+				{
+					sw.WriteLine(baseSttingsJson);
+				}
 			}
 		}
 
