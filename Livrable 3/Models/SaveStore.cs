@@ -1,5 +1,6 @@
 ﻿using EasySave2._0.Enums;
 using EasySave2._0.Models;
+using EasySave2._0.Models.Notifications_Related;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -186,11 +187,22 @@ namespace EasySave2._0.ViewModels
 		}
 		public void ResumeSave(int id)
 		{
-			if (CanResumeSaves)
+			Save saveToResume = GetSave(id);
+			if (!CanResumeSaves)
 			{
-				Save saveToResume = GetSave(id);
+				NotificationHelper.CreateNotifcation(title: "Application métier",
+													 content: "Impossible de reprendre la sauvegarde, une application métier est lancée.",
+													 type: 0);
+			}
+			else if (Creator.GetPasterInstance().CriticalFilesBeingCopied)
+			{
+				NotificationHelper.CreateNotifcation(title: "Fichier prioritaire",
+													 content: "Impossible de reprendre la sauvegarde, elle attend la copie de fichier prioritaire.",
+													 type: 0);
+			}
+			else
+			{
 				saveToResume.Resume();
-
 				SaveResumed?.Invoke(this, GetSave(id));
 			}
 		}

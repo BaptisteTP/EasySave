@@ -2,20 +2,13 @@
 using EasySave2._0.Enums;
 using EasySave2._0.Models.Notifications_Related;
 using EasySave2._0.ViewModels;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using System.Diagnostics.Tracing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace EasySave2._0.Models
 {
-    public class Paster
+	public class Paster
     {
         private static Paster? _pasterInstance;
 		public event EventHandler<CopyDirectoryEventArgs>? OnDirectoryCopied;
@@ -27,7 +20,10 @@ namespace EasySave2._0.Models
 
 		private object _lockAddCriticalFile = new object();
 		private object _lockRemoveCriticalFile = new object();
+
 		public List<string> CriticalFiles = new List<string>();
+		public bool CriticalFilesBeingCopied => CriticalFiles.Count > 0;
+
 		private event EventHandler? CriticalFilesAdded;
 		private event EventHandler? CriticalFilesCopyEnded;
 
@@ -316,7 +312,9 @@ namespace EasySave2._0.Models
 							RemoveCriticalFileFromList(_file);
 						}
                         executedSave.IsCopyingCriticalFile = false;
-                        return;
+						executedSave.IsWaitingForCriticalFiles = false;
+
+						return;
 					}
 
 					FileInfo fileInfo = new FileInfo(file);
@@ -353,10 +351,13 @@ namespace EasySave2._0.Models
 
                 }
                 executedSave.IsCopyingCriticalFile = false;
-            } 
-            
-            if (!executedSave.IsCopyingCriticalFile && CriticalFiles.Count > 0)
+				executedSave.IsWaitingForCriticalFiles = false;
+
+			}
+
+			if (!executedSave.IsCopyingCriticalFile && CriticalFiles.Count > 0)
 			{
+				executedSave.IsWaitingForCriticalFiles = true;
 				Creator.GetSaveStoreInstance().PauseSave(executedSave.Id, false);
 				NotificationHelper.CreateNotifcation("Fichiers prioritaires",
 													$"La sauvegarde {executedSave.Name} a été mise en pause.",

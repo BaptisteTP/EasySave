@@ -75,6 +75,7 @@ namespace EasySave2._0.ViewModels
         }
 
         public bool WasSavePausedByUser { get; set; }
+
 		private bool isCopyingCriticalFile;
 
 		public bool IsCopyingCriticalFile
@@ -83,8 +84,15 @@ namespace EasySave2._0.ViewModels
 			set { isCopyingCriticalFile = value; OnPropertyChanged(); }
 		}
 
+		private bool isWaitingForCriticalFiles;
 
-        public SaveType Type { get; set; }
+		public bool IsWaitingForCriticalFiles
+		{
+			get { return isWaitingForCriticalFiles; }
+			set { isWaitingForCriticalFiles = value; OnPropertyChanged(); }
+		}
+
+		public SaveType Type { get; set; }
         public DateTime? LastExecuteDate { get; set; }
 
         private CancellationTokenSource cancellationTokenSource;
