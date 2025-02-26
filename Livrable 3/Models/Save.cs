@@ -139,7 +139,6 @@ namespace EasySave2._0.ViewModels
             Debug.WriteLine("Save execution finished for Save ID: " + Id);
         }
 
-
         public void Resume()
         {
             IsPaused = false;
