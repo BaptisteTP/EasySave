@@ -266,7 +266,7 @@ namespace EasySave2._0.Models
 
 			if (!executedSave.IsCopyingCriticalFile)
 			{
-				Creator.GetSaveStoreInstance().PauseSave(executedSave.Id, true);
+				Creator.GetSaveStoreInstance().PauseSave(executedSave.Id, false);
 				NotificationHelper.CreateNotifcation("Fichiers prioritaires",
 													$"La sauvegarde {executedSave.Name} a été mise en pause.",
 													2);
