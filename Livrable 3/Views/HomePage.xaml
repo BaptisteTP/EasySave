@@ -21,329 +21,364 @@
     </Page.DataContext>
 
     <Grid>
-        <ContentControl ContentTemplate="{StaticResource EasySaveLogo2}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <TextBlock x:Name="Text"
-                   Text="{DynamicResource OperationList}"
-                   FontSize="24"
-                   FontWeight="Bold"
-                   Margin="90,150,0,0">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Visibility"
-                            Value="Visible" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Items.Count}"
-                                     Value="0">
-                            <Setter Property="Visibility"
-                                    Value="Collapsed" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
+        <ContentControl Grid.Row="0"
+                        ContentTemplate="{StaticResource EasySaveLogo2}" />
 
-        <TextBlock x:Name="NoSaveMessage"
-                   Text="{DynamicResource NoSaves}"
-                   FontSize="24"
-                   FontWeight="Bold"
-                   Foreground="Red"
-                   HorizontalAlignment="Center"
-                   Margin="0 150 0 0">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Visibility"
-                            Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Items.Count}"
-                                     Value="0">
-                            <Setter Property="Visibility"
-                                    Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
+        <Grid Grid.Row="1"
+              Margin="24 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <Button Content="{DynamicResource ExecuteSaves}"
-                Command="{Binding ExecuteAllSavesCommand}"
-                Height="44"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Margin="0 150 120 0"
-                Width="270">
-            <Button.Style>
-                <Style TargetType="Button"
-                       BasedOn="{StaticResource GreenButtonStyle}">
-                    <Setter Property="Visibility"
-                            Value="Visible" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Items.Count}"
-                                     Value="0">
-                            <Setter Property="Visibility"
-                                    Value="Collapsed" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-        </Button>
+            <TextBlock x:Name="Text"
+                       Grid.Column="0"
+                       Text="{DynamicResource OperationList}"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       TextWrapping="Wrap"
+                       MinWidth="200">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility"
+                                Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Items.Count}"
+                                         Value="0">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <Button Grid.Column="1"
+                    Content="{DynamicResource ExecuteSaves}"
+                    Command="{Binding ExecuteAllSavesCommand}"
+                    Height="44"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Width="270">
+                <Button.Style>
+                    <Style TargetType="Button"
+                           BasedOn="{StaticResource GreenButtonStyle}">
+                        <Setter Property="Visibility"
+                                Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Items.Count}"
+                                         Value="0">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
 
 
-        <ListView ItemsSource="{Binding PagedItems}"
-                  Width="1090"
-                  Background="Transparent"
-                  BorderThickness="0"
-                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  Height="400"
-                  Margin="95,196,95,108">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}">
-                    <Setter Property="Background"
-                            Value="Transparent" />
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListViewItem">
-                                <ContentPresenter />
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListView.ItemContainerStyle>
+        <Grid Grid.Row="2"
+              Margin="24 8">
+            <ListView ItemsSource="{Binding PagedItems}"
+                      Background="Transparent"
+                      BorderThickness="0"
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      Height="400">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Background"
+                                Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
 
-            <ListView.ItemTemplate>
-                <DataTemplate DataType="viewmodels:Save">
-                    <Border Background="#F3F1F1"
-                            Padding="10"
-                            CornerRadius="10"
-                            Width="1040"
-                            Margin="0,0,0,10"
-                            MinHeight="60"
-                            MaxHeight="90"
-                            HorizontalAlignment="Center">
-                        <Grid VerticalAlignment="Center">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="viewmodels:Save">
+                        <Border Background="#F3F1F1"
+                                Padding="10"
+                                CornerRadius="10"
+                                Margin="0,0,0,10"
+                                MinHeight="60"
+                                MaxHeight="90"
+                                HorizontalAlignment="Stretch">
 
-                            <Grid Grid.Row="0">
-                                <StackPanel Orientation="Horizontal"
-                                            HorizontalAlignment="Left">
-                                    <TextBlock Text="{Binding Id}"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Left"
-                                               Margin="5,0,0,0"
-                                               FontWeight="Bold"
-                                               FontSize="16" />
+                            <Grid VerticalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
                                     <TextBlock Text="{Binding Name}"
+                                               Grid.Column="0"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Left"
                                                Margin="10,0,0,0"
                                                FontWeight="Bold"
                                                FontSize="16" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal"
-                                            HorizontalAlignment="Right">
-                                    <Button Margin="10,0,40,0"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.StartSaveCommand}"
-                                            CommandParameter="{Binding}"
-                                            Cursor="Hand"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center">
-                                        <Image Source="../assets/images/PlayButton.png"
-                                               Width="24"
-                                               Height="24" />
-                                        <Button.Style>
-                                            <Style BasedOn="{StaticResource NoHighlightButton}"
-                                                   TargetType="Button">
-                                                <Setter Property="Visibility"
-                                                        Value="Visible" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsExecuting}"
-                                                                 Value="True">
-                                                        <Setter Property="Visibility"
-                                                                Value="Collapsed" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
-                                    <Button Margin="10,0,0,0"
-                                            Style="{StaticResource NoHighlightButton}"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.PauseCommand}"
-                                            CommandParameter="{Binding}"
-                                            Cursor="Hand"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center">
-                                        <Button.Visibility>
-                                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                                <Binding Path="IsExecuting" />
-                                                <Binding Path="IsPaused" />
-                                            </MultiBinding>
-                                        </Button.Visibility>
-                                        <Image Source="../assets/images/PauseButton.png"
-                                               Width="24"
-                                               Height="24" />
-                                    </Button>
-                                    <Button Margin="10,0,0,0"
-                                            Style="{StaticResource NoHighlightButton}"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.ResumeCommand}"
-                                            CommandParameter="{Binding}"
-                                            Cursor="Hand"
-                                            HorizontalAlignment="Right"
-                                            Visibility="{Binding IsPaused, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                            VerticalAlignment="Center">
-                                        <Image Source="../assets/images/PlayButton.png"
-                                               Width="24"
-                                               Height="24" />
-                                    </Button>
-                                    <Button Margin="10,0,30,0"
-                                            Style="{StaticResource NoHighlightButton}"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.StopCommand}"
-                                            CommandParameter="{Binding}"
-                                            Cursor="Hand"
-                                            HorizontalAlignment="Right"
-                                            Visibility="{Binding IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                            VerticalAlignment="Center">
-                                        <Image Source="../assets/images/CancelButton.png"
-                                               Width="24"
-                                               Height="24" />
-                                    </Button>
-                                    <Button Margin="10,0,0,0"
-                                            Style="{StaticResource NoHighlightButton}"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.InformationSaveCommand}"
-                                            Cursor="Hand"
-                                            CommandParameter="{Binding}"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center">
-                                        <Image Source="../assets/images/information.png"
-                                               Width="24"
-                                               Height="24" />
-                                    </Button>
-                                    <Button Margin="10,0,0,0"
-                                            Style="{StaticResource NoHighlightButton}"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.EditItemCommand}"
-                                            Cursor="Hand"
-                                            CommandParameter="{Binding}"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center">
-                                        <Image Source="../assets/images/EditButton.png"
-                                               Width="24"
-                                               Height="24" />
-                                    </Button>
-                                    <Button Margin="10,0,0,0"
-                                            Style="{StaticResource NoHighlightButton}"
-                                            Cursor="Hand"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.DeleteCommand}"
-                                            CommandParameter="{Binding}"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center">
-                                        <Image Source="../assets/images/SupButton.png"
-                                               Width="24"
-                                               Height="24" />
-                                    </Button>
+
+                                    <StackPanel Orientation="Horizontal"
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Right">
+                                        <Button Margin="10,0,40,0"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.StartSaveCommand}"
+                                                CommandParameter="{Binding}"
+                                                Cursor="Hand"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
+                                            <Image Source="../assets/images/PlayButton.png"
+                                                   Width="24"
+                                                   Height="24" />
+                                            <Button.Style>
+                                                <Style BasedOn="{StaticResource NoHighlightButton}"
+                                                       TargetType="Button">
+                                                    <Setter Property="Visibility"
+                                                            Value="Visible" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsExecuting}"
+                                                                     Value="True">
+                                                            <Setter Property="Visibility"
+                                                                    Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                        <Button Margin="10,0,0,0"
+                                                Style="{StaticResource NoHighlightButton}"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.PauseCommand}"
+                                                CommandParameter="{Binding}"
+                                                Cursor="Hand"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
+                                            <Button.Visibility>
+                                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                                    <Binding Path="IsExecuting" />
+                                                    <Binding Path="IsPaused" />
+                                                </MultiBinding>
+                                            </Button.Visibility>
+                                            <Image Source="../assets/images/PauseButton.png"
+                                                   Width="24"
+                                                   Height="24" />
+                                        </Button>
+                                        <Button Margin="10,0,0,0"
+                                                Style="{StaticResource NoHighlightButton}"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.ResumeCommand}"
+                                                CommandParameter="{Binding}"
+                                                Cursor="Hand"
+                                                HorizontalAlignment="Right"
+                                                Visibility="{Binding IsPaused, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                VerticalAlignment="Center">
+                                            <Image Source="../assets/images/PlayButton.png"
+                                                   Width="24"
+                                                   Height="24" />
+                                        </Button>
+                                        <Button Margin="10,0,30,0"
+                                                Style="{StaticResource NoHighlightButton}"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.StopCommand}"
+                                                CommandParameter="{Binding}"
+                                                Cursor="Hand"
+                                                HorizontalAlignment="Right"
+                                                Visibility="{Binding IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                VerticalAlignment="Center">
+                                            <Image Source="../assets/images/CancelButton.png"
+                                                   Width="24"
+                                                   Height="24" />
+                                        </Button>
+                                        <Button Margin="10,0,0,0"
+                                                Style="{StaticResource NoHighlightButton}"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.InformationSaveCommand}"
+                                                Cursor="Hand"
+                                                CommandParameter="{Binding}"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
+                                            <Image Source="../assets/images/information.png"
+                                                   Width="24"
+                                                   Height="24" />
+                                        </Button>
+                                        <Button Margin="10,0,0,0"
+                                                Style="{StaticResource NoHighlightButton}"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.EditItemCommand}"
+                                                Cursor="Hand"
+                                                CommandParameter="{Binding}"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
+                                            <Image Source="../assets/images/EditButton.png"
+                                                   Width="24"
+                                                   Height="24" />
+                                        </Button>
+                                        <Button Margin="10,0,0,0"
+                                                Style="{StaticResource NoHighlightButton}"
+                                                Cursor="Hand"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.DeleteCommand}"
+                                                CommandParameter="{Binding}"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
+                                            <Image Source="../assets/images/SupButton.png"
+                                                   Width="24"
+                                                   Height="24" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+
+                                <StackPanel Grid.Row="1"
+                                            VerticalAlignment="Bottom"
+                                            Visibility="{Binding IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{DynamicResource ExecutionMessage}"
+                                                   FontWeight="Medium" />
+                                        <TextBlock Text="{Binding Progress, StringFormat={}{0}%}" />
+                                    </StackPanel>
+                                    <ProgressBar VerticalAlignment="Bottom"
+                                                 Height="4"
+                                                 Minimum="0"
+                                                 Maximum="100"
+                                                 Value="{Binding Progress}" />
                                 </StackPanel>
                             </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
-                            <StackPanel Grid.Row="1"
-                                        VerticalAlignment="Bottom"
-                                        Visibility="{Binding IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{DynamicResource ExecutionMessage}"
-                                               FontWeight="Medium" />
-                                    <TextBlock Text="{Binding Progress, StringFormat={}{0}%}" />
-                                </StackPanel>
-                                <ProgressBar VerticalAlignment="Bottom"
-                                             Height="4"
-                                             Minimum="0"
-                                             Maximum="100"
-                                             Value="{Binding Progress}" />
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    Margin="0,0,0,100">
-            <StackPanel.Style>
-                <Style TargetType="StackPanel">
-                    <Setter Property="Visibility"
-                            Value="Visible" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Items.Count}"
-                                     Value="0">
-                            <Setter Property="Visibility"
-                                    Value="Collapsed" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </StackPanel.Style>
-            <Button Style="{StaticResource NoHighlightButton}"
-                    Command="{Binding PreviousPageCommand}"
-                    Padding="10,5"
-                    Width="25"
-                    Cursor="Hand">
-                <Image Source="../assets/images/Previous.png" />
-            </Button>
-            <TextBlock Text="{Binding CurrentPageFormatted}"
-                       FontSize="18"
+            <TextBlock x:Name="NoSaveMessage"
+                       Text="{DynamicResource NoSaves}"
+                       FontSize="24"
                        FontWeight="Bold"
-                       VerticalAlignment="Center"
-                       Margin="10" />
-            <Button Style="{StaticResource NoHighlightButton}"
-                    Command="{Binding NextPageCommand}"
-                    Padding="10,5"
-                    Width="25"
-                    Cursor="Hand">
-                <Image Source="../assets/images/Next.png" />
-            </Button>
-        </StackPanel>
+                       Foreground="Red"
+                       HorizontalAlignment="Center"
+                       Margin="0 150 0 0">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility"
+                                Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Items.Count}"
+                                         Value="0">
+                                <Setter Property="Visibility"
+                                        Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
 
-        <Button x:Name="CreateButton"
-                Content="{DynamicResource Add}"
-                Click="CreateButton_Click"
-                Style="{StaticResource GreenButtonStyle}"
-                Width="170"
-                Height="44"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Margin="100,0,0,100" />
-
-        <Button x:Name="PasswordButton"
-                Content="{DynamicResource Pass}"
-                Click="PasswordButton_Click"
-                Style="{StaticResource BlueButtonStyle}"
-                Width="170"
-                Height="44"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                Margin="440,0,0,100" />
-
-        <Button x:Name="OptionButton"
-                Style="{StaticResource OptionButton}"
-                Cursor="Hand"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Margin="0,0,100,100"
-                Click="OptionButton_Click">
+        <Grid Grid.Row="3">
             <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                <TextBlock Text="Option"
-                           FontSize="24"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Grid.Column="1">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility"
+                                Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Items.Count}"
+                                         Value="0">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <Button Style="{StaticResource NoHighlightButton}"
+                        Command="{Binding PreviousPageCommand}"
+                        Padding="10,5"
+                        Width="25"
+                        Cursor="Hand">
+                    <Image Source="../assets/images/Previous.png" />
+                </Button>
+
+                <TextBlock Text="{Binding CurrentPageFormatted}"
+                           FontSize="18"
                            FontWeight="Bold"
                            VerticalAlignment="Center"
-                           Margin="0,0,10,0"
-                           Height="37" />
-                <Image Source="../assets/images/Option.png"
-                       Width="24"
-                       Height="24"
-                       VerticalAlignment="Center" />
+                           Margin="10" />
+                <Button Style="{StaticResource NoHighlightButton}"
+                        Command="{Binding NextPageCommand}"
+                        Padding="10,5"
+                        Width="25"
+                        Cursor="Hand">
+                    <Image Source="../assets/images/Next.png" />
+                </Button>
             </StackPanel>
-        </Button>
+        </Grid>
+
+        <Grid Grid.Row="4"
+              Margin="20">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="CreateButton"
+                    Grid.Column="0"
+                    Content="{DynamicResource Add}"
+                    Click="CreateButton_Click"
+                    Style="{StaticResource GreenButtonStyle}"
+                    Width="170"
+                    Height="44"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom" />
+
+
+
+            <Button x:Name="PasswordButton"
+                    Grid.Column="2"
+                    Content="{DynamicResource Pass}"
+                    Click="PasswordButton_Click"
+                    Style="{StaticResource BlueButtonStyle}"
+                    Width="170"
+                    Height="44"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom" />
+
+            <Button x:Name="OptionButton"
+                    Grid.Column="3"
+                    Style="{StaticResource OptionButton}"
+                    Cursor="Hand"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Click="OptionButton_Click">
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="Option"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"
+                               Height="37" />
+                    <Image Source="../assets/images/Option.png"
+                           Width="24"
+                           Height="24"
+                           VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Grid>
     </Grid>
 </Page>
