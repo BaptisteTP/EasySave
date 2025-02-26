@@ -194,7 +194,7 @@ namespace EasySave2._0.ViewModels
 													 content: "Impossible de reprendre la sauvegarde, une application métier est lancée.",
 													 type: 0);
 			}
-			else if (Creator.GetPasterInstance().CriticalFilesBeingCopied)
+			else if (Creator.GetPasterInstance().CriticalFilesBeingCopied && saveToResume.IsWaitingForCriticalFiles)
 			{
 				NotificationHelper.CreateNotifcation(title: "Fichier prioritaire",
 													 content: "Impossible de reprendre la sauvegarde, elle attend la copie de fichier prioritaire.",

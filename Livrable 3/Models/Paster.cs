@@ -299,6 +299,7 @@ namespace EasySave2._0.Models
 			if(saveFilesInCriticalFiles.Count > 0 && !executedSave.IsCopyingCriticalFile)
             {
                 executedSave.IsCopyingCriticalFile = true;
+				executedSave.IsWaitingForCriticalFiles = false;
                 int count = 1;
 
                foreach (string file in saveFilesInCriticalFiles)
@@ -354,7 +355,6 @@ namespace EasySave2._0.Models
 				executedSave.IsWaitingForCriticalFiles = false;
 
 			}
-
 			if (!executedSave.IsCopyingCriticalFile && CriticalFiles.Count > 0)
 			{
 				executedSave.IsWaitingForCriticalFiles = true;
