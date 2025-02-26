@@ -142,11 +142,11 @@ namespace EasySave2._0.ViewModels
         {
             if (SaveToEdit != null)
             {
-                SaveToEdit.Name = SaveName;
-                SaveToEdit.SourcePath = SourcePath;
-                SaveToEdit.DestinationPath = DestinationPath;
-                SaveToEdit.Type = SelectedSaveType;
-                SaveToEdit.Encrypt = Encrypt;
+                saveStore.EditSave(SaveToEdit.Id, 1, SaveName);
+                saveStore.EditSave(SaveToEdit.Id, 2, SourcePath);
+                saveStore.EditSave(SaveToEdit.Id, 3, DestinationPath);
+                saveStore.EditSave(SaveToEdit.Id, 4, SelectedSaveType);
+                saveStore.EditSave(SaveToEdit.Id, 5, Encrypt);
 
                 SaveEdit?.Invoke(this, EventArgs.Empty);
             }
