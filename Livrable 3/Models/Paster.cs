@@ -75,20 +75,28 @@ namespace EasySave2._0.Models
 
 		private bool BeginDifferentialSave(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
         {
-			EventHandler BSDetected = (sender, e) => OnBuisnessSoftwareDetected(executedSave);
-			EventHandler AllBSClosed = (sender, e) => OnAllBuisnessSoftwareClosed(executedSave);
+			void BSDetected(object? sender, EventArgs e) => OnBuisnessSoftwareDetected(executedSave);
+			void AllBSClosed(object? sender, EventArgs e) => OnAllBuisnessSoftwareClosed(executedSave);
 
 			ProcessObserver.BuisnessSoftwareDetected += BSDetected;
 			ProcessObserver.AllBuisnessProcessClosed += AllBSClosed;
 
-        List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
+			List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
 
             if (eligibleFiles.Count == 0)
             {
                 return false;
             }
 
-            SaveStarted?.Invoke(this, executedSave);
+			List<string> criticalFilesDetected = [];
+			void CriticalFilesHandler(object? sender, EventArgs e) => HandleCriticalFiles(executedSave, criticalFilesDetected, pauseEvent);
+			void CriticalFilesCopyEndedHandler(object? sender, EventArgs e) => OnCriticalFilesCopyEnded(executedSave);
+			CriticalFilesAdded += CriticalFilesHandler;
+			CriticalFilesCopyEnded += CriticalFilesCopyEndedHandler;
+
+			SaveStarted?.Invoke(this, executedSave);
+			AddCriticalFiles(executedSave, eligibleFiles, out criticalFilesDetected);
+
             List<string> remainingFiles = new List<string>(eligibleFiles);
             foreach (string fileFullName in Directory.GetFiles(executedSave.SourcePath))
             {
@@ -161,10 +169,14 @@ namespace EasySave2._0.Models
                     }
                 }
             }
-            executedSave.LastExecuteDate = DateTime.Now;
-            SaveFinished?.Invoke(this, executedSave);
+
 			ProcessObserver.BuisnessSoftwareDetected -= BSDetected;
 			ProcessObserver.AllBuisnessProcessClosed -= AllBSClosed;
+			CriticalFilesAdded -= CriticalFilesHandler;
+			CriticalFilesCopyEnded -= CriticalFilesCopyEndedHandler;
+
+			executedSave.LastExecuteDate = DateTime.Now;
+            SaveFinished?.Invoke(this, executedSave);
 
 			return true;
         }
@@ -183,77 +195,76 @@ namespace EasySave2._0.Models
         }
 
         private bool BeginFullSave(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
-        {
-			EventHandler BSDetected = (sender, e) => OnBuisnessSoftwareDetected(executedSave);
-			EventHandler AllBSClosed = (sender, e) => OnAllBuisnessSoftwareClosed(executedSave);
+		{
+			void BSDetected(object? sender, EventArgs e) => OnBuisnessSoftwareDetected(executedSave);
+			void AllBSClosed(object? sender, EventArgs e) => OnAllBuisnessSoftwareClosed(executedSave);
 
-            ProcessObserver.BuisnessSoftwareDetected += BSDetected;
-            ProcessObserver.AllBuisnessProcessClosed += AllBSClosed;
-
-            SaveStore saveStore = Creator.GetSaveStoreInstance();
-            int _nbFile = saveStore.CountFilesInDirectory(executedSave.SourcePath);
+			ProcessObserver.BuisnessSoftwareDetected += BSDetected;
+			ProcessObserver.AllBuisnessProcessClosed += AllBSClosed;
 
             List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
 
-            if (eligibleFiles.Count == 0)
-            {
-                return false;
-            }
+			if (eligibleFiles.Count == 0)
+			{
+				return false;
+			}
 
-            List<string> criticalFilesDetected = [];
-			EventHandler CriticalFilesHandler = (sender, e) => HandleCriticalFiles(executedSave, criticalFilesDetected);
-			EventHandler CriticalFilesCopyEndedHandler = (sender, e) => OnCriticalFilesCopyEnded(executedSave);
-
+			List<string> criticalFilesDetected = [];
+			void CriticalFilesHandler(object? sender, EventArgs e) => HandleCriticalFiles(executedSave, criticalFilesDetected, pauseEvent);
+			void CriticalFilesCopyEndedHandler(object? sender, EventArgs e) => OnCriticalFilesCopyEnded(executedSave);
 			CriticalFilesAdded += CriticalFilesHandler;
-            CriticalFilesCopyEnded += CriticalFilesCopyEndedHandler;
+			CriticalFilesCopyEnded += CriticalFilesCopyEndedHandler;
 
 			SaveStarted?.Invoke(this, executedSave);
 			AddCriticalFiles(executedSave, eligibleFiles, out criticalFilesDetected);
 
-            List<string> remainingFiles = new List<string>(eligibleFiles);
-            foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
-            {
-                if (cancellationToken.IsCancellationRequested) return false;
-                pauseEvent.Wait(cancellationToken);
+			SaveStore saveStore = Creator.GetSaveStoreInstance();
+			int _nbFile = saveStore.CountFilesInDirectory(executedSave.SourcePath);
 
-                CopyDirectory(executedSave, directorySourcePath.Replace(executedSave.SourcePath, executedSave.DestinationPath));
-            }
-            foreach (string newPath in Directory.GetFiles(executedSave.SourcePath, "*.*", SearchOption.AllDirectories))
-            {
-                if (cancellationToken.IsCancellationRequested) return false;
-                pauseEvent.Wait(cancellationToken);
+			List<string> remainingFiles = new List<string>(eligibleFiles);
+			foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
+			{
+				if (cancellationToken.IsCancellationRequested) return false;
+				pauseEvent.Wait(cancellationToken);
 
-                string destinationPath = newPath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+				CopyDirectory(executedSave, directorySourcePath.Replace(executedSave.SourcePath, executedSave.DestinationPath));
+			}
+			foreach (string newPath in Directory.GetFiles(executedSave.SourcePath, "*.*", SearchOption.AllDirectories))
+			{
+				if (cancellationToken.IsCancellationRequested) return false;
+				pauseEvent.Wait(cancellationToken);
 
-                OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, newPath, destinationPath));
-                try
-                {
-                    executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(_nbFile - 1)) * 100);
-                }
-                catch
-                {
-                    executedSave.Progress = 0;
-                }
-                if (IsFileSizeWithinLimit(newPath) == true)
-                {
-                    CopyFile(newPath, executedSave, destinationPath);
-                }
-                else
-                {
-                    HandleOverLimitSize(newPath, executedSave, destinationPath);
-                }
-                remainingFiles.Remove(newPath);
-            }
+				string destinationPath = newPath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
 
-            executedSave.LastExecuteDate = DateTime.Now;
-            SaveFinished?.Invoke(this, executedSave);
-            ProcessObserver.BuisnessSoftwareDetected -= BSDetected;
-            ProcessObserver.AllBuisnessProcessClosed -= AllBSClosed;
+				OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, newPath, destinationPath));
+				try
+				{
+					executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count) / (double)(_nbFile)) * 100);
+				}
+				catch
+				{
+					executedSave.Progress = 0;
+				}
+				if (IsFileSizeWithinLimit(newPath) == true)
+				{
+					CopyFile(newPath, executedSave, destinationPath);
+				}
+				else
+				{
+					HandleOverLimitSize(newPath, executedSave, destinationPath);
+				}
+				remainingFiles.Remove(newPath);
+			}
 
-            CriticalFilesAdded -= CriticalFilesHandler;
+			ProcessObserver.BuisnessSoftwareDetected -= BSDetected;
+			ProcessObserver.AllBuisnessProcessClosed -= AllBSClosed;
+			CriticalFilesAdded -= CriticalFilesHandler;
 			CriticalFilesCopyEnded -= CriticalFilesCopyEndedHandler;
+
+			executedSave.LastExecuteDate = DateTime.Now;
+			SaveFinished?.Invoke(this, executedSave);
 			return true;
-        }
+		}
 
 		private void OnCriticalFilesCopyEnded(Save executedSave)
 		{
@@ -263,29 +274,24 @@ namespace EasySave2._0.Models
             }   
 		}
 
-		private void HandleCriticalFiles(Save executedSave, List<string> eligibleFiles)
+		private void HandleCriticalFiles(Save executedSave, List<string> eligibleFiles, ManualResetEventSlim pauseEvent)
         {
-            List<string> saveFilesInCriticalFiles = CriticalFiles.Intersect(eligibleFiles).ToList();
+			List<string> saveFilesInCriticalFiles = CriticalFiles.Intersect(eligibleFiles).ToList();
 
             SaveStore saveStore = Creator.GetSaveStoreInstance();
             int _nbFile = saveStore.CountFilesInDirectory(executedSave.SourcePath);
-
-            if (!executedSave.IsCopyingCriticalFile)
-			{
-				Creator.GetSaveStoreInstance().PauseSave(executedSave.Id, false);
-				NotificationHelper.CreateNotifcation("Fichiers prioritaires",
-													$"La sauvegarde {executedSave.Name} a été mise en pause.",
-													2);
-			}
-			else if(saveFilesInCriticalFiles.Count > 0)
+            
+			if(saveFilesInCriticalFiles.Count > 0 && !executedSave.IsCopyingCriticalFile)
             {
+                executedSave.IsCopyingCriticalFile = true;
                 int count = 1;
 
                foreach (string file in saveFilesInCriticalFiles)
                {
-                    FileInfo fileInfo = new FileInfo(file);
+                    pauseEvent.Wait();
+					FileInfo fileInfo = new FileInfo(file);
 
-                    string destDirectoryPath = fileInfo.Directory.FullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+					string destDirectoryPath = fileInfo.Directory.FullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
 
                     if (!Directory.Exists(destDirectoryPath))
                     {
@@ -296,7 +302,7 @@ namespace EasySave2._0.Models
                     string destinationPath = fileInfo.FullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
                     try
                     {
-						executedSave.Progress = Convert.ToInt32(((double)(count -1) / (double)(_nbFile -1)) * 100);
+						executedSave.Progress = Convert.ToInt32(((double)(count) / (double)(_nbFile)) * 100);
 					}
 					catch
 					{
@@ -317,8 +323,16 @@ namespace EasySave2._0.Models
 
                 }
                 executedSave.IsCopyingCriticalFile = false;
-            }                
-        }
+            } 
+            
+            if (!executedSave.IsCopyingCriticalFile && CriticalFiles.Count > 0)
+			{
+				Creator.GetSaveStoreInstance().PauseSave(executedSave.Id, false);
+				NotificationHelper.CreateNotifcation("Fichiers prioritaires",
+													$"La sauvegarde {executedSave.Name} a été mise en pause.",
+													2);
+			}
+		}
 
 		private void RemoveCriticalFileFromList(string file)
 		{
@@ -334,42 +348,41 @@ namespace EasySave2._0.Models
 
 		private void AddCriticalFiles(Save executedSave, List<string> eligibleFiles, out List<string> detectedCriticalFiles)
         {
-            lock (_lockAddCriticalFile) { 
 
-                Settings settings = Creator.GetSettingsInstance();
-                List<string> ExtensionPriority = settings.PriorityExtension;
-                bool wasCriticalFileAdded = false;
-                detectedCriticalFiles = [];
+            Settings settings = Creator.GetSettingsInstance();
+            List<string> ExtensionPriority = settings.PriorityExtension;
+            bool wasCriticalFileAdded = false;
+            detectedCriticalFiles = [];
 
 
-				foreach (string file in eligibleFiles)
+			foreach (string file in eligibleFiles)
+            {
+                foreach (string extension in ExtensionPriority)
                 {
-                    foreach (string extension in ExtensionPriority)
+                    if (file.EndsWith(extension))
                     {
-                        if (file.EndsWith(extension))
+                        lock (_lockAddCriticalFile)
                         {
                             CriticalFiles.Add(file);
-							detectedCriticalFiles.Add(file);
+                        }
+						detectedCriticalFiles.Add(file);
 
-							wasCriticalFileAdded = true;
-						}
-                    }
-                }
-
-                if(wasCriticalFileAdded)
-				{
-                    foreach(string file in detectedCriticalFiles)
-                    {
-                        eligibleFiles.Remove(file);
-                    }
-
-                    executedSave.IsCopyingCriticalFile = true;
-                    CriticalFilesAdded?.Invoke(this, EventArgs.Empty);
+						wasCriticalFileAdded = true;
+					}
                 }
             }
-        }
 
-        private List<string> GetNameOfFilesModifiedAfterLastExecution(Save executedSave)
+            if(wasCriticalFileAdded)
+			{
+                foreach(string file in detectedCriticalFiles)
+                {
+                    eligibleFiles.Remove(file);
+                }
+			    CriticalFilesAdded?.Invoke(this, EventArgs.Empty);
+            }
+		}
+
+		private List<string> GetNameOfFilesModifiedAfterLastExecution(Save executedSave)
 		{
 			List<string> result = new List<string>();
 			// Get all files that have been modified since the last execution
@@ -510,8 +523,11 @@ namespace EasySave2._0.Models
             {
                 OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
             }
-           
         }
-    }
+
+		#region Utilities
+
+		#endregion
+	}
 }
 
