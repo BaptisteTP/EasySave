@@ -281,6 +281,15 @@ namespace EasySave2._0.Models
                     string newPath = fileInfo.FullName;
                     string destinationPath = fileInfo.FullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
 
+					try
+					{
+						executedSave.Progress = Convert.ToInt32((1 - (double)(saveFilesInCriticalFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
+					}
+					catch
+					{
+						executedSave.Progress = 0;
+					}
+
 					if (IsFileSizeWithinLimit(newPath) == true)
 					{
 						CopyFile(newPath, executedSave, destinationPath);
@@ -323,7 +332,9 @@ namespace EasySave2._0.Models
                         if (file.EndsWith(extension))
                         {
                             CriticalFiles.Add(file);
-                            wasCriticalFileAdded = true;
+                            eligibleFiles.Remove(file);
+
+							wasCriticalFileAdded = true;
 						}
                     }
                 }
