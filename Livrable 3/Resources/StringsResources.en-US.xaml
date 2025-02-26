@@ -58,5 +58,17 @@
     <system:String x:Key="FileToDecrypt">Path to decrypt :</system:String>
     <system:String x:Key="DecryptKey">Decryption keys :</system:String>
     <system:String x:Key="Decrypt">Decrypt</system:String>
+    <system:String x:Key="KoBlockLimit">Choose a file transfer size limit (in KB):</system:String>
+    
+    <!--#region Notification Messages-->
+    
+    <!--#region HomeView-->
+
+    <system:String x:Key="GlobalExecutionTitle">A global save execution has started</system:String>
+    <system:String x:Key="GlobalExecutionContent">A total number of {0} saves has started.</system:String>
+
+    <!--#endregion-->
+    
+    <!--#endregion-->
 
 </ResourceDictionary>

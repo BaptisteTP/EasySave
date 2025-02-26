@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using EasySave2._0.CustomEventArgs;
 using System.Windows.Navigation;
 using System.Diagnostics;
+using EasySave2._0.Models.Notifications_Related;
 
 namespace EasySave2._0
 {
@@ -28,7 +29,6 @@ namespace EasySave2._0
         public ObservableCollection<Save> Items { get; set; } = new ObservableCollection<Save>();
 
         public ObservableCollection<Save> PagedItems { get; set; } = new ObservableCollection<Save>();
-
 
 		public ICommand NextPageCommand { get; }
         public ICommand PreviousPageCommand { get; }
@@ -102,23 +102,24 @@ namespace EasySave2._0
         {
             if (obj is Save save)
             {
-                save.Pause();
+                saveStore.PauseSave(save.Id,
+                                    wasSavePausedByUser: true);
             }
         }
         public void ResumeSave(object obj)
         {
             if (obj is Save save)
             {
-                save.Resume();
+                saveStore.ResumeSave(save.Id);
             }
         }
         public void StopSave(object obj)
         {
             if (obj is Save save)
             {
-                save.Stop(); 
-            }
-        }
+				saveStore.StopSave(save.Id);
+			}
+		}
         public bool CanResume(object arg) => true;
         public bool CanPauseStop(object arg) => true;
         private void InfoItem(object obj)
@@ -162,16 +163,25 @@ namespace EasySave2._0
         private void ExecuteAllSaves(object obj)
         {
             Debug.WriteLine("ExecuteAllSaves command executed.");
+            int nbExecutedSaves = 0;
             foreach (Save save in Items)
             {
                 if (!save.IsExecuting)
                 {
                     Debug.WriteLine("Executing save for Save ID: " + save.Id);
                     ExecuteSaveAsync(save);
-                }
+                    nbExecutedSaves++;
+
+				}
+            }
+
+            if(nbExecutedSaves > 0)
+            {
+                NotificationHelper.CreateNotifcation(title: Application.Current.Resources["GlobalExecutionTitle"] as string,
+                                                     content: string.Format(Application.Current.Resources["GlobalExecutionContent"] as string, nbExecutedSaves),
+                                                     type: 2);
             }
         }
-
 
         private bool CanInteract(object arg)
             {

@@ -21,7 +21,8 @@ namespace EasySave2._0.Models
 		public string? DailyLogPath { get; set; }
 		public string? RealTimeLogPath { get; set; }
 		public string? LogFormat { get; set; }
-		public List<string> BuisnessSoftwaresInterrupt { get; set; }
+        public string? FileSizeLimit { get; set; }
+        public List<string> BuisnessSoftwaresInterrupt { get; set; }
 
 		public static event EventHandler? LogFomatChanged;
 
@@ -37,7 +38,8 @@ namespace EasySave2._0.Models
 				DailyLogPath = "",
 				RealTimeLogPath = "",
 				LogFormat = "",
-				BuisnessSoftwaresInterrupt = new List<string>(),
+                FileSizeLimit = "",
+                BuisnessSoftwaresInterrupt = new List<string>(),
 			};
 			WriteSettingsToJsonFile(baseSettings);
 
@@ -93,8 +95,10 @@ namespace EasySave2._0.Models
 					currentSettings.LogFormat = (string)newValue;
 					LogFomatChanged?.Invoke(null, EventArgs.Empty);
 					break;
-
-				case "BuisnessSoftwaresInterrupt":
+                case "FileSizeLimit":
+                    currentSettings.FileSizeLimit = (string)newValue;
+                    break;
+                case "BuisnessSoftwaresInterrupt":
 					currentSettings.BuisnessSoftwaresInterrupt = (List<string>)newValue;
 					break;
 				default:

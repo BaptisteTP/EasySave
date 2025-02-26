@@ -34,6 +34,7 @@ namespace EasySave2._0.ViewModels
         private static Paster _pasterInstance;
         private static Logger _loggerInstance;
         private static List<LanguageItem> _languages;
+        private static ProcessObserver _processObserverInstance = ProcessObserver.GetProcessObserverInstance();
 
         // Returns a resource manager instance
 
@@ -94,6 +95,11 @@ namespace EasySave2._0.ViewModels
 
 		#endregion
 
+        public static ProcessObserver GetProcessObserverInstance()
+        {
+            return _processObserverInstance;
+		}
+
         public static List<LanguageItem> GetAvalaibleLanguages()
         {
             if(_languages == null)
@@ -124,19 +130,30 @@ namespace EasySave2._0.ViewModels
             {
                 _saveStoreInstance = new SaveStore();
 
-                _pasterInstance = new Paster();
+                _pasterInstance = Paster.GetPasterInstance();
                 _loggerInstance = new Logger();
 
                 _pasterInstance.OnFileCopyPreview += _loggerInstance.OnCopyFilePreview;
+                _pasterInstance.OnFileCopyPreview += Server.GetServerInstance().OnCopyFilePreview;
                 _pasterInstance.OnFileCopied += _loggerInstance.OnCopyFile;
 				_pasterInstance.OnDirectoryCopied += _loggerInstance.OnCopyDirectory;
 				_pasterInstance.SaveStarted += _loggerInstance.OnSaveStarted;
+				_pasterInstance.SaveStarted += Server.GetServerInstance().OnSaveStarted;
 				_pasterInstance.SaveFinished += _loggerInstance.OnSaveFinished;
+				_pasterInstance.SaveFinished += Server.GetServerInstance().OnSaveFinished;
                 _pasterInstance.BuisnessSoftwareDetected += _loggerInstance.OnBuisnessSoftwareDetected;
-				_saveStoreInstance.SaveCreated += _loggerInstance.OnSaveCreated;
+                _saveStoreInstance.SaveCreated += Server.GetServerInstance().OnSaveCreated;
+                _saveStoreInstance.SaveCreated += _loggerInstance.OnSaveCreated;
+				_saveStoreInstance.SavesLoaded += _loggerInstance.OnSavesLoaded;
 				_saveStoreInstance.SaveEdited += _loggerInstance.OnSaveEdited;
+				_saveStoreInstance.SaveEdited += Server.GetServerInstance().OnSaveEdited;
 				_saveStoreInstance.SaveDeleted += _loggerInstance.OnSaveDeleted;
-				Settings.LogFomatChanged += _loggerInstance.OnSaveCreated;
+				_saveStoreInstance.SaveDeleted += Server.GetServerInstance().OnSaveDeleted;
+                _saveStoreInstance.SavePaused += Server.GetServerInstance().OnSavePaused;
+                _saveStoreInstance.SaveResumed += Server.GetServerInstance().OnSaveResumed;
+                _saveStoreInstance.SaveStopped += Server.GetServerInstance().OnSaveStopped;
+
+				Settings.LogFomatChanged += _loggerInstance.OnSavesLoaded;
 
 				_saveStoreInstance.LoadLoggedSaves();
 			}
