@@ -38,7 +38,7 @@ namespace EasySave2._0.Models
 				DailyLogPath = "",
 				RealTimeLogPath = "",
 				LogFormat = "",
-                FileSizeLimit = "",
+                FileSizeLimit = "0",
                 BuisnessSoftwaresInterrupt = new List<string>(),
 			};
 			WriteSettingsToJsonFile(baseSettings);
