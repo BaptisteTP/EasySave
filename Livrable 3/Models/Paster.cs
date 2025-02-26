@@ -164,7 +164,7 @@ namespace EasySave2._0.Models
         {
             FileInfo fileInfo = new FileInfo(fullName);
             Settings settings = Creator.GetSettingsInstance();
-            if (fileInfo.Length >= long.Parse(settings.FileSizeLimit) * 1000)
+            if (fileInfo.Length >= long.Parse(settings.FileSizeLimit) * 1024)
             {
                 return false;
             }
@@ -217,12 +217,12 @@ namespace EasySave2._0.Models
                 if (IsFileSizeWithinLimit(newPath) == true)
                 {
                     CopyFile(newPath, executedSave, destinationPath);
-                    remainingFiles.Remove(newPath);
                 }
                 else
                 {
                     HandleOverLimitSize(newPath, executedSave, destinationPath);
                 }
+                remainingFiles.Remove(newPath);
             }
 
             executedSave.LastExecuteDate = DateTime.Now;
