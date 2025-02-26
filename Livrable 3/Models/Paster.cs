@@ -196,14 +196,15 @@ namespace EasySave2._0.Models
                 return false;
             }
 
-            EventHandler CriticalFilesHandler = (sender, e) => HandleCriticalFiles(executedSave, eligibleFiles);
+            List<string> criticalFilesDetected = [];
+			EventHandler CriticalFilesHandler = (sender, e) => HandleCriticalFiles(executedSave, criticalFilesDetected);
 			EventHandler CriticalFilesCopyEndedHandler = (sender, e) => OnCriticalFilesCopyEnded(executedSave);
 
 			CriticalFilesAdded += CriticalFilesHandler;
             CriticalFilesCopyEnded += CriticalFilesCopyEndedHandler;
 
 			SaveStarted?.Invoke(this, executedSave);
-			AddCriticalFiles(executedSave, eligibleFiles);
+			AddCriticalFiles(executedSave, eligibleFiles, out criticalFilesDetected);
 
             List<string> remainingFiles = new List<string>(eligibleFiles);
             foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
@@ -317,23 +318,24 @@ namespace EasySave2._0.Models
             }
 		}
 
-		private void AddCriticalFiles(Save executedSave, List<string> eligibleFiles)
+		private void AddCriticalFiles(Save executedSave, List<string> eligibleFiles, out List<string> detectedCriticalFiles)
         {
             lock (_lockAddCriticalFile) { 
 
                 Settings settings = Creator.GetSettingsInstance();
                 List<string> ExtensionPriority = settings.PriorityExtension;
-                List<string> CriticalFilesAddedList = [];
                 bool wasCriticalFileAdded = false;
+                detectedCriticalFiles = [];
 
-                foreach (string file in eligibleFiles)
+
+				foreach (string file in eligibleFiles)
                 {
                     foreach (string extension in ExtensionPriority)
                     {
                         if (file.EndsWith(extension))
                         {
                             CriticalFiles.Add(file);
-							CriticalFilesAddedList.Add(file);
+							detectedCriticalFiles.Add(file);
 
 							wasCriticalFileAdded = true;
 						}
