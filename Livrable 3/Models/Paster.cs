@@ -217,12 +217,12 @@ namespace EasySave2._0.Models
                 if (IsFileSizeWithinLimit(newPath) == true)
                 {
                     CopyFile(newPath, executedSave, destinationPath);
-                    remainingFiles.Remove(newPath);
                 }
                 else
                 {
                     HandleOverLimitSize(newPath, executedSave, destinationPath);
                 }
+                remainingFiles.Remove(newPath);
             }
 
             executedSave.LastExecuteDate = DateTime.Now;
