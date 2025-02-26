@@ -32,6 +32,12 @@ namespace EasySave2._0.Models
 		}
 
 		public bool BeginCopyPaste(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
+        private object _lockAddCriticalFile = new object();
+        public List<string> CriticalFiles = new List<string>();
+        private event EventHandler? CriticalFilesAdded;
+
+
+        public bool BeginCopyPaste(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
         {
             if (!Directory.Exists(executedSave.SourcePath)) { return false; }
 
@@ -184,6 +190,10 @@ namespace EasySave2._0.Models
 
 			List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
 
+            CriticalFilesAdded += HandleCriticalFiles(executedSave, eligibleFiles);
+
+            AddCriticalFiles(eligibleFiles);
+
             if (eligibleFiles.Count == 0)
             {
                 return false;
@@ -233,6 +243,40 @@ namespace EasySave2._0.Models
 			return true;
         }
 
+        private EventHandler HandleCriticalFiles(Save executedSave, List<string> eligibleFiles)
+        {
+            List<string> saveFilesInCriticalFiles = CriticalFiles.Intersect(eligibleFiles).ToList();
+
+            if(saveFilesInCriticalFiles.Count > 0)
+            {
+               foreach(string file in saveFilesInCriticalFiles)
+                {
+                    string destPath = file.Replace(executedSave.SourcePath, executedSave.DestinationPath);
+                }
+            }
+                
+        }
+
+        private void AddCriticalFiles(List<string> eligibleFiles)
+        {
+            lock (_lockAddCriticalFile) { 
+
+                Settings settings = Creator.GetSettingsInstance();
+                List<string> ExtensionPriority = settings.PriorityExtension;
+                foreach (string file in eligibleFiles)
+                {
+                    foreach (string extension in ExtensionPriority)
+                    {
+                        if (file.EndsWith(extension))
+                        {
+                            CriticalFiles.Add(file);
+                        }
+                    }
+                }
+                CriticalFilesAdded?.Invoke(this, EventArgs.Empty);
+
+            }
+        }
 
         private List<string> GetNameOfFilesModifiedAfterLastExecution(Save executedSave)
 		{
@@ -250,44 +294,31 @@ namespace EasySave2._0.Models
 			return result;
 		}
 
-		private bool BeginFullSave(Save executedSave)
-		{
-			// Get all files in the source path
-			List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
+        public int NumberOfPriorityFiles;
 
-			if (eligibleFiles.Count == 0)
-			{
-				return false;
-			}
-
-			SaveStarted?.Invoke(this, executedSave);
-			List<string> remainingFiles = new List<string>(eligibleFiles);
-			foreach (string directorySourcePath in Directory.GetDirectories(executedSave.SourcePath, "*", SearchOption.AllDirectories))
-			{
-				CopyDirectory(executedSave, directorySourcePath.Replace(executedSave.SourcePath, executedSave.DestinationPath));
-			}
-			// Copy all files
-			foreach (string newPath in Directory.GetFiles(executedSave.SourcePath, "*.*", SearchOption.AllDirectories))
-			{
-				string destinationPath = newPath.Replace(executedSave.SourcePath, executedSave.DestinationPath);
-
-				OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, newPath, destinationPath));
-				try
-				{
-					executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
-				}
-				catch
-				{
-					executedSave.Progress = 0;
+		public int GetNumberOfPriorityFiles(Save executedSave)
+        {
+            Settings settings = Creator.GetSettingsInstance();
+            List<string> ExtensionPriority = settings.PriorityExtension;
+            List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
+            foreach (string file in eligibleFiles)
+            {
+                foreach (string extension in ExtensionPriority)
+                {
+                    if (file.EndsWith(extension))
+                    {
+                        NumberOfPriorityFiles++;
+                    }
                 }
-				CopyFile(newPath, executedSave, destinationPath);
-				remainingFiles.Remove(newPath);
-			}
+            }
 
-			executedSave.LastExecuteDate = DateTime.Now;
-			SaveFinished?.Invoke(this, executedSave);
-			return true;
-		}
+            return NumberOfPriorityFiles;
+        }
+        public List<string> GetPriorityFiles(Save executedSave)
+        {
+           
+            return CriticalFiles;
+        }
 
         private readonly object _lock = new object();
         private void HandleOverLimitSize(string filePath, Save executedSave, string destinationPath)
