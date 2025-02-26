@@ -75,7 +75,13 @@ namespace EasySave2._0.ViewModels
         }
 
         public bool WasSavePausedByUser { get; set; }
+		private bool isCopyingCriticalFile;
 
+		public bool IsCopyingCriticalFile
+		{
+			get { return isCopyingCriticalFile; }
+			set { isCopyingCriticalFile = value; OnPropertyChanged(); }
+		}
 
 
         public SaveType Type { get; set; }

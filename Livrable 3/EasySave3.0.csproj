@@ -74,6 +74,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\UserControl_Library\UserControl_Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="LogLib">
       <HintPath>LogLib.dll</HintPath>
     </Reference>
