@@ -31,7 +31,7 @@ namespace EasySave2._0.Models
 		private event EventHandler? CriticalFilesAdded;
 		private event EventHandler? CriticalFilesCopyEnded;
 
-		private Paster() { }
+        private Paster() { }
 
         public static Paster GetPasterInstance()
         {
@@ -81,7 +81,7 @@ namespace EasySave2._0.Models
 			ProcessObserver.BuisnessSoftwareDetected += BSDetected;
 			ProcessObserver.AllBuisnessProcessClosed += AllBSClosed;
 
-			List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
+        List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
 
             if (eligibleFiles.Count == 0)
             {
@@ -100,7 +100,7 @@ namespace EasySave2._0.Models
                     string destinationPath = fileFullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
                     try
                     {
-                        executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
+                        executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count)) * 100);
                     }
                     catch
                     {
@@ -190,6 +190,9 @@ namespace EasySave2._0.Models
             ProcessObserver.BuisnessSoftwareDetected += BSDetected;
             ProcessObserver.AllBuisnessProcessClosed += AllBSClosed;
 
+            SaveStore saveStore = Creator.GetSaveStoreInstance();
+            int _nbFile = saveStore.CountFilesInDirectory(executedSave.SourcePath);
+
             List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
 
             if (eligibleFiles.Count == 0)
@@ -225,7 +228,7 @@ namespace EasySave2._0.Models
                 OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, remainingFiles, newPath, destinationPath));
                 try
                 {
-                    executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(eligibleFiles.Count - 1)) * 100);
+                    executedSave.Progress = Convert.ToInt32((1 - (double)(remainingFiles.Count - 1) / (double)(_nbFile - 1)) * 100);
                 }
                 catch
                 {
@@ -264,7 +267,10 @@ namespace EasySave2._0.Models
         {
             List<string> saveFilesInCriticalFiles = CriticalFiles.Intersect(eligibleFiles).ToList();
 
-			if (!executedSave.IsCopyingCriticalFile)
+            SaveStore saveStore = Creator.GetSaveStoreInstance();
+            int _nbFile = saveStore.CountFilesInDirectory(executedSave.SourcePath);
+
+            if (!executedSave.IsCopyingCriticalFile)
 			{
 				Creator.GetSaveStoreInstance().PauseSave(executedSave.Id, false);
 				NotificationHelper.CreateNotifcation("Fichiers prioritaires",
@@ -273,20 +279,24 @@ namespace EasySave2._0.Models
 			}
 			else if(saveFilesInCriticalFiles.Count > 0)
             {
-                int count = saveFilesInCriticalFiles.Count;
+                int count = 1;
 
                foreach (string file in saveFilesInCriticalFiles)
                {
                     FileInfo fileInfo = new FileInfo(file);
 
                     string destDirectoryPath = fileInfo.Directory.FullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
-                    CopyDirectory(executedSave, destDirectoryPath);
+
+                    if (!Directory.Exists(destDirectoryPath))
+                    {
+                        CopyDirectory(executedSave, destDirectoryPath);
+                    }
 
                     string newPath = fileInfo.FullName;
                     string destinationPath = fileInfo.FullName.Replace(executedSave.SourcePath, executedSave.DestinationPath);
                     try
                     {
-						executedSave.Progress = Convert.ToInt32((1 - (double)(count -1) / (double)(eligibleFiles.Count -1)) * 100);
+						executedSave.Progress = Convert.ToInt32(((double)(count -1) / (double)(_nbFile -1)) * 100);
 					}
 					catch
 					{
@@ -303,7 +313,7 @@ namespace EasySave2._0.Models
 					}
 
 					RemoveCriticalFileFromList(file);
-                    count--;
+                    count++;
 
                 }
                 executedSave.IsCopyingCriticalFile = false;
