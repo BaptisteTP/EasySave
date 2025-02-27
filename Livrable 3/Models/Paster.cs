@@ -509,8 +509,6 @@ namespace EasySave2._0.Models
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            Thread.Sleep(500);
-
             try
             {
                 File.Copy(fileFullName, destinationPath, true);
