@@ -76,9 +76,23 @@ namespace EasySave2._0.ViewModels
 
         public bool WasSavePausedByUser { get; set; }
 
+		private bool isCopyingCriticalFile;
 
+		public bool IsCopyingCriticalFile
+		{
+			get { return isCopyingCriticalFile; }
+			set { isCopyingCriticalFile = value; OnPropertyChanged(); }
+		}
 
-        public SaveType Type { get; set; }
+		private bool isWaitingForCriticalFiles;
+
+		public bool IsWaitingForCriticalFiles
+		{
+			get { return isWaitingForCriticalFiles; }
+			set { isWaitingForCriticalFiles = value; OnPropertyChanged(); }
+		}
+
+		public SaveType Type { get; set; }
         public DateTime? LastExecuteDate { get; set; }
 
         private CancellationTokenSource cancellationTokenSource;
@@ -132,7 +146,6 @@ namespace EasySave2._0.ViewModels
 
             Debug.WriteLine("Save execution finished for Save ID: " + Id);
         }
-
 
         public void Resume()
         {
