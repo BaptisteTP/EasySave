@@ -131,15 +131,15 @@ namespace EasySave2._0.ViewModels
 		{
 			if (Saves.Count == 0) { throw new InvalidOperationException("Cannot execute specified saves : there are nos saves currently registered."); }
 			if (start > stop) { throw new ArgumentException("Start number is greater than stop number."); }
-
 			else
 			{
+				List<Task> saveToExecute = new List<Task>();
 				for (int i = start - 1; i <= stop - 1; i++)
 				{
 					if (i < Saves.Count)
 					{
 						SaveExecuted.Invoke(i + 1);
-						await Saves.ElementAt(i).Execute();
+						saveToExecute.Add(Saves.ElementAt(i).Execute());
 
 					}
 					else
@@ -148,6 +148,13 @@ namespace EasySave2._0.ViewModels
 
 					}
 				}
+				try
+				{
+					await Task.WhenAll(saveToExecute);
+				}catch(Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+				}
 			}
 		}
 
@@ -155,19 +162,20 @@ namespace EasySave2._0.ViewModels
 		{
 			if (Saves.Count == 0) { throw new InvalidOperationException("Cannot execute specified saves : there are nos saves currently registered."); }
 
+			List<Task> saveToExecute = new List<Task>();
 			foreach (int saveNumber in saveNumbers)
 			{
 				if (saveNumber > 0 && saveNumber <= Saves.Count)
 				{
 					OnSaveExecute.Invoke(saveNumber);
-					await Saves.ElementAt(saveNumber - 1).Execute();
+					saveToExecute.Add(Saves.ElementAt(saveNumber - 1).Execute());
 				}
 				else
 				{
 					OnFailedExecute.Invoke(saveNumber);
 				}
-
 			}
+			await Task.WhenAll(saveToExecute);
 		}
 
 		public void PauseSave(int id, bool wasSavePausedByUser)
