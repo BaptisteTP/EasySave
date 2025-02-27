@@ -117,7 +117,6 @@ namespace EasySave2._0.ViewModels
         public string LastExecutionString => string.Format(Application.Current.Resources["LastSaveExecution"] as string, LastExecuteDate == null ? 
                                                                                                         Application.Current.Resources["NeverExecutedMessage"] as string
                                                                                                         : ((DateTime)LastExecuteDate).ToString("dd/MM/yyyy - HH:mm"));
-
         private int numberOfExecution = 0;
 
         public int NumberOfExecution

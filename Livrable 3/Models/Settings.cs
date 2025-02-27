@@ -26,6 +26,7 @@ namespace EasySave2._0.Models
 		public List<string> PriorityExtension { get; set; }
 
         public static event EventHandler? LogFomatChanged;
+        public static event EventHandler? LanguageChanged;
 
 		public static object _writeLock = new object();
 
@@ -134,10 +135,11 @@ namespace EasySave2._0.Models
                     break;
             }
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
+			LanguageChanged?.Invoke(null, EventArgs.Empty);
 
-        }
+		}
 
-        public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
+		public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
 		{
 			// Check if the user has the right permissions in the folder.
 			if (!Directory.Exists(newDailyLogFolderPath)) {  return false; }

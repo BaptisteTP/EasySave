@@ -10,6 +10,7 @@ using EasySave2._0.CustomEventArgs;
 using System.Windows.Navigation;
 using System.Diagnostics;
 using EasySave2._0.Models.Notifications_Related;
+using EasySave2._0.Models;
 
 namespace EasySave2._0
 {
@@ -67,40 +68,52 @@ namespace EasySave2._0
             }
         }
 
-            private int _saveExecutionProgress = 0;
-            public int SaveExecutionProgress
+        private int _saveExecutionProgress = 0;
+        public int SaveExecutionProgress
+        {
+            get { return _saveExecutionProgress; }
+            set 
             {
-                get { return _saveExecutionProgress; }
-                set 
-                {
-                    _saveExecutionProgress = value;
-                    OnPropertyChanged();
-                }
+                _saveExecutionProgress = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public HomeViewModel()
+        {
+            var Saves = saveStore.GetAllSaves();
+            foreach (var save in Saves)
+            {
+                Items.Add(save);
             }
 
-            public HomeViewModel()
-            {
-                var Saves = saveStore.GetAllSaves();
-                foreach (var save in Saves)
-                {
-                    Items.Add(save);
-                }
-
-                NextPageCommand = new RelayCommand(_ => NextPage(), _ => CanGoNext());
-                PreviousPageCommand = new RelayCommand(_ => PreviousPage(), _ => CanGoPrevious());
-                StartSaveCommand = new RelayCommand(StartSave, CanInteract);
-                DeleteCommand = new RelayCommand(DeleteItem, CanInteract);
-                EditItemCommand = new RelayCommand(EditItem, CanInteract);
-                InformationSaveCommand = new RelayCommand(OpenInfoPopup, CanInteract);
-                ExecuteAllSavesCommand = new RelayCommand(ExecuteAllSaves);
-                PauseCommand = new RelayCommand(PauseSave, CanPauseStop);
-                StopCommand = new RelayCommand(StopSave, CanPauseStop);
-                ResumeCommand = new RelayCommand(ResumeSave, CanResume);
-
+            NextPageCommand = new RelayCommand(_ => NextPage(), _ => CanGoNext());
+            PreviousPageCommand = new RelayCommand(_ => PreviousPage(), _ => CanGoPrevious());
+            StartSaveCommand = new RelayCommand(StartSave, CanInteract);
+            DeleteCommand = new RelayCommand(DeleteItem, CanInteract);
+            EditItemCommand = new RelayCommand(EditItem, CanInteract);
+            InformationSaveCommand = new RelayCommand(OpenInfoPopup, CanInteract);
+            ExecuteAllSavesCommand = new RelayCommand(ExecuteAllSaves);
+            PauseCommand = new RelayCommand(PauseSave, CanPauseStop);
+            StopCommand = new RelayCommand(StopSave, CanPauseStop);
+            ResumeCommand = new RelayCommand(ResumeSave, CanResume);
+			Settings.LanguageChanged += Settings_LanguageChanged;
 
             UpdatePagedItems();
+        }
+
+		private void Settings_LanguageChanged(object? sender, EventArgs e)
+		{
+            OnPropertyChanged(nameof(SaveListingString));
+			foreach(Save save in Items)
+            {
+                save.LastExecuteDate = save.LastExecuteDate;
+                save.NumberOfExecution = save.NumberOfExecution;
+
             }
-        public void PauseSave(object obj)
+		}
+
+		public void PauseSave(object obj)
         {
             if (obj is Save save)
             {
