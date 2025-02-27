@@ -1,11 +1,13 @@
 ﻿using EasySave2._0.Enums;
 using EasySave2._0.Models;
+using EasySave2._0.Models.Notifications_Related;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace EasySave2._0.ViewModels
@@ -148,7 +150,11 @@ namespace EasySave2._0.ViewModels
                 saveStore.EditSave(SaveToEdit.Id, 4, SelectedSaveType);
                 saveStore.EditSave(SaveToEdit.Id, 5, Encrypt);
 
-                SaveEdit?.Invoke(this, EventArgs.Empty);
+				NotificationHelper.CreateNotifcation(title: Application.Current.Resources["SaveTitle"] as string,
+												 content: string.Format(Application.Current.Resources["SaveEdit"] as string, SaveName),
+												 type: 2);
+
+				SaveEdit?.Invoke(this, EventArgs.Empty);
             }
         }
     }

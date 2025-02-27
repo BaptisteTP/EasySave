@@ -54,9 +54,11 @@ namespace EasySave2._0
 			timer.Start();
 		}
 
-		private void DeleteNotification(DispatcherTimer timer, Notification_UC e)
+		private async void DeleteNotification(DispatcherTimer timer, Notification_UC e)
 		{
 			timer.Stop();
+			e.EndAnimation();
+			await Task.Delay(400);
 			NotificationGrid.Children.Remove(e);
 		}
 	}

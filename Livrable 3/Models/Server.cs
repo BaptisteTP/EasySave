@@ -1,5 +1,6 @@
 ﻿using c.Models.Server_Related;
 using EasySave2._0.CustomEventArgs;
+using EasySave2._0.CustomExceptions;
 using EasySave2._0.Enums;
 using EasySave2._0.ViewModels;
 using System;
@@ -127,7 +128,7 @@ namespace EasySave2._0.Models
 
 					if (concernedSave.IsExecuting == false)
 					{
-						concernedSave.Execute();
+						_saveStore.ExecuteSave(concernedSave.Id);
 					}
 					else
 					{
@@ -159,24 +160,25 @@ namespace EasySave2._0.Models
 					saveReceived = DeserializeSave(clientPacket.Payload);
 					concernedSave = _saveStore.GetSave(saveReceived.Id);
 
-					if (concernedSave.IsPaused == true)
+					try
 					{
-						if (_saveStore.CanResumeSaves)
-						{
-							_saveStore.ResumeSave(concernedSave.Id);
-						}
-						else
-						{
-							serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Cannot_resume_save, Payload = SerializeMessage(saveReceived) };
-							SendMessageToClient(serverPacket, _clientSocket);
-						}
+						_saveStore.ResumeSave(concernedSave.Id);
 					}
-					else
+					catch(BuisnessSoftwareUpException)
+					{
+						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Cannot_resume_save, Payload = SerializeMessage(saveReceived) };
+						SendMessageToClient(serverPacket, _clientSocket);
+					}
+					catch (CriticalFilesCopyException)
+					{
+						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_waiting_crtical_files_copy, Payload = SerializeMessage(saveReceived) };
+						SendMessageToClient(serverPacket, _clientSocket);
+					}
+					catch (SaveNotPausedException)
 					{
 						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_already_resumed, Payload = SerializeMessage(saveReceived) };
 						SendMessageToClient(serverPacket, _clientSocket);
 						ReSendSave(concernedSave, _clientSocket);
-
 					}
 					break;
 
@@ -219,6 +221,18 @@ namespace EasySave2._0.Models
 
 		#region Event Handler
 
+		public void OnCriticalFileCopyEnded(object sender, EventArgs args)
+		{
+			Task.Run(() =>
+			{
+				ServerPacket serverPacket;
+				foreach (Socket _clientSocket in _clientsSockets)
+				{
+					serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_copy_critical_files_ended, Payload = SerializeMessage("") };
+					SendMessageToClient(serverPacket, _clientSocket);
+				}
+			});
+		}
 		public void OnCopyFilePreview(object sender, FileCopyPreviewEventArgs eventArgs)
 		{
 			Task.Run(() =>

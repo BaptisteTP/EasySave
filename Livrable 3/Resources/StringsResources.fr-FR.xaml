@@ -63,13 +63,31 @@
     <system:String x:Key="NoPriorityExtension">Pas d'extenstion de fichier prioritaire</system:String>
 
     <!--#region Notification Messages-->
+    
+    <!--#region Process observer-->
 
-    <!--#region HomeView-->
+    <system:String x:Key="BuisnessSoftwareTitle">Logiciel métier</system:String>
+    <system:String x:Key="BuisnessSoftwareFound">Un logiciel métier a été détecté.</system:String>
+    <system:String x:Key="NoBuisnessSoftwareFound">Tous les logiciels métiers ont été fermé.</system:String>
+    <system:String x:Key="BuisnessSofwareCancelSave">La sauvegarde n'a pas pu s'exécuter car un logiciel métier est lancé.</system:String>
 
-    <system:String x:Key="GlobalExecutionTitle">Une éxécution globale a commencé</system:String>
-    <system:String x:Key="GlobalExecutionContent">{0} sauvegardes ont été lancé.</system:String>
+    <!--endregion-->
 
-    <!--#endregion-->
+    <!--#region Critical files-->
+
+    <system:String x:Key="CriticalFilesTitle">Fichiers prioritaires</system:String>
+    <system:String x:Key="CriticalFilesCopyEnd">Le traitement des fichiers prioritaires est terminé.</system:String>
+
+    <!--endregion-->
+
+    <!--#region Save CRUD-->
+
+    <system:String x:Key="SaveTitle">Sauvegardes</system:String>
+    <system:String x:Key="SaveAdd">La sauvegarde {0} a bien été créé.</system:String>
+    <system:String x:Key="SaveEdit">La sauvegarde {0} a bien été modifié.</system:String>
+    <system:String x:Key="SaveDelete">La sauvegarde {0} a bien été supprimé.</system:String>
+
+    <!--endregion-->
 
     <!--#endregion-->
 

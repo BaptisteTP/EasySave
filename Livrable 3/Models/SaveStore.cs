@@ -1,4 +1,5 @@
-﻿using EasySave2._0.Enums;
+﻿using EasySave2._0.CustomExceptions;
+using EasySave2._0.Enums;
 using EasySave2._0.Models;
 using EasySave2._0.Models.Notifications_Related;
 using System;
@@ -29,7 +30,7 @@ namespace EasySave2._0.ViewModels
 		public event EventHandler? SavesLoaded;
 		public bool CanAddSave => NumberOfSaves < MaximumNumberOfSave;
 		public bool CanExecuteSave => NumberOfSaves > 0;
-		public bool CanResumeSaves => !Creator.GetProcessObserverInstance().AnyBSOpened;
+		public bool AnyBSUp => Creator.GetProcessObserverInstance().AnyBSOpened;
 		public int NumberOfSaves => Saves.Count;
 		private int CurrentAvailableID { get; set; } = 1;
 		private int MaximumNumberOfSave { get; } = 5;
@@ -187,18 +188,32 @@ namespace EasySave2._0.ViewModels
 		}
 		public void ResumeSave(int id)
 		{
-			Save saveToResume = GetSave(id);
-			if (!CanResumeSaves)
+			if (AnyBSUp)
 			{
 				NotificationHelper.CreateNotifcation(title: "Application métier",
 													 content: "Impossible de reprendre la sauvegarde, une application métier est lancée.",
 													 type: 0);
+
+				throw new BuisnessSoftwareUpException();
+			}
+
+			Save saveToResume = GetSave(id);
+
+			if (!saveToResume.IsPaused)
+			{
+				NotificationHelper.CreateNotifcation(title: "Erreur",
+													 content: "Impossible de reprendre la sauvegarde, elle n'est pas en pause.",
+													 type: 0);
+
+				throw new SaveNotPausedException();
 			}
 			else if (Creator.GetPasterInstance().CriticalFilesBeingCopied && saveToResume.IsWaitingForCriticalFiles)
 			{
 				NotificationHelper.CreateNotifcation(title: "Fichier prioritaire",
 													 content: "Impossible de reprendre la sauvegarde, elle attend la copie de fichier prioritaire.",
 													 type: 0);
+
+				throw new CriticalFilesCopyException();
 			}
 			else
 			{

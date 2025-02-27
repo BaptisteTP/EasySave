@@ -207,7 +207,7 @@ namespace Remote_app_easysave.ViewModels
 			ServerPacket? serverPacket = DeserializeServerResponse(buffer);
 			if (serverPacket == null) { return; }
 
-			Save receivedSave = DeserializeSave(serverPacket.Payload);
+			Save? receivedSave = DeserializeSave(serverPacket.Payload);
 			Save concernedSave;
 			Notification_UC notification;
 			int index;
@@ -373,6 +373,33 @@ namespace Remote_app_easysave.ViewModels
 					});
 					break;
 
+				case ServerResponses.Save_waiting_crtical_files_copy:
+					App.Current.Dispatcher.Invoke(() =>
+					{
+						notification = new Notification_UC()
+						{
+							NotificationTitle = "Fichiers prioritaires",
+							NotificationType = 0,
+							ContentText = "La sauvegarde ne peut pas être reprise. (Elle attend la copie de fichiers prioritaires)"
+						};
+
+						ShowNotification(notification);
+					});
+					break;
+
+				case ServerResponses.Save_copy_critical_files_ended:
+					App.Current.Dispatcher.Invoke(() =>
+					{
+						notification = new Notification_UC()
+						{
+							NotificationTitle = "Fichiers prioritaires",
+							NotificationType = UserControl_Library.NotificationUC.Enums.NotificationType.Info,
+							ContentText = "Le traitement des fichiers prioritaires est terminé."
+						};
+
+						ShowNotification(notification);
+					});
+					break;
 				default:
 					break;
 			}
@@ -546,12 +573,20 @@ namespace Remote_app_easysave.ViewModels
 
 		}
 
-		private Save DeserializeSave(byte[] data)
+		private Save? DeserializeSave(byte[] data)
 		{
-			string json = Encoding.UTF8.GetString(data);
-			Save save = JsonSerializer.Deserialize<Save>(json);
+			try
+			{
+				string json = Encoding.UTF8.GetString(data);
+				Save save = JsonSerializer.Deserialize<Save>(json);
 
-			return save;
+				return save;
+
+			}
+			catch
+			{
+				return null;
+			}
 		}
 
 		#endregion

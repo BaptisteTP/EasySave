@@ -142,6 +142,7 @@ namespace EasySave2._0.ViewModels
 				_pasterInstance.SaveFinished += _loggerInstance.OnSaveFinished;
 				_pasterInstance.SaveFinished += Server.GetServerInstance().OnSaveFinished;
                 _pasterInstance.BuisnessSoftwareDetected += _loggerInstance.OnBuisnessSoftwareDetected;
+                _pasterInstance.CriticalFilesCopyEnded += Server.GetServerInstance().OnCriticalFileCopyEnded;
                 _saveStoreInstance.SaveCreated += Server.GetServerInstance().OnSaveCreated;
                 _saveStoreInstance.SaveCreated += _loggerInstance.OnSaveCreated;
 				_saveStoreInstance.SavesLoaded += _loggerInstance.OnSavesLoaded;

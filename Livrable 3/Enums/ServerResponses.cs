@@ -28,5 +28,8 @@ namespace EasySave2._0.Enums
 		Cannot_resume_save,
 
 		Save_error_detected,
+		Save_waiting_crtical_files_copy,
+		Save_copy_critical_files_ended,
+		
 	}
 }

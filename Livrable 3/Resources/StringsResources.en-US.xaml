@@ -64,14 +64,32 @@
 
     
     <!--#region Notification Messages-->
-    
-    <!--#region HomeView-->
+   
+    <!--#region Buisness software-->
 
-    <system:String x:Key="GlobalExecutionTitle">A global save execution has started</system:String>
-    <system:String x:Key="GlobalExecutionContent">A total number of {0} saves has started.</system:String>
+    <system:String x:Key="BuisnessSoftwareTitle">Buisness software</system:String>
+    <system:String x:Key="BuisnessSoftwareFound">A buisness software has been detected.</system:String>
+    <system:String x:Key="NoBuisnessSoftwareFound">All buisness software has been closed.</system:String>
+    <system:String x:Key="BuisnessSofwareCancelSave">Save could not execute because a buisness software is on.</system:String>
 
-    <!--#endregion-->
-    
+    <!--endregion-->
+
+    <!--#region Critical files-->
+
+    <system:String x:Key="CriticalFilesTitle">Files priority</system:String>
+    <system:String x:Key="CriticalFilesCopyEnd">Copy of critical files has ended.</system:String>
+
+    <!--endregion-->
+
+    <!--#region Save CRUD-->
+
+    <system:String x:Key="SaveTitle">Saves</system:String>
+    <system:String x:Key="SaveAdd">Save {0} has been created.</system:String>
+    <system:String x:Key="SaveEdit">Save {0} has been edited.</system:String>
+    <system:String x:Key="SaveDelete">Save {0} has been deleted.</system:String>
+
+    <!--endregion-->
+
     <!--#endregion-->
 
 </ResourceDictionary>
