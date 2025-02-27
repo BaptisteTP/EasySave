@@ -166,17 +166,17 @@ namespace EasySave2._0.Models
 					}
 					catch(BuisnessSoftwareUpException)
 					{
-						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Cannot_resume_save, Payload = SerializeMessage(saveReceived) };
+						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Cannot_resume_save, Payload = SerializeMessage(concernedSave) };
 						SendMessageToClient(serverPacket, _clientSocket);
 					}
 					catch (CriticalFilesCopyException)
 					{
-						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_waiting_crtical_files_copy, Payload = SerializeMessage(saveReceived) };
+						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_waiting_crtical_files_copy, Payload = SerializeMessage(concernedSave) };
 						SendMessageToClient(serverPacket, _clientSocket);
 					}
 					catch (SaveNotPausedException)
 					{
-						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_already_resumed, Payload = SerializeMessage(saveReceived) };
+						serverPacket = new ServerPacket() { ServerResponse = ServerResponses.Save_already_resumed, Payload = SerializeMessage(concernedSave) };
 						SendMessageToClient(serverPacket, _clientSocket);
 						ReSendSave(concernedSave, _clientSocket);
 					}

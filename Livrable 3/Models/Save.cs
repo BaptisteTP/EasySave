@@ -57,8 +57,6 @@ namespace EasySave2._0.ViewModels
         }
 
         private int progress;
-		[JsonIgnore]
-		[XmlIgnore]
 		public int Progress
         {
             get { return progress; }
