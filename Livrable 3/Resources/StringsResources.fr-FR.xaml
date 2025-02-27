@@ -89,6 +89,7 @@
     <system:String x:Key="SaveAdd">La sauvegarde {0} a bien été créé.</system:String>
     <system:String x:Key="SaveEdit">La sauvegarde {0} a bien été modifié.</system:String>
     <system:String x:Key="SaveDelete">La sauvegarde {0} a bien été supprimé.</system:String>
+    <system:String x:Key="NoEligibleFileFound">Impossible d'exécuter la sauvegarde {0} : aucun fichier éligible n'a été trouvé.</system:String>
 
     <!--endregion-->
 

@@ -91,6 +91,7 @@
     <system:String x:Key="SaveAdd">Save {0} has been created.</system:String>
     <system:String x:Key="SaveEdit">Save {0} has been edited.</system:String>
     <system:String x:Key="SaveDelete">Save {0} has been deleted.</system:String>
+    <system:String x:Key="NoEligibleFileFound">Cannot execute save {0} : no eligible files found.</system:String>
 
     <!--endregion-->
 
