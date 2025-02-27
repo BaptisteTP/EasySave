@@ -68,9 +68,9 @@ namespace EasySave2._0.ViewModels
                 ClearError(nameof(SaveName));
                 if (_saveName == "")
                 {
-                    AddError(nameof(SaveName), "Le nom de la sauvegarde ne peut pas être vide.");
-                }
-            }
+                    AddError(nameof(SaveName), Application.Current.Resources["SaveNameEmptyMessage"] as string);
+				}
+			}
         }
 
         private SaveType selectedSaveType = SaveType.Full;
@@ -98,12 +98,13 @@ namespace EasySave2._0.ViewModels
                 ClearError(nameof(SourcePath));
                 if (_sourcePath == "")
                 {
-                    AddError(nameof(SourcePath), "Le chemin source ne peut pas être vide.");
-                }
-                if (!Settings.UserHasRightPermissionInFolder(SourcePath))
+					AddError(nameof(SourcePath), Application.Current.Resources["SourcePathEmptyMessage"] as string);
+
+				}
+				if (!Settings.UserHasRightPermissionInFolder(SourcePath))
                 {
-                    AddError(nameof(SourcePath), "Le chemin source spécifié n'est pas valide.");
-                }
+					AddError(nameof(SourcePath), Application.Current.Resources["SourcePathWrongMessage"] as string);
+				}
 
             }
         }
@@ -121,12 +122,12 @@ namespace EasySave2._0.ViewModels
                 ClearError(nameof(DestinationPath));
                 if (_destinationPath == "")
                 {
-                    AddError(nameof(DestinationPath), "Le chemin destination ne peut pas être vide.");
-                }
+					AddError(nameof(DestinationPath), Application.Current.Resources["DestinationPathEmptyMessage"] as string);
+				}
                 if (!Settings.UserHasRightPermissionInFolder(DestinationPath))
                 {
-                    AddError(nameof(DestinationPath), "Le chemin source spécifié n'est pas valide.");
-                }
+					AddError(nameof(DestinationPath), Application.Current.Resources["DestinationPathWrongMessage"] as string);
+				}
             }
         }
 
