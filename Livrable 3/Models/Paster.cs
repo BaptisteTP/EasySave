@@ -41,10 +41,15 @@ namespace EasySave2._0.Models
             if (!Directory.Exists(executedSave.SourcePath)) { return false; }
 
 			if(Creator.GetProcessObserverInstance().AnyBSOpened)
-			{ 
-				NotificationHelper.CreateNotifcation(title: Application.Current.Resources["BuisnessSoftwareTitle"].ToString(),
-													 content: Application.Current.Resources["BuisnessSofwareCancelSave"].ToString(),
-													 type: 1);
+			{
+				try
+				{
+					NotificationHelper.CreateNotifcation(title: Application.Current.Resources["BuisnessSoftwareTitle"].ToString(),
+															content: Application.Current.Resources["BuisnessSofwareCancelSave"].ToString(),
+															type: 1);
+
+				}
+				catch { }
 				BuisnessSoftwareDetected?.Invoke(this, executedSave);
 				return false; 
 			}
@@ -397,10 +402,15 @@ namespace EasySave2._0.Models
                 CriticalFiles.Remove(file);
                 if(CriticalFiles.Count == 0)
                 {
-					NotificationHelper.CreateNotifcation(title: Application.Current.Resources["CriticalFilesTitle"].ToString(),
-														 content: Application.Current.Resources["CriticalFilesCopyEnd"].ToString(),
-														 type: 2);
-                    CriticalFilesCopyEnded?.Invoke(this, EventArgs.Empty);
+					try
+					{
+						NotificationHelper.CreateNotifcation(title: Application.Current.Resources["CriticalFilesTitle"].ToString(),
+															 content: Application.Current.Resources["CriticalFilesCopyEnd"].ToString(),
+															 type: 2);
+
+					}
+					catch { }
+					CriticalFilesCopyEnded?.Invoke(this, EventArgs.Empty);
 				}
             }
 		}

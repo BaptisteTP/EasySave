@@ -34,7 +34,7 @@ namespace EasySave2._0.ViewModels
         private static Paster _pasterInstance;
         private static Logger _loggerInstance;
         private static List<LanguageItem> _languages;
-        private static ProcessObserver _processObserverInstance = ProcessObserver.GetProcessObserverInstance();
+        private static ProcessObserver _processObserverInstance;
 
         // Returns a resource manager instance
 
@@ -97,7 +97,7 @@ namespace EasySave2._0.ViewModels
 
         public static ProcessObserver GetProcessObserverInstance()
         {
-            return _processObserverInstance;
+            return _processObserverInstance ??= ProcessObserver.GetProcessObserverInstance();
 		}
 
         public static List<LanguageItem> GetAvalaibleLanguages()

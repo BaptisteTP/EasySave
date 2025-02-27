@@ -11,17 +11,6 @@ namespace EasySave2._0.Models.Notifications_Related
 	public class NotificationHelper
 	{
 		public static event EventHandler<Notification_UC>? NotificationAdded;
-		//private static NotificationHelper? _instance;
-
-		//#region Singleton
-		//private NotificationHelper() { }
-
-		//public static NotificationHelper? GetNotificationHelperInstance()
-		//{
-		//	return _instance ??= new NotificationHelper();
-		//}
-
-		//#endregion
 
 		public static void CreateNotifcation(string title, string content, int type = 2)
 		{
