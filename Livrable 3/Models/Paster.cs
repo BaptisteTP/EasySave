@@ -106,6 +106,17 @@ namespace EasySave2._0.Models
 
 				if (eligibleFiles.Count == 0)
 				{
+					try
+					{
+						NotificationHelper.CreateNotifcation(title: Application.Current.Resources["SaveTitle"].ToString(),
+																content: string.Format(Application.Current.Resources["NoEligibleFileFound"].ToString(), executedSave.Name),
+																type: 1);
+
+					}
+					catch { }
+					executedSave.IsExecuting = false;
+					executedSave.IsPaused = false;
+					executedSave.Progress = 0;
 					return false;
 				}
 
@@ -241,6 +252,17 @@ namespace EasySave2._0.Models
 
 				if (eligibleFiles.Count == 0)
 				{
+					try
+					{
+						NotificationHelper.CreateNotifcation(title: Application.Current.Resources["SaveTitle"].ToString(),
+																content: string.Format(Application.Current.Resources["NoEligibleFileFound"].ToString(), executedSave.Name),
+																type: 1);
+
+					}
+					catch { }
+					executedSave.IsExecuting = false;
+					executedSave.IsPaused = false;
+					executedSave.Progress = 0;
 					return false;
 				}
 
