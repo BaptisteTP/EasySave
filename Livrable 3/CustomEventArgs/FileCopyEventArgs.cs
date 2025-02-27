@@ -16,13 +16,15 @@ namespace EasySave2._0.CustomEventArgs
 		public long FileSize => SourceFile.Length;
 		public string DestinationPath { get; set; }
 		public TimeSpan? TransferTime { get; set; }
-		public FileCopyEventArgs(DateTime copyDate, Save executedSave, FileInfo sourceFile, string destinationPath, TimeSpan? transferTime)
+		public TimeSpan? EncryptTime { get; set; }
+		public FileCopyEventArgs(DateTime copyDate, Save executedSave, FileInfo sourceFile, string destinationPath, TimeSpan? transferTime, TimeSpan? timeEncrypt)
 		{
 			CopyDate = copyDate;
 			ExecutedSave = executedSave;
 			SourceFile = sourceFile;
 			DestinationPath = destinationPath;
 			TransferTime = transferTime;
+			EncryptTime = timeEncrypt; 
 		}
 
 	}

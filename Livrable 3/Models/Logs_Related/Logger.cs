@@ -75,6 +75,7 @@ namespace EasySave2._0.Models.Logs_Related
 												  fileTarget: eventArgs.DestinationPath,
 												  fileSize: eventArgs.FileSize,
 												  fileTransferTime: eventArgs.TransferTime.ToString() ?? "-1",
+                                                  timeEncrypt: eventArgs.EncryptTime.ToString() ?? "-1",
 												  time: eventArgs.CopyDate);
 
 				//Add it to the copied files list of the current save being made (the added last)
