@@ -80,6 +80,8 @@ namespace EasySave2._0
 
         private void EncryptFile(string filePath, string encryptionKey)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             try
             {
                 Process process = new Process();
@@ -105,6 +107,7 @@ namespace EasySave2._0
             {
                 MessageBox.Show($"Erreur lors de l'exécution de CryptoSoft.exe : {ex.Message}");
             }
+            stopwatch.Stop();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

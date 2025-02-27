@@ -190,7 +190,7 @@ namespace EasySave2._0.Models
         {
             FileInfo fileInfo = new FileInfo(fullName);
             Settings settings = Creator.GetSettingsInstance();
-            if (fileInfo.Length >= long.Parse(settings.FileSizeLimit) * 1000)
+            if (fileInfo.Length >= long.Parse(settings.FileSizeLimit) * 1024)
             {
                 return false;
             }
@@ -506,7 +506,9 @@ namespace EasySave2._0.Models
         private void CopyFile(string fileFullName, Save executedSave, string destinationPath)
         {
             TimeSpan? timeElapsed = null;
+            TimeSpan? timeEncrypt = null;
             var stopWatch = new Stopwatch();
+            var TimeEncrypt = new Stopwatch();
             stopWatch.Start();
 
             try
@@ -515,6 +517,7 @@ namespace EasySave2._0.Models
 
                 if (executedSave.Encrypt)
                 {
+                    TimeEncrypt.Start();
                     var startInfo = new ProcessStartInfo
                     {
                         FileName = "CryptoSoft.exe",
@@ -540,6 +543,8 @@ namespace EasySave2._0.Models
 							//throw new Exception($"CryptoSoft.exe a échoué avec le code de sortie {process.ExitCode}: {error}");
 						}
 					}
+                    TimeEncrypt.Stop();
+                    timeEncrypt = TimeEncrypt.Elapsed;
                 }
 
                 stopWatch.Stop();
@@ -552,7 +557,7 @@ namespace EasySave2._0.Models
             }
             finally
             {
-                OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed));
+                OnFileCopied?.Invoke(this, new FileCopyEventArgs(DateTime.Now, executedSave, new FileInfo(fileFullName), destinationPath, timeElapsed, timeEncrypt));
             }
         }
 
