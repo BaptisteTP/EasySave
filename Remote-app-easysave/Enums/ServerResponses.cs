@@ -28,5 +28,7 @@ namespace Remote_app_easysave.Enums
 		Cannot_resume_save,
 
 		Save_error_detected,
+		Save_waiting_crtical_files_copy,
+		Save_copy_critical_files_ended,
 	}
 }

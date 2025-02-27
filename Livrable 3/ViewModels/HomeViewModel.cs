@@ -110,7 +110,11 @@ namespace EasySave2._0
         {
             if (obj is Save save)
             {
-                saveStore.ResumeSave(save.Id);
+                try
+                {
+                    saveStore.ResumeSave(save.Id);
+                }
+                catch { }
             }
         }
         public void StopSave(object obj)
@@ -163,23 +167,14 @@ namespace EasySave2._0
         private void ExecuteAllSaves(object obj)
         {
             Debug.WriteLine("ExecuteAllSaves command executed.");
-            int nbExecutedSaves = 0;
             foreach (Save save in Items)
             {
                 if (!save.IsExecuting)
                 {
                     Debug.WriteLine("Executing save for Save ID: " + save.Id);
                     ExecuteSaveAsync(save);
-                    nbExecutedSaves++;
 
 				}
-            }
-
-            if(nbExecutedSaves > 0)
-            {
-                NotificationHelper.CreateNotifcation(title: Application.Current.Resources["GlobalExecutionTitle"] as string,
-                                                     content: string.Format(Application.Current.Resources["GlobalExecutionContent"] as string, nbExecutedSaves),
-                                                     type: 2);
             }
         }
 
@@ -287,7 +282,11 @@ namespace EasySave2._0
                 Items.Remove(save);
                 saveStore.DeleteSave(save.Id);
 
-                CurrentPage = 1;
+				NotificationHelper.CreateNotifcation(title: Application.Current.Resources["SaveTitle"] as string,
+									 content: string.Format(Application.Current.Resources["SaveDelete"] as string, save.Name),
+									 type: 2);
+
+				CurrentPage = 1;
                 UpdatePagedItems();
 			}
         }

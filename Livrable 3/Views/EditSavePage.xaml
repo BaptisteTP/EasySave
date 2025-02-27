@@ -90,7 +90,7 @@
     </Page.Resources>
 
     <Page.DataContext>
-        <viewmodels:AddSaveViewModel/>
+        <viewmodels:EditSaveViewModel/>
     </Page.DataContext>
 
     <Grid>

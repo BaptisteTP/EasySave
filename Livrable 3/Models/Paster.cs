@@ -2,6 +2,7 @@
 using EasySave2._0.Enums;
 using EasySave2._0.Models.Notifications_Related;
 using EasySave2._0.ViewModels;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -25,7 +26,7 @@ namespace EasySave2._0.Models
 		public bool CriticalFilesBeingCopied => CriticalFiles.Count > 0;
 
 		private event EventHandler? CriticalFilesAdded;
-		private event EventHandler? CriticalFilesCopyEnded;
+		public event EventHandler? CriticalFilesCopyEnded;
 
         private Paster() { }
 
@@ -38,6 +39,18 @@ namespace EasySave2._0.Models
         public bool BeginCopyPaste(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
         {
             if (!Directory.Exists(executedSave.SourcePath)) { return false; }
+
+			if(Creator.GetProcessObserverInstance().AnyBSOpened)
+			{ 
+				NotificationHelper.CreateNotifcation(title: Application.Current.Resources["BuisnessSoftwareTitle"].ToString(),
+													 content: Application.Current.Resources["BuisnessSofwareCancelSave"].ToString(),
+													 type: 1);
+				BuisnessSoftwareDetected?.Invoke(this, executedSave);
+				return false; 
+			}
+
+			executedSave.Progress = 0;
+			executedSave.IsExecuting = true;
 
 			switch (executedSave.Type)
             {
@@ -65,33 +78,36 @@ namespace EasySave2._0.Models
 		{
 			if(executedSave.IsPaused == true && executedSave.WasSavePausedByUser == false)
             {
-                Creator.GetSaveStoreInstance().ResumeSave(executedSave.Id);
+				try
+				{
+					Creator.GetSaveStoreInstance().ResumeSave(executedSave.Id);
+				}
+				catch { }
             }
 		}
 
 		private bool BeginDifferentialSave(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
         {
+			List<string> criticalFilesDetected = [];
 			void BSDetected(object? sender, EventArgs e) => OnBuisnessSoftwareDetected(executedSave);
 			void AllBSClosed(object? sender, EventArgs e) => OnAllBuisnessSoftwareClosed(executedSave);
-
-			ProcessObserver.BuisnessSoftwareDetected += BSDetected;
-			ProcessObserver.AllBuisnessProcessClosed += AllBSClosed;
-
-			List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
-
-            if (eligibleFiles.Count == 0)
-            {
-                return false;
-            }
-
-			List<string> criticalFilesDetected = [];
 			void CriticalFilesHandler(object? sender, EventArgs e) => HandleCriticalFiles(executedSave, criticalFilesDetected, cancellationToken, pauseEvent);
 			void CriticalFilesCopyEndedHandler(object? sender, EventArgs e) => OnCriticalFilesCopyEnded(executedSave);
-			CriticalFilesAdded += CriticalFilesHandler;
-			CriticalFilesCopyEnded += CriticalFilesCopyEndedHandler;
 
             try
             {
+				List<string> eligibleFiles = GetNameOfFilesModifiedAfterLastExecution(executedSave);
+
+				if (eligibleFiles.Count == 0)
+				{
+					return false;
+				}
+
+				ProcessObserver.BuisnessSoftwareDetected += BSDetected;
+				ProcessObserver.AllBuisnessProcessClosed += AllBSClosed;
+				CriticalFilesAdded += CriticalFilesHandler;
+				CriticalFilesCopyEnded += CriticalFilesCopyEndedHandler;
+
 				SaveStarted?.Invoke(this, executedSave);
 				AddCriticalFiles(executedSave, eligibleFiles, out criticalFilesDetected);
 
@@ -169,7 +185,11 @@ namespace EasySave2._0.Models
 				}
 
 				executedSave.LastExecuteDate = DateTime.Now;
+
 				SaveFinished?.Invoke(this, executedSave);
+				executedSave.IsExecuting = false;
+				executedSave.IsPaused = false;
+				executedSave.Progress = 0;
 
 				return true;
 			}
@@ -202,27 +222,26 @@ namespace EasySave2._0.Models
 
         private bool BeginFullSave(Save executedSave, CancellationToken cancellationToken, ManualResetEventSlim pauseEvent)
 		{
+			List<string> criticalFilesDetected = [];
 			void BSDetected(object? sender, EventArgs e) => OnBuisnessSoftwareDetected(executedSave);
 			void AllBSClosed(object? sender, EventArgs e) => OnAllBuisnessSoftwareClosed(executedSave);
-
-			ProcessObserver.BuisnessSoftwareDetected += BSDetected;
-			ProcessObserver.AllBuisnessProcessClosed += AllBSClosed;
-
-            List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
-
-			if (eligibleFiles.Count == 0)
-			{
-				return false;
-			}
-
-			List<string> criticalFilesDetected = [];
 			void CriticalFilesHandler(object? sender, EventArgs e) => HandleCriticalFiles(executedSave, criticalFilesDetected, cancellationToken, pauseEvent);
 			void CriticalFilesCopyEndedHandler(object? sender, EventArgs e) => OnCriticalFilesCopyEnded(executedSave);
-			CriticalFilesAdded += CriticalFilesHandler;
-			CriticalFilesCopyEnded += CriticalFilesCopyEndedHandler;
 
 			try
 			{
+				List<string> eligibleFiles = GetEligibleFilesFullSave(executedSave.SourcePath);
+
+				if (eligibleFiles.Count == 0)
+				{
+					return false;
+				}
+
+				ProcessObserver.BuisnessSoftwareDetected += BSDetected;
+				ProcessObserver.AllBuisnessProcessClosed += AllBSClosed;
+				CriticalFilesAdded += CriticalFilesHandler;
+				CriticalFilesCopyEnded += CriticalFilesCopyEndedHandler;
+
 				SaveStarted?.Invoke(this, executedSave);
 				AddCriticalFiles(executedSave, eligibleFiles, out criticalFilesDetected);
 
@@ -265,7 +284,11 @@ namespace EasySave2._0.Models
 				}
 
 				executedSave.LastExecuteDate = DateTime.Now;
+
 				SaveFinished?.Invoke(this, executedSave);
+				executedSave.IsExecuting = false;
+				executedSave.IsPaused = false;
+				executedSave.Progress = 0;
 
 				return true;
 			}
@@ -283,9 +306,13 @@ namespace EasySave2._0.Models
 
 		private void OnCriticalFilesCopyEnded(Save executedSave)
 		{
-            if (executedSave.IsPaused)
+            if (executedSave.IsPaused && executedSave.WasSavePausedByUser == false)
             {
-                Creator.GetSaveStoreInstance().ResumeSave(executedSave.Id);
+				try
+				{
+					Creator.GetSaveStoreInstance().ResumeSave(executedSave.Id);
+				}
+				catch { }
             }   
 		}
 
@@ -338,6 +365,7 @@ namespace EasySave2._0.Models
 						executedSave.Progress = 0;
 					}
 
+					OnFileCopyPreview?.Invoke(this, new FileCopyPreviewEventArgs(executedSave, "Active", eligibleFiles, saveFilesInCriticalFiles, newPath, destinationPath));
 					if (IsFileSizeWithinLimit(newPath) == true)
 					{
 						CopyFile(newPath, executedSave, destinationPath);
@@ -359,9 +387,6 @@ namespace EasySave2._0.Models
 			{
 				executedSave.IsWaitingForCriticalFiles = true;
 				Creator.GetSaveStoreInstance().PauseSave(executedSave.Id, false);
-				NotificationHelper.CreateNotifcation("Fichiers prioritaires",
-													$"La sauvegarde {executedSave.Name} a été mise en pause.",
-													2);
 			}
 		}
 
@@ -372,6 +397,9 @@ namespace EasySave2._0.Models
                 CriticalFiles.Remove(file);
                 if(CriticalFiles.Count == 0)
                 {
+					NotificationHelper.CreateNotifcation(title: Application.Current.Resources["CriticalFilesTitle"].ToString(),
+														 content: Application.Current.Resources["CriticalFilesCopyEnd"].ToString(),
+														 type: 2);
                     CriticalFilesCopyEnded?.Invoke(this, EventArgs.Empty);
 				}
             }
@@ -380,11 +408,12 @@ namespace EasySave2._0.Models
 		private void AddCriticalFiles(Save executedSave, List<string> eligibleFiles, out List<string> detectedCriticalFiles)
         {
 
+            detectedCriticalFiles = [];
             Settings settings = Creator.GetSettingsInstance();
             List<string> ExtensionPriority = settings.PriorityExtension;
-            bool wasCriticalFileAdded = false;
-            detectedCriticalFiles = [];
 
+			if(ExtensionPriority.Count == 0) { return; }
+            bool wasCriticalFileAdded = false;
 
 			foreach (string file in eligibleFiles)
             {
@@ -397,7 +426,6 @@ namespace EasySave2._0.Models
                             CriticalFiles.Add(file);
                         }
 						detectedCriticalFiles.Add(file);
-
 						wasCriticalFileAdded = true;
 					}
                 }

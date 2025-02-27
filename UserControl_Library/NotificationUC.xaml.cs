@@ -57,6 +57,20 @@ namespace UserControl_Library
 
 			NotificationUC.RenderTransform.BeginAnimation(TranslateTransform.YProperty, anim);
 		}
-	}
+
+		public void EndAnimation()
+		{
+			Duration duration = new Duration(new TimeSpan(0, 0, 0, 0, 400));
+			DoubleAnimation anim = new DoubleAnimation(500, duration);
+			anim.AccelerationRatio = 0.7;
+
+			NotificationUC.RenderTransform.BeginAnimation(TranslateTransform.XProperty, anim);
+		}
+
+		private void NotificationUC_MouseDown(object sender, MouseButtonEventArgs e)
+		{
+			EndAnimation();
+		}
+    }
 
 }
