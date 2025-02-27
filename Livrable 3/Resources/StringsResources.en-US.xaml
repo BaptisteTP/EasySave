@@ -3,7 +3,7 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="NoSaves">No saves recorded!</system:String>
     <system:String x:Key="DailyLogFolder">To change the daily log folder, choose a new folder to store it:</system:String>
-    <system:String x:Key="OperationList">List of all backup operations:</system:String>
+    <system:String x:Key="OperationList">List of all backup operations ({0}):</system:String>
     <system:String x:Key="RealTimeLogFolder">To change the real-time log folder, choose a new folder to store it:</system:String>
     <system:String x:Key="ValidSave">✔ Save</system:String>
     <system:String x:Key="WelcomeMessage">Welcome to Easy Save, choose your language:</system:String>
@@ -61,8 +61,12 @@
     <system:String x:Key="KoBlockLimit">Choose a file transfer size limit (in KB):</system:String>
     <system:String x:Key="TextPriorityExtension">Extension Priority</system:String>
     <system:String x:Key="NoPriorityExtension">No priority extension</system:String>
+    <system:String x:Key="NumberOfExecutionSave">Total number of execution : {0}</system:String>
+    <system:String x:Key="LastSaveExecution">Last execution : {0}</system:String>
+    <system:String x:Key="NeverExecutedMessage">never.</system:String>
 
-    
+
+
     <!--#region Notification Messages-->
    
     <!--#region Buisness software-->

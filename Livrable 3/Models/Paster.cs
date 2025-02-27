@@ -57,6 +57,7 @@ namespace EasySave2._0.Models
 			executedSave.Progress = 0;
 			executedSave.IsExecuting = true;
 
+
 			switch (executedSave.Type)
             {
                 case SaveType.Full:
@@ -191,10 +192,11 @@ namespace EasySave2._0.Models
 
 				executedSave.LastExecuteDate = DateTime.Now;
 
-				SaveFinished?.Invoke(this, executedSave);
+				executedSave.NumberOfExecution++;
 				executedSave.IsExecuting = false;
 				executedSave.IsPaused = false;
 				executedSave.Progress = 0;
+				SaveFinished?.Invoke(this, executedSave);
 
 				return true;
 			}
@@ -290,10 +292,11 @@ namespace EasySave2._0.Models
 
 				executedSave.LastExecuteDate = DateTime.Now;
 
-				SaveFinished?.Invoke(this, executedSave);
+				executedSave.NumberOfExecution++;
 				executedSave.IsExecuting = false;
 				executedSave.IsPaused = false;
 				executedSave.Progress = 0;
+				SaveFinished?.Invoke(this, executedSave);
 
 				return true;
 			}

@@ -48,6 +48,8 @@ namespace EasySave2._0
         {
             get => $"{CurrentPage} / {TotalPages}";
         }
+
+        public string SaveListingString => string.Format(Application.Current.Resources["OperationList"] as string, Items.Count.ToString());
         public int TotalPages => (int)Math.Ceiling((double)Items.Count / ItemsPerPage);
 
         public int CurrentPage
@@ -236,6 +238,7 @@ namespace EasySave2._0
 
 			    OnPropertyChanged(nameof(CurrentPageFormatted));
 			    OnPropertyChanged(nameof(CurrentPage));
+			    OnPropertyChanged(nameof(SaveListingString));
             }
 
         private void NextPage()
