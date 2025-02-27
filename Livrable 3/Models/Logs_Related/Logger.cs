@@ -164,6 +164,9 @@ namespace EasySave2._0.Models.Logs_Related
 		{
 			lock (_RealTimeLock)
 			{
+				List<Save> saves = Creator.GetSaveStoreInstance().GetAllSaves();
+				WriteSavesInLog(saves);
+
 				Settings settings = Creator.GetSettingsInstance();
 				string pathToWriteTo = settings.RealTimeLogPath;
 

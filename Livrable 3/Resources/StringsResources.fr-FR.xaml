@@ -3,7 +3,7 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="NoSaves">Aucune sauvegarde enregistrée !</system:String>
     <system:String x:Key="DailyLogFolder">Pour changer le dossier des logs journalier choisissez un nouveau dossier pour accueillir le dossier :</system:String>
-    <system:String x:Key="OperationList">Liste de toutes les opérations de sauvegarde :</system:String>
+    <system:String x:Key="OperationList">Liste de toutes les opérations de sauvegarde ({0}):</system:String>
     <system:String x:Key="RealTimeLogFolder">Pour changer le dossier des logs en temps réel choisissez un nouveau dossier pour accueillir le dossier :</system:String>
     <system:String x:Key="ValidSave">✔ Sauvegarder</system:String>
     <system:String x:Key="WelcomeMessage">Bienvenue sur Easy Save, choisissez votre langue :</system:String>
@@ -61,6 +61,9 @@
     <system:String x:Key="KoBlockLimit">Choisissez une limite d'espace de transfert des fichiers (en Ko) :</system:String>
     <system:String x:Key="TextPriorityExtension">Extension Prioritaire</system:String>
     <system:String x:Key="NoPriorityExtension">Pas d'extenstion de fichier prioritaire</system:String>
+    <system:String x:Key="NumberOfExecutionSave">Nombre d'exécution: {0}</system:String>
+    <system:String x:Key="LastSaveExecution">Dernière exécution: {0}</system:String>
+    <system:String x:Key="NeverExecutedMessage">jamais.</system:String>
 
     <!--#region Notification Messages-->
     

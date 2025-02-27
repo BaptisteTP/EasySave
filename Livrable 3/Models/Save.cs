@@ -102,7 +102,35 @@ namespace EasySave2._0.ViewModels
 		}
 
 		public SaveType Type { get; set; }
-        public DateTime? LastExecuteDate { get; set; }
+        private DateTime? lastExecuteDate = null;
+
+        public DateTime? LastExecuteDate
+        {
+            get { return lastExecuteDate; }
+            set 
+            { 
+                lastExecuteDate = value;
+                OnPropertyChanged(nameof(LastExecutionString));
+            }
+        }
+
+        public string LastExecutionString => string.Format(Application.Current.Resources["LastSaveExecution"] as string, LastExecuteDate == null ? 
+                                                                                                        Application.Current.Resources["NeverExecutedMessage"] as string
+                                                                                                        : ((DateTime)LastExecuteDate).ToString("dd/MM/yyyy - HH:mm"));
+
+        private int numberOfExecution = 0;
+
+        public int NumberOfExecution
+        {
+            get { return numberOfExecution; }
+            set 
+            { 
+                numberOfExecution = value;
+				OnPropertyChanged(nameof(NumberOfExecutionString));
+			}
+		}
+
+        public string NumberOfExecutionString => string.Format(Application.Current.Resources["NumberOfExecutionSave"] as string, NumberOfExecution.ToString());
 
         private CancellationTokenSource cancellationTokenSource;
         private ManualResetEventSlim pauseEvent;
