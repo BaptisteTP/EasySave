@@ -3,7 +3,7 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="NoSaves">Aucune sauvegarde enregistrée !</system:String>
     <system:String x:Key="DailyLogFolder">Pour changer le dossier des logs journalier choisissez un nouveau dossier pour accueillir le dossier :</system:String>
-    <system:String x:Key="OperationList">Liste de toutes les opérations de sauvegarde :</system:String>
+    <system:String x:Key="OperationList">Liste de toutes les opérations de sauvegarde ({0}):</system:String>
     <system:String x:Key="RealTimeLogFolder">Pour changer le dossier des logs en temps réel choisissez un nouveau dossier pour accueillir le dossier :</system:String>
     <system:String x:Key="ValidSave">✔ Sauvegarder</system:String>
     <system:String x:Key="WelcomeMessage">Bienvenue sur Easy Save, choisissez votre langue :</system:String>
@@ -47,10 +47,53 @@
     <system:String x:Key="SourcePathPopUp">Chemin source :   </system:String>
     <system:String x:Key="DestinationPathPopUp">Chemin destination :   </system:String>
     <system:String x:Key="TypeSavePopUp">Type de sauvegarde :   </system:String>
-    <system:String x:Key="EncryptionPopUp">Crypter la sauvegarde :   </system:String>
+    <system:String x:Key="EncryptionPopUp">Chiffrer la sauvegarde :   </system:String>
     <system:String x:Key="NumberFilePopUp">Nombre de fichier dans le dossier source :   </system:String>
     <system:String x:Key="SizeFilePopUp">Taille du dossier :   </system:String>
     <system:String x:Key="CloseButton">Fermer</system:String>
+    <system:String x:Key="Pass">Déchiffrer</system:String>
+    <system:String x:Key="mdp">Mot de passe : </system:String>
+    <system:String x:Key="Validate">Valider</system:String>
+    <system:String x:Key="IncorrectPassword">Mot de passe incorrect</system:String>
+    <system:String x:Key="FileToDecrypt">Dossier à déchiffrer :</system:String>
+    <system:String x:Key="DecryptKey">Clés de déchiffrage :</system:String>
+    <system:String x:Key="Decrypt">Déchiffrer</system:String>
+    <system:String x:Key="KoBlockLimit">Choisissez une limite d'espace de transfert des fichiers (en Ko) :</system:String>
+    <system:String x:Key="TextPriorityExtension">Extension Prioritaire</system:String>
+    <system:String x:Key="NoPriorityExtension">Pas d'extenstion de fichier prioritaire</system:String>
+    <system:String x:Key="NumberOfExecutionSave">Nombre d'exécution: {0}</system:String>
+    <system:String x:Key="LastSaveExecution">Dernière exécution: {0}</system:String>
+    <system:String x:Key="NeverExecutedMessage">jamais.</system:String>
+
+    <!--#region Notification Messages-->
+    
+    <!--#region Process observer-->
+
+    <system:String x:Key="BuisnessSoftwareTitle">Logiciel métier</system:String>
+    <system:String x:Key="BuisnessSoftwareFound">Un logiciel métier a été détecté.</system:String>
+    <system:String x:Key="NoBuisnessSoftwareFound">Tous les logiciels métiers ont été fermé.</system:String>
+    <system:String x:Key="BuisnessSofwareCancelSave">La sauvegarde n'a pas pu s'exécuter car un logiciel métier est lancé.</system:String>
+
+    <!--endregion-->
+
+    <!--#region Critical files-->
+
+    <system:String x:Key="CriticalFilesTitle">Fichiers prioritaires</system:String>
+    <system:String x:Key="CriticalFilesCopyEnd">Le traitement des fichiers prioritaires est terminé.</system:String>
+
+    <!--endregion-->
+
+    <!--#region Save CRUD-->
+
+    <system:String x:Key="SaveTitle">Sauvegardes</system:String>
+    <system:String x:Key="SaveAdd">La sauvegarde {0} a bien été créé.</system:String>
+    <system:String x:Key="SaveEdit">La sauvegarde {0} a bien été modifié.</system:String>
+    <system:String x:Key="SaveDelete">La sauvegarde {0} a bien été supprimé.</system:String>
+    <system:String x:Key="NoEligibleFileFound">Impossible d'exécuter la sauvegarde {0} : aucun fichier éligible n'a été trouvé.</system:String>
+
+    <!--endregion-->
+
+    <!--#endregion-->
 
 
 </ResourceDictionary>

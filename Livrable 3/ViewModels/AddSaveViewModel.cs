@@ -12,6 +12,7 @@ using System.Xml.Linq;
 using System.Windows.Navigation;
 using EasySave2._0.Models;
 using System.Windows;
+using EasySave2._0.Models.Notifications_Related;
 
 namespace EasySave2._0.ViewModels
 {
@@ -121,11 +122,16 @@ namespace EasySave2._0.ViewModels
         private void CreateSave()
         {
 			saveStore.CreateNewSave(SaveName, SelectedSaveType, SourcePath, DestinationPath, Encrypt);
+
+            NotificationHelper.CreateNotifcation(title: Application.Current.Resources["SaveTitle"] as string,
+												 content: string.Format(Application.Current.Resources["SaveAdd"] as string, SaveName),
+                                                 type:2);
             ClearFields();
             SaveCreated?.Invoke(this, EventArgs.Empty);
 		}
 
-        private void ClearFields()
+
+		private void ClearFields()
         {
 			SaveName = string.Empty;
 			ClearError(nameof(SaveName));

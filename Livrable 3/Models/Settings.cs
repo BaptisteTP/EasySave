@@ -21,11 +21,14 @@ namespace EasySave2._0.Models
 		public string? DailyLogPath { get; set; }
 		public string? RealTimeLogPath { get; set; }
 		public string? LogFormat { get; set; }
-		public List<string> BuisnessSoftwaresInterrupt { get; set; }
+        public string? FileSizeLimit { get; set; }
+        public List<string> BuisnessSoftwaresInterrupt { get; set; }
+		public List<string> PriorityExtension { get; set; }
 
-		public static event EventHandler? LogFomatChanged;
+        public static event EventHandler? LogFomatChanged;
+        public static event EventHandler? LanguageChanged;
 
-		private static ResourceManager _ressourceManager = Creator.GetResourceManagerInstance();
+		public static object _writeLock = new object();
 
 		public static Settings CreateBaseSettings()
 		{
@@ -37,8 +40,10 @@ namespace EasySave2._0.Models
 				DailyLogPath = "",
 				RealTimeLogPath = "",
 				LogFormat = "",
-				BuisnessSoftwaresInterrupt = new List<string>(),
-			};
+                FileSizeLimit = "0",
+                BuisnessSoftwaresInterrupt = new List<string>(),
+                PriorityExtension = new List<string>()
+            };
 			WriteSettingsToJsonFile(baseSettings);
 
 			return baseSettings;
@@ -47,12 +52,15 @@ namespace EasySave2._0.Models
 		private static void WriteSettingsToJsonFile(Settings settings)
 		{
 			// Write the settings to a json file.
-			var options = new JsonSerializerOptions { WriteIndented = true };
-			string baseSttingsJson = JsonSerializer.Serialize<Settings>(settings, options);
-
-			using (StreamWriter sw = File.CreateText("appsettings.json"))
+			lock (_writeLock)
 			{
-				sw.WriteLine(baseSttingsJson);
+				var options = new JsonSerializerOptions { WriteIndented = true };
+				string baseSttingsJson = JsonSerializer.Serialize<Settings>(settings, options);
+
+				using (StreamWriter sw = File.CreateText("appsettings.json"))
+				{
+					sw.WriteLine(baseSttingsJson);
+				}
 			}
 		}
 
@@ -93,11 +101,16 @@ namespace EasySave2._0.Models
 					currentSettings.LogFormat = (string)newValue;
 					LogFomatChanged?.Invoke(null, EventArgs.Empty);
 					break;
-
-				case "BuisnessSoftwaresInterrupt":
+                case "FileSizeLimit":
+                    currentSettings.FileSizeLimit = (string)newValue;
+                    break;
+                case "BuisnessSoftwaresInterrupt":
 					currentSettings.BuisnessSoftwaresInterrupt = (List<string>)newValue;
 					break;
-				default:
+                case "PriorityExtension":
+                    currentSettings.PriorityExtension = (List<string>)newValue;
+					break;
+                default:
 					return;
 			}
 
@@ -122,10 +135,11 @@ namespace EasySave2._0.Models
                     break;
             }
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
+			LanguageChanged?.Invoke(null, EventArgs.Empty);
 
-        }
+		}
 
-        public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
+		public static bool UserHasRightPermissionInFolder(string newDailyLogFolderPath)
 		{
 			// Check if the user has the right permissions in the folder.
 			if (!Directory.Exists(newDailyLogFolderPath)) {  return false; }

@@ -9,9 +9,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.Serialization;
 
 namespace EasySave2._0.ViewModels
 {
@@ -42,7 +44,9 @@ namespace EasySave2._0.ViewModels
         }
 
         private bool isExecuting;
-        public bool IsExecuting
+		[JsonIgnore]
+		[XmlIgnore]
+		public bool IsExecuting
         {
             get { return isExecuting; }
             set
@@ -53,7 +57,7 @@ namespace EasySave2._0.ViewModels
         }
 
         private int progress;
-        public int Progress
+		public int Progress
         {
             get { return progress; }
             set { progress = value; OnPropertyChanged(); }
@@ -67,17 +71,63 @@ namespace EasySave2._0.ViewModels
         }
 
         private bool isPaused;
-
-        public bool IsPaused
+		[JsonIgnore]
+		[XmlIgnore]
+		public bool IsPaused
         {
             get { return isPaused; }
             set { isPaused = value; OnPropertyChanged(); }
         }
 
+        public bool WasSavePausedByUser { get; set; }
 
+		private bool isCopyingCriticalFile;
+		[JsonIgnore]
+		[XmlIgnore]
+		public bool IsCopyingCriticalFile
+		{
+			get { return isCopyingCriticalFile; }
+			set { isCopyingCriticalFile = value; OnPropertyChanged(); }
+		}
 
-        public SaveType Type { get; set; }
-        public DateTime? LastExecuteDate { get; set; }
+		private bool isWaitingForCriticalFiles;
+		[JsonIgnore]
+		[XmlIgnore]
+		public bool IsWaitingForCriticalFiles
+		{
+			get { return isWaitingForCriticalFiles; }
+			set { isWaitingForCriticalFiles = value; OnPropertyChanged(); }
+		}
+
+		public SaveType Type { get; set; }
+        private DateTime? lastExecuteDate = null;
+
+        public DateTime? LastExecuteDate
+        {
+            get { return lastExecuteDate; }
+            set 
+            { 
+                lastExecuteDate = value;
+                OnPropertyChanged(nameof(LastExecutionString));
+            }
+        }
+
+        public string LastExecutionString => string.Format(Application.Current.Resources["LastSaveExecution"] as string, LastExecuteDate == null ? 
+                                                                                                        Application.Current.Resources["NeverExecutedMessage"] as string
+                                                                                                        : ((DateTime)LastExecuteDate).ToString("dd/MM/yyyy - HH:mm"));
+        private int numberOfExecution = 0;
+
+        public int NumberOfExecution
+        {
+            get { return numberOfExecution; }
+            set 
+            { 
+                numberOfExecution = value;
+				OnPropertyChanged(nameof(NumberOfExecutionString));
+			}
+		}
+
+        public string NumberOfExecutionString => string.Format(Application.Current.Resources["NumberOfExecutionSave"] as string, NumberOfExecution.ToString());
 
         private CancellationTokenSource cancellationTokenSource;
         private ManualResetEventSlim pauseEvent;
@@ -114,8 +164,6 @@ namespace EasySave2._0.ViewModels
         public async Task Execute()
         {
             cancellationTokenSource = new CancellationTokenSource();
-            IsExecuting = true;
-            Progress = 0;
 
             Debug.WriteLine("Save execution started for Save ID: " + Id);
 
@@ -124,13 +172,8 @@ namespace EasySave2._0.ViewModels
                 Creator.GetPasterInstance().BeginCopyPaste(this, cancellationTokenSource.Token, pauseEvent);
             }, cancellationTokenSource.Token);
 
-            IsExecuting = false;
-            Progress = 0;
-            IsPaused = false;
-
             Debug.WriteLine("Save execution finished for Save ID: " + Id);
         }
-
 
         public void Resume()
         {
@@ -146,8 +189,14 @@ namespace EasySave2._0.ViewModels
 
         public void Stop()
         {
+            // Cancel the ongoing operation
             cancellationTokenSource?.Cancel();
+
+            pauseEvent.Set();
+
+            // Reset the state properties
             IsExecuting = false;
+            IsPaused = false;
             Progress = 0;
         }
     }

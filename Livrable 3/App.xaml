@@ -74,6 +74,10 @@
             <Setter Property="Background" Value="Red"/>
         </Style>
 
+        <Style x:Key="BlueButtonStyle" BasedOn="{StaticResource BaseButtonStyle}" TargetType="Button">
+            <Setter Property="Background" Value="#FF007FCA"/>
+        </Style>
+
         <Style x:Key="OptionButton" BasedOn="{StaticResource BaseButtonStyle}" TargetType="Button">
             <Setter Property="Width" Value="154"/>
             <Setter Property="Height" Value="44"/>

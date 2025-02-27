@@ -9,6 +9,8 @@ using System.Windows.Threading;
 using EasySave2._0.CustomEventArgs;
 using System.Windows.Navigation;
 using System.Diagnostics;
+using EasySave2._0.Models.Notifications_Related;
+using EasySave2._0.Models;
 
 namespace EasySave2._0
 {
@@ -29,7 +31,6 @@ namespace EasySave2._0
 
         public ObservableCollection<Save> PagedItems { get; set; } = new ObservableCollection<Save>();
 
-
 		public ICommand NextPageCommand { get; }
         public ICommand PreviousPageCommand { get; }
         public ICommand StartSaveCommand {  get; }
@@ -48,6 +49,8 @@ namespace EasySave2._0
         {
             get => $"{CurrentPage} / {TotalPages}";
         }
+
+        public string SaveListingString => string.Format(Application.Current.Resources["OperationList"] as string, Items.Count.ToString());
         public int TotalPages => (int)Math.Ceiling((double)Items.Count / ItemsPerPage);
 
         public int CurrentPage
@@ -65,60 +68,77 @@ namespace EasySave2._0
             }
         }
 
-            private int _saveExecutionProgress = 0;
-            public int SaveExecutionProgress
+        private int _saveExecutionProgress = 0;
+        public int SaveExecutionProgress
+        {
+            get { return _saveExecutionProgress; }
+            set 
             {
-                get { return _saveExecutionProgress; }
-                set 
-                {
-                    _saveExecutionProgress = value;
-                    OnPropertyChanged();
-                }
+                _saveExecutionProgress = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public HomeViewModel()
+        {
+            var Saves = saveStore.GetAllSaves();
+            foreach (var save in Saves)
+            {
+                Items.Add(save);
             }
 
-            public HomeViewModel()
-            {
-                var Saves = saveStore.GetAllSaves();
-                foreach (var save in Saves)
-                {
-                    Items.Add(save);
-                }
-
-                NextPageCommand = new RelayCommand(_ => NextPage(), _ => CanGoNext());
-                PreviousPageCommand = new RelayCommand(_ => PreviousPage(), _ => CanGoPrevious());
-                StartSaveCommand = new RelayCommand(StartSave, CanInteract);
-                DeleteCommand = new RelayCommand(DeleteItem, CanInteract);
-                EditItemCommand = new RelayCommand(EditItem, CanInteract);
-                InformationSaveCommand = new RelayCommand(OpenInfoPopup, CanInteract);
-                ExecuteAllSavesCommand = new RelayCommand(ExecuteAllSaves);
-                PauseCommand = new RelayCommand(PauseSave, CanPauseStop);
-                StopCommand = new RelayCommand(StopSave, CanPauseStop);
+            NextPageCommand = new RelayCommand(_ => NextPage(), _ => CanGoNext());
+            PreviousPageCommand = new RelayCommand(_ => PreviousPage(), _ => CanGoPrevious());
+            StartSaveCommand = new RelayCommand(StartSave, CanInteract);
+            DeleteCommand = new RelayCommand(DeleteItem, CanInteract);
+            EditItemCommand = new RelayCommand(EditItem, CanInteract);
+            InformationSaveCommand = new RelayCommand(OpenInfoPopup, CanInteract);
+            ExecuteAllSavesCommand = new RelayCommand(ExecuteAllSaves);
+            PauseCommand = new RelayCommand(PauseSave, CanPauseStop);
+            StopCommand = new RelayCommand(StopSave, CanPauseStop);
             ResumeCommand = new RelayCommand(ResumeSave, CanResume);
-
+			Settings.LanguageChanged += Settings_LanguageChanged;
 
             UpdatePagedItems();
+        }
+
+		private void Settings_LanguageChanged(object? sender, EventArgs e)
+		{
+            OnPropertyChanged(nameof(SaveListingString));
+			foreach(Save save in Items)
+            {
+                save.LastExecuteDate = save.LastExecuteDate;
+                save.NumberOfExecution = save.NumberOfExecution;
+
             }
-        public void PauseSave(object obj)
+		}
+
+		public void PauseSave(object obj)
         {
             if (obj is Save save)
             {
-                save.Pause();
+                saveStore.PauseSave(save.Id,
+                                    wasSavePausedByUser: true);
             }
         }
         public void ResumeSave(object obj)
         {
             if (obj is Save save)
             {
-                save.Resume();
+                try
+                {
+                    saveStore.ResumeSave(save.Id);
+                }
+                catch { }
             }
         }
         public void StopSave(object obj)
         {
             if (obj is Save save)
             {
-                save.Stop(); 
-            }
-        }
+				saveStore.StopSave(save.Id);
+			}
+		}
         public bool CanResume(object arg) => true;
         public bool CanPauseStop(object arg) => true;
         private void InfoItem(object obj)
@@ -168,10 +188,10 @@ namespace EasySave2._0
                 {
                     Debug.WriteLine("Executing save for Save ID: " + save.Id);
                     ExecuteSaveAsync(save);
-                }
+
+				}
             }
         }
-
 
         private bool CanInteract(object arg)
             {
@@ -231,6 +251,7 @@ namespace EasySave2._0
 
 			    OnPropertyChanged(nameof(CurrentPageFormatted));
 			    OnPropertyChanged(nameof(CurrentPage));
+			    OnPropertyChanged(nameof(SaveListingString));
             }
 
         private void NextPage()
@@ -277,7 +298,11 @@ namespace EasySave2._0
                 Items.Remove(save);
                 saveStore.DeleteSave(save.Id);
 
-                CurrentPage = 1;
+				NotificationHelper.CreateNotifcation(title: Application.Current.Resources["SaveTitle"] as string,
+									 content: string.Format(Application.Current.Resources["SaveDelete"] as string, save.Name),
+									 type: 2);
+
+				CurrentPage = 1;
                 UpdatePagedItems();
 			}
         }

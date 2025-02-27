@@ -8,6 +8,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -23,8 +24,10 @@ namespace EasySave2._0.ViewModels
 		public ICommand ConfirmSettingsCommand { get; }
 		public ICommand AddBuisnessSoftwareCommand { get; }
 		public ICommand DeleteBuisnessSoftwareCommand { get; }
+		public ICommand DeletePriorityExtensionCommand { get; }
+		public ICommand AddPriorityExtensionCommand { get; }
 
-		public ObservableCollection<LanguageItem> LanguageItems { get; } = new ObservableCollection<LanguageItem>(Creator.GetAvalaibleLanguages());
+        public ObservableCollection<LanguageItem> LanguageItems { get; } = new ObservableCollection<LanguageItem>(Creator.GetAvalaibleLanguages());
 
 		#region Attributes
 
@@ -42,7 +45,21 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-		public LanguageItem SelectedLanguage { get; private set; }
+		public ObservableCollection<string> PriorityExtension { get; }
+
+        private string _priorityExtensionToAdd = "";
+
+		public string PriorityExtensionToAdd
+		{
+			get { return _priorityExtensionToAdd; }
+            set
+			{
+				_priorityExtensionToAdd = value;
+				OnPropertyChanged();
+			}
+		}
+
+        public LanguageItem SelectedLanguage { get; private set; }
 
 		public string dailyLogPath = Creator.GetSettingsInstance().DailyLogPath!;
 
@@ -81,7 +98,21 @@ namespace EasySave2._0.ViewModels
 			}
 		}
 
-		private LogType selectedLogType = LogType.json;
+        public string _fileSizeLimit = Creator.GetSettingsInstance().FileSizeLimit;
+        public string FileSizeLimit
+        {
+            get => _fileSizeLimit;
+            set
+            {
+                if (_fileSizeLimit != value && Regex.IsMatch(value, "^\\d*$"))
+                {
+                    _fileSizeLimit = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private LogType selectedLogType = LogType.json;
 
 		public LogType SelectedLogType
 		{
@@ -100,7 +131,9 @@ namespace EasySave2._0.ViewModels
 			ChangedLogPathCommand = new RelayCommand(ChangeViaFolderDialog);
 			ConfirmSettingsCommand = new RelayCommand(ConfirmSettings, CanConfirmSettings);
 			AddBuisnessSoftwareCommand = new RelayCommand(AddBuisnessSoftware, CanAddBuisness);
+			AddPriorityExtensionCommand = new RelayCommand(AddPriorityExtension, CanAddPriorityExtension);
 			DeleteBuisnessSoftwareCommand = new RelayCommand(DeleteBuisnessSoftware, _ => true);
+			DeletePriorityExtensionCommand = new RelayCommand(DeletePriorityExtension, _ => true);
 
 			Settings settings = Creator.GetSettingsInstance();
 
@@ -108,9 +141,11 @@ namespace EasySave2._0.ViewModels
 								?? Creator.GetAvalaibleLanguages().FirstOrDefault(lang => lang.Language == settings.FallBackLanguage);
 			DailyLogPath = settings.DailyLogPath;
 			RealTimeLogPath = settings.RealTimeLogPath;
-			BuisnessSoftwaresInterrupt = new ObservableCollection<string>(settings.BuisnessSoftwaresInterrupt);
+            FileSizeLimit = settings.FileSizeLimit;
+            BuisnessSoftwaresInterrupt = new ObservableCollection<string>(settings.BuisnessSoftwaresInterrupt);
+            PriorityExtension = new ObservableCollection<string>(settings.PriorityExtension);
 
-			if (Enum.IsDefined(typeof(LogType), settings.LogFormat))
+            if (Enum.IsDefined(typeof(LogType), settings.LogFormat))
 			{
 				SelectedLogType = (LogType)Enum.Parse(typeof(LogType), settings.LogFormat);
 			}
@@ -143,10 +178,37 @@ namespace EasySave2._0.ViewModels
 			Settings.ChangeSetting("BuisnessSoftwaresInterrupt", new List<string>(BuisnessSoftwaresInterrupt));
 			settings.BuisnessSoftwaresInterrupt = new List<string>(BuisnessSoftwaresInterrupt);
 		}
+		private void DeletePriorityExtension(object obj)
+		{
+			if(obj is string priorityExtensionToRemove)
+			{
+				Settings settings = Creator.GetSettingsInstance();
+
+				PriorityExtension.Remove(priorityExtensionToRemove);
+
+				Settings.ChangeSetting("PriorityExtension", new List<string>(PriorityExtension));
+				settings.PriorityExtension = new List<string>(PriorityExtension);
+			}
+		}
+
+		private void AddPriorityExtension(object obj)
+		{
+			Settings settings = Creator.GetSettingsInstance();
+
+            PriorityExtension.Add(PriorityExtensionToAdd);
+			PriorityExtensionToAdd = "";
+
+			Settings.ChangeSetting("PriorityExtension", new List<string>(PriorityExtension));
+			settings.PriorityExtension = new List<string>(PriorityExtension);
+		}
 
 		private bool CanAddBuisness(object arg)
 		{
 			return BuisnessSoftwareToAdd != "";
+		}
+		private bool CanAddPriorityExtension(object arg)
+		{
+			return PriorityExtensionToAdd != "";
 		}
 
         private void ConfirmSettings(object obj)
@@ -160,7 +222,10 @@ namespace EasySave2._0.ViewModels
 			Settings.ChangeSetting("LogFormat", selectedLogType.ToString());
 			Creator.GetSettingsInstance().LogFormat = selectedLogType.ToString();
 
-			SettingsConfirmed?.Invoke(this, EventArgs.Empty);
+            Settings.ChangeSetting("FileSizeLimit", FileSizeLimit);
+            Creator.GetSettingsInstance().FileSizeLimit = FileSizeLimit;
+
+            SettingsConfirmed?.Invoke(this, EventArgs.Empty);
 		}
 
 		private bool CanConfirmSettings(object arg)

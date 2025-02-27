@@ -1,0 +1,510 @@
+﻿<Window x:Class="Remote_app_easysave.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Remote_app_easysave"
+        xmlns:viewmodels="clr-namespace:Remote_app_easysave.ViewModels"
+        xmlns:models="clr-namespace:Remote_app_easysave.Models"
+        xmlns:custom="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
+        xmlns:valueconverters="clr-namespace:Remote_app_easysave.ValueConverters"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="450"
+        Width="800"
+        MinWidth="400">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <valueconverters:BooleanAndConverter x:Key="BooleanAndConverter" />
+        <valueconverters:EmptyStringToBooleanConverter x:Key="EmptyStringToBooleanConverter" />
+    </Window.Resources>
+
+    <Window.DataContext>
+        <viewmodels:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Background="WhiteSmoke"
+                HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}"
+                Padding="8"
+                BorderThickness="0 0 0 1"
+                BorderBrush="Black">
+            <Expander Grid.Row="0">
+                <Expander.Header>
+                    <Grid HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0"
+                                Command="{Binding ConnectionCommand}"
+                                Padding="4"
+                                Margin="0 0 4 0">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Content"
+                                            Value="Connect" />
+                                    <Setter Property="IsEnabled"
+                                            Value="True" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ConnectionState}"
+                                                     Value="Connected">
+                                            <Setter Property="Content"
+                                                    Value="Disconnect" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}"
+                                                     Value="Connecting..">
+                                            <Setter Property="IsEnabled"
+                                                    Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding ErrorMessage}"
+                                   Foreground="Red"
+                                   VerticalAlignment="Center" 
+                                   TextWrapping="Wrap"/>
+
+                        <StackPanel Grid.Column="2"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Ellipse Width="12"
+                                     Height="12"
+                                     Margin="4 0">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill"
+                                                Value="Red" />
+                                        <Setter Property="Visibility"
+                                                Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ConnectionState}"
+                                                         Value="Connected">
+                                                <Setter Property="Fill"
+                                                        Value="ForestGreen" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}"
+                                                         Value="Connecting..">
+                                                <Setter Property="Visibility"
+                                                        Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+
+                            <custom:LoadingSpinner Diameter="12"
+                                                   Thickness="2"
+                                                   Color="ForestGreen"
+                                                   Margin="4 0">
+                                <custom:LoadingSpinner.Style>
+                                    <Style TargetType="custom:LoadingSpinner">
+                                        <Setter Property="IsLoading"
+                                                Value="False" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ConnectionState}"
+                                                         Value="Connecting..">
+                                                <Setter Property="IsLoading"
+                                                        Value="True" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </custom:LoadingSpinner.Style>
+                            </custom:LoadingSpinner>
+
+                            <TextBlock Text="{Binding ConnectionState}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Expander.Header>
+
+                <UniformGrid Columns="2"
+                             Margin="0 4 0 0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   Text="IP : " />
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Ip}"
+                                 MinWidth="80" />
+                    </Grid>
+
+                    <Grid Margin="4 0 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   Text="Port : " />
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Port}"
+                                 MinWidth="80" />
+                    </Grid>
+                </UniformGrid>
+
+            </Expander>
+        </Border>
+
+        <!--Connected Grid-->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility"
+                            Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ConnectionState}"
+                                     Value="Connected">
+                            <Setter Property="Visibility"
+                                    Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            
+            <!--SearchBar Grid-->
+            <Grid Grid.Row="0" Margin="8">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility"
+                                Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Saves.Count}"
+                                         Value="0">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0"
+                      HorizontalAlignment="Center">
+                    <TextBox Padding="16"
+                             Width="400"
+                             Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Text="Rechercher une sauvegarde"
+                               Margin="20 0 0 0"
+                               VerticalAlignment="Center"
+                               IsHitTestVisible="False">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding FilterString}"
+                                                 Value="">
+                                        <Setter Property="Visibility"
+                                                Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+
+                <Grid Grid.Row="1"
+                      HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Margin"
+                                    Value="4 8 4 0" />
+                            <Setter Property="Padding"
+                                    Value="8" />
+                        </Style>
+                    </Grid.Resources>
+
+                    <Button Grid.Column="0"
+                            Content="Tout éxécuter"
+                            Visibility="{Binding AnySaveIdle, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Command="{Binding StartAllSavesCommand}" />
+
+                    <Button Grid.Column="1"
+                            Content="Tout mettre en pause"
+                            Visibility="{Binding AnySaveExecuting, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Command="{Binding PauseAllSavesCommand}" />
+
+                    <Button Grid.Column="2"
+                            Content="Tout reprendre"
+                            Visibility="{Binding AnySavePaused, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Command="{Binding ResumeAllSavesCommand}" />
+                    <Button Grid.Column="3"
+                            Content="Tout annuler"
+                            Visibility="{Binding AnySaveToCancel, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Command="{Binding CancelAllSavesCommand}" />
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <TextBlock Text="No saves registered"
+                           Foreground="Red"
+                           FontSize="16"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Saves.Count}"
+                                             Value="0">
+                                    <Setter Property="Visibility"
+                                            Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <TextBlock Text="No saves found"
+                           Foreground="Red"
+                           FontSize="16"
+                           Panel.ZIndex="5"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding FilteredSaves.Count}"
+                                                   Value="0" />
+                                        <Condition Binding="{Binding FilterString, Converter={StaticResource EmptyStringToBooleanConverter}}"
+                                                   Value="False" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility"
+                                            Value="Visible" />
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <ListView ItemsSource="{Binding FilteredSaves}"
+                          BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.Style>
+                        <Style TargetType="ListView">
+                            <Setter Property="Visibility"
+                                    Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Saves.Count}"
+                                             Value="0">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Style>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Background"
+                                    Value="Transparent" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="viewmodels:Save">
+                            <Border Background="#F3F1F1"
+                                    Padding="12"
+                                    CornerRadius="10"
+                                    Margin="10 4">
+                                <Grid VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid Grid.Column="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0"
+                                                       Text="{Binding Id}"
+                                                       VerticalAlignment="Center"
+                                                       Margin="16"
+                                                       FontWeight="Bold"
+                                                       FontSize="16" />
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding Name}"
+                                                       Margin="10,0,0,0"
+                                                       MinWidth="50"
+                                                       VerticalAlignment="Center"
+                                                       TextWrapping="Wrap"
+                                                       FontWeight="Bold"
+                                                       FontSize="16" />
+                                        </Grid>
+                                        <StackPanel Grid.Column="1"
+                                                    Orientation="Horizontal"
+                                                    HorizontalAlignment="Right">
+                                            <Button Margin="10,0,0,0"
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.StartSaveCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Cursor="Hand"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center">
+                                                <Image Source="assets/images/PlayButton.png"
+                                                       Width="24"
+                                                       Height="24" />
+                                                <Button.Style>
+                                                    <Style BasedOn="{StaticResource NoHighlightButton}"
+                                                           TargetType="Button">
+                                                        <Setter Property="Visibility"
+                                                                Value="Visible" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsExecuting}"
+                                                                         Value="True">
+                                                                <Setter Property="Visibility"
+                                                                        Value="Collapsed" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <Button Margin="10,0,0,0"
+                                                    Style="{StaticResource NoHighlightButton}"
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.PauseSaveCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Cursor="Hand"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center">
+                                                <Button.Visibility>
+                                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                                        <Binding Path="IsExecuting" />
+                                                        <Binding Path="IsPaused" />
+                                                    </MultiBinding>
+                                                </Button.Visibility>
+                                                <Image Source="assets/images/PauseButton.png"
+                                                       Width="24"
+                                                       Height="24" />
+                                            </Button>
+                                            <Button Margin="10,0,0,0"
+                                                    Style="{StaticResource NoHighlightButton}"
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.ResumeSaveCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Cursor="Hand"
+                                                    HorizontalAlignment="Right"
+                                                    Visibility="{Binding IsPaused, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                    VerticalAlignment="Center">
+                                                <Image Source="assets/images/PlayButton.png"
+                                                       Width="24"
+                                                       Height="24" />
+                                            </Button>
+                                            <Button Margin="10,0,0,0"
+                                                    Style="{StaticResource NoHighlightButton}"
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.CancelSaveCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Cursor="Hand"
+                                                    HorizontalAlignment="Right"
+                                                    Visibility="{Binding IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                    VerticalAlignment="Center">
+                                                <Image Source="assets/images/CancelButton.png"
+                                                       Width="24"
+                                                       Height="24" />
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <StackPanel Grid.Row="1"
+                                                VerticalAlignment="Bottom"
+                                                Visibility="{Binding IsExecuting, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Executing.."
+                                                       FontWeight="Medium" />
+                                            <TextBlock Text="{Binding Progress, StringFormat={}{0}%}" />
+                                        </StackPanel>
+                                        <ProgressBar VerticalAlignment="Bottom"
+                                                     Height="4"
+                                                     Minimum="0"
+                                                     Maximum="100"
+                                                     Value="{Binding Progress}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Grid>
+
+        <!--Not Connected Grid-->
+        <Grid Grid.Row="1">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility"
+                            Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ConnectionState}"
+                                     Value="Not connected">
+                            <Setter Property="Visibility"
+                                    Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <TextBlock Panel.ZIndex="5"
+                       Text="You are not connected to the server."
+                       Foreground="Red"
+                       FontSize="16"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </Grid>
+
+        <Grid x:Name="NotificationGrid"
+              Grid.Row="1"
+              VerticalAlignment="Bottom"
+              HorizontalAlignment="Right" />
+
+    </Grid>
+</Window>

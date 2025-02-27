@@ -3,7 +3,7 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="NoSaves">No saves recorded!</system:String>
     <system:String x:Key="DailyLogFolder">To change the daily log folder, choose a new folder to store it:</system:String>
-    <system:String x:Key="OperationList">List of all backup operations:</system:String>
+    <system:String x:Key="OperationList">List of all backup operations ({0}):</system:String>
     <system:String x:Key="RealTimeLogFolder">To change the real-time log folder, choose a new folder to store it:</system:String>
     <system:String x:Key="ValidSave">✔ Save</system:String>
     <system:String x:Key="WelcomeMessage">Welcome to Easy Save, choose your language:</system:String>
@@ -44,13 +44,57 @@
     <system:String x:Key="RealTimeLogUnvalidMessage">The real-time log folder is not valid.</system:String>
     <system:String x:Key="SettingText">Settings</system:String>
     <system:String x:Key="SaveInformationPopUp">Save information</system:String>
-    <system:String x:Key="SourcePathPopUp">Source path:   </system:String>
-    <system:String x:Key="DestinationPathPopUp">Destination path:   </system:String>
-    <system:String x:Key="TypeSavePopUp">Save type:   </system:String>
-    <system:String x:Key="EncryptionPopUp">Encrypt save:   </system:String>
-    <system:String x:Key="NumberFilePopUp">Number of files in the source folder:   </system:String>
-    <system:String x:Key="SizeFilePopUp">Folder size:   </system:String>
+    <system:String x:Key="SourcePathPopUp">Source path:</system:String>
+    <system:String x:Key="DestinationPathPopUp">Destination path:</system:String>
+    <system:String x:Key="TypeSavePopUp">Save type:</system:String>
+    <system:String x:Key="EncryptionPopUp">Encrypt save:</system:String>
+    <system:String x:Key="NumberFilePopUp">Number of files in the source folder:</system:String>
+    <system:String x:Key="SizeFilePopUp">Folder size:</system:String>
     <system:String x:Key="CloseButton">Close</system:String>
+    <system:String x:Key="Pass">Decrypt</system:String>
+    <system:String x:Key="mdp">Password :</system:String>
+    <system:String x:Key="Validate">Validate</system:String>
+    <system:String x:Key="IncorrectPassword">Incorrect password</system:String>
+    <system:String x:Key="FileToDecrypt">Path to decrypt :</system:String>
+    <system:String x:Key="DecryptKey">Decryption keys :</system:String>
+    <system:String x:Key="Decrypt">Decrypt</system:String>
+    <system:String x:Key="KoBlockLimit">Choose a file transfer size limit (in KB):</system:String>
+    <system:String x:Key="TextPriorityExtension">Extension Priority</system:String>
+    <system:String x:Key="NoPriorityExtension">No priority extension</system:String>
+    <system:String x:Key="NumberOfExecutionSave">Total number of execution : {0}</system:String>
+    <system:String x:Key="LastSaveExecution">Last execution : {0}</system:String>
+    <system:String x:Key="NeverExecutedMessage">never.</system:String>
 
+
+
+    <!--#region Notification Messages-->
+   
+    <!--#region Buisness software-->
+
+    <system:String x:Key="BuisnessSoftwareTitle">Buisness software</system:String>
+    <system:String x:Key="BuisnessSoftwareFound">A buisness software has been detected.</system:String>
+    <system:String x:Key="NoBuisnessSoftwareFound">All buisness software has been closed.</system:String>
+    <system:String x:Key="BuisnessSofwareCancelSave">Save could not execute because a buisness software is on.</system:String>
+
+    <!--endregion-->
+
+    <!--#region Critical files-->
+
+    <system:String x:Key="CriticalFilesTitle">Files priority</system:String>
+    <system:String x:Key="CriticalFilesCopyEnd">Copy of critical files has ended.</system:String>
+
+    <!--endregion-->
+
+    <!--#region Save CRUD-->
+
+    <system:String x:Key="SaveTitle">Saves</system:String>
+    <system:String x:Key="SaveAdd">Save {0} has been created.</system:String>
+    <system:String x:Key="SaveEdit">Save {0} has been edited.</system:String>
+    <system:String x:Key="SaveDelete">Save {0} has been deleted.</system:String>
+    <system:String x:Key="NoEligibleFileFound">Cannot execute save {0} : no eligible files found.</system:String>
+
+    <!--endregion-->
+
+    <!--#endregion-->
 
 </ResourceDictionary>

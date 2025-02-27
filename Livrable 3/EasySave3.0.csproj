@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>easysave-icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -67,6 +68,7 @@
     <Content Include="assets\images\information.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="easysave-icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,8 +76,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\UserControl_Library\UserControl_Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="LogLib">
       <HintPath>LogLib.dll</HintPath>
+    </Reference>
+    <Reference Include="UserControl_Library">
+      <HintPath>UserControl_Library.dll</HintPath>
     </Reference>
   </ItemGroup>
 

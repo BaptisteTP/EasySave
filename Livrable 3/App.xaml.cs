@@ -5,6 +5,7 @@ using System.Data;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace EasySave2._0
 {
@@ -13,9 +14,14 @@ namespace EasySave2._0
     /// </summary>
     public partial class App : Application
     {
-        private static Mutex mutex = new Mutex(true, "{E32D87C6-33A6-4F9D-A8D2-3F2C0A00F4F3}");
+		[DllImport("Kernel32.dll")]
+		private static extern bool AttachConsole(int processId);
 
-        async void App_Startup(object sender, StartupEventArgs e)
+		[DllImport("kernel32.dll")]
+		private static extern bool FreeConsole();
+		private static Mutex mutex = new Mutex(true, "{E32D87C6-33A6-4F9D-A8D2-3F2C0A00F4F3}");
+
+		async void App_Startup(object sender, StartupEventArgs e)
         {
             if (!mutex.WaitOne(TimeSpan.Zero, true))
             {
@@ -30,15 +36,21 @@ namespace EasySave2._0
                 MainWindow mainWindow = Creator.GetMainWindow();
                 mainWindow.Show();
                 mainWindow.StartAppNaviguation();
-            }
+                Creator.GetProcessObserverInstance();
+			}
             else if (e.Args.Length == 1)
             {
-                await HandleCommandLineExecution(e.Args);
-                App.Current.Shutdown();
+				Creator.GetProcessObserverInstance();
+				AttachConsole(-1);
+                Console.WriteLine("");
+				await HandleCommandLineExecution(e.Args);
+                Console.WriteLine("Fin de l'exécution.");
+                FreeConsole();
+				App.Current.Shutdown();
             }
             else
             {
-                Console.WriteLine("Les paramètres spécifiés ne sont pas reconnus comme valides.");
+                Console.WriteLine("Les paramètres spécifiés ne sont pas reconnus comme valide.");
                 App.Current.Shutdown();
             }
         }
@@ -78,7 +90,7 @@ namespace EasySave2._0
 
         private static void OnSaveExecuted(int i)
         {
-            Console.WriteLine($"Exécution du sauvegarde {i}.");
+            Console.WriteLine($"Exécution de la sauvegarde {i}.");
         }
 
         private static void OnFailedExecute(int i)

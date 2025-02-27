@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace EasySave2._0.ViewModels
 {
-	public class LogViewModel : ViewModelBase
+	public class LogViewModel : ValidationViewModelBase
 	{
 		public event EventHandler? NextPageButtonClicked;
 		public ICommand ChangePathCommand { get; }
@@ -24,8 +25,15 @@ namespace EasySave2._0.ViewModels
 			get { return dailyLogPath; }
 			set
 			{
+				ClearError(nameof(DailyLogPath));
+
 				dailyLogPath = value;
 				OnPropertyChanged();
+
+				if (string.IsNullOrEmpty(DailyLogPath) || !Settings.UserHasRightPermissionInFolder(DailyLogPath))
+				{
+					AddError(nameof(DailyLogPath), Application.Current.Resources["DailyLogUnvalidMessage"] as string);
+				}
 			}
 		}
 
@@ -35,13 +43,19 @@ namespace EasySave2._0.ViewModels
 			get { return realTimeLogPath; }
 			set
 			{
+				ClearError(nameof(RealTimeLogPath));
+
 				realTimeLogPath = value;
 				OnPropertyChanged();
+
+				if (string.IsNullOrEmpty(RealTimeLogPath) || !Settings.UserHasRightPermissionInFolder(RealTimeLogPath))
+				{
+					AddError(nameof(RealTimeLogPath), Application.Current.Resources["RealTimeLogUnvalidMessage"] as string);
+				}
 			}
 		}
 
 		private LogType selectedLogType = LogType.json;
-
 		public LogType SelectedLogType
 		{
 			get { return selectedLogType; }
@@ -107,9 +121,9 @@ namespace EasySave2._0.ViewModels
 
 		private bool CanGoNext(object arg)
 		{
-			return !string.IsNullOrEmpty(DailyLogPath) && !string.IsNullOrEmpty(RealTimeLogPath)
-				&& Settings.UserHasRightPermissionInFolder(DailyLogPath)
-				&& Settings.UserHasRightPermissionInFolder(RealTimeLogPath);
+			return !string.IsNullOrEmpty(DailyLogPath) 
+				&& !string.IsNullOrEmpty(RealTimeLogPath)
+				&& !HasErrors;
 
 		}
 	}

@@ -1,4 +1,7 @@
-﻿using EasySave2._0.Enums;
+﻿using EasySave2._0.CustomExceptions;
+using EasySave2._0.Enums;
+using EasySave2._0.Models;
+using EasySave2._0.Models.Notifications_Related;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,11 +21,16 @@ namespace EasySave2._0.ViewModels
 		// It can create, edit, delete, display and execute saves.
 
 		private List<Save> Saves = [];
-		public event EventHandler? SaveCreated;
-		public event EventHandler? SaveDeleted;
-		public event EventHandler? SaveEdited;
+		public event EventHandler<Save>? SaveCreated;
+		public event EventHandler<Save>? SaveDeleted;
+		public event EventHandler<Save>? SaveEdited;
+		public event EventHandler<Save>? SavePaused;
+		public event EventHandler<Save>? SaveResumed;
+		public event EventHandler<Save>? SaveStopped;
+		public event EventHandler? SavesLoaded;
 		public bool CanAddSave => NumberOfSaves < MaximumNumberOfSave;
 		public bool CanExecuteSave => NumberOfSaves > 0;
+		public bool AnyBSUp => Creator.GetProcessObserverInstance().AnyBSOpened;
 		public int NumberOfSaves => Saves.Count;
 		private int CurrentAvailableID { get; set; } = 1;
 		private int MaximumNumberOfSave { get; } = 5;
@@ -37,7 +45,7 @@ namespace EasySave2._0.ViewModels
 			Saves.Clear();
 			Saves = DeserializeSaves();
 			GetAvailableSaveId();
-			SaveCreated?.Invoke(this, EventArgs.Empty);
+			SavesLoaded?.Invoke(this, EventArgs.Empty);
 		}
 
 		private void GetAvailableSaveId()
@@ -65,7 +73,7 @@ namespace EasySave2._0.ViewModels
 
 
 			Saves.Add(newSave);
-			SaveCreated?.Invoke(this, EventArgs.Empty);
+			SaveCreated?.Invoke(this, newSave);
 
 			return CurrentAvailableID++;
 		}
@@ -80,26 +88,26 @@ namespace EasySave2._0.ViewModels
 				// Look for the save with the given id and change the property to the new value.
 				case 1:
 					saveToEdit.Name = (string)newValue;
-					SaveEdited?.Invoke(this, EventArgs.Empty);
+					SaveEdited?.Invoke(this, saveToEdit);
 					break;
 
 				case 2:
 					saveToEdit.SourcePath = (string)newValue;
-					SaveEdited?.Invoke(this, EventArgs.Empty);
+					SaveEdited?.Invoke(this, saveToEdit);
 					break;
 
 				case 3:
 					saveToEdit.DestinationPath = (string)newValue;
-					SaveEdited?.Invoke(this, EventArgs.Empty);
+					SaveEdited?.Invoke(this, saveToEdit);
 					break;
 
 				case 4:
 					saveToEdit.Type = (SaveType)newValue;
-					SaveEdited?.Invoke(this, EventArgs.Empty);
+					SaveEdited?.Invoke(this, saveToEdit);
 					break;
 				case 5:
 					saveToEdit.Encrypt = (bool)newValue;
-                    SaveEdited?.Invoke(this, EventArgs.Empty);
+                    SaveEdited?.Invoke(this, saveToEdit);
                     break;
                 default:
 					return;
@@ -112,7 +120,7 @@ namespace EasySave2._0.ViewModels
 			if (saveToDelete == null) { return; }
 
 			Saves.Remove(saveToDelete);
-			SaveDeleted?.Invoke(this, EventArgs.Empty);
+			SaveDeleted?.Invoke(this, saveToDelete);
 		}
 		// Look for the save with the given id and execute it
 		public void ExecuteSave(int id) { Saves.Find(s => s.Id == id).Execute(); }
@@ -123,15 +131,15 @@ namespace EasySave2._0.ViewModels
 		{
 			if (Saves.Count == 0) { throw new InvalidOperationException("Cannot execute specified saves : there are nos saves currently registered."); }
 			if (start > stop) { throw new ArgumentException("Start number is greater than stop number."); }
-
 			else
 			{
+				List<Task> saveToExecute = new List<Task>();
 				for (int i = start - 1; i <= stop - 1; i++)
 				{
 					if (i < Saves.Count)
 					{
 						SaveExecuted.Invoke(i + 1);
-						await Saves.ElementAt(i).Execute();
+						saveToExecute.Add(Saves.ElementAt(i).Execute());
 
 					}
 					else
@@ -140,6 +148,13 @@ namespace EasySave2._0.ViewModels
 
 					}
 				}
+				try
+				{
+					await Task.WhenAll(saveToExecute);
+				}catch(Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+				}
 			}
 		}
 
@@ -147,18 +162,71 @@ namespace EasySave2._0.ViewModels
 		{
 			if (Saves.Count == 0) { throw new InvalidOperationException("Cannot execute specified saves : there are nos saves currently registered."); }
 
+			List<Task> saveToExecute = new List<Task>();
 			foreach (int saveNumber in saveNumbers)
 			{
 				if (saveNumber > 0 && saveNumber <= Saves.Count)
 				{
 					OnSaveExecute.Invoke(saveNumber);
-					await Saves.ElementAt(saveNumber - 1).Execute();
+					saveToExecute.Add(Saves.ElementAt(saveNumber - 1).Execute());
 				}
 				else
 				{
 					OnFailedExecute.Invoke(saveNumber);
 				}
+			}
+			await Task.WhenAll(saveToExecute);
+		}
 
+		public void PauseSave(int id, bool wasSavePausedByUser)
+		{
+			Save saveToPause = GetSave(id);
+			saveToPause.Pause();
+			saveToPause.WasSavePausedByUser = wasSavePausedByUser;
+
+			SavePaused?.Invoke(this, GetSave(id));
+		}
+
+		public void StopSave(int id)
+		{
+			Save saveToPause = GetSave(id);
+			saveToPause.Stop();
+
+			SaveStopped?.Invoke(this, GetSave(id));
+		}
+		public void ResumeSave(int id)
+		{
+			if (AnyBSUp)
+			{
+				NotificationHelper.CreateNotifcation(title: "Application métier",
+													 content: "Impossible de reprendre la sauvegarde, une application métier est lancée.",
+													 type: 0);
+
+				throw new BuisnessSoftwareUpException();
+			}
+
+			Save saveToResume = GetSave(id);
+
+			if (!saveToResume.IsPaused)
+			{
+				NotificationHelper.CreateNotifcation(title: "Erreur",
+													 content: "Impossible de reprendre la sauvegarde, elle n'est pas en pause.",
+													 type: 0);
+
+				throw new SaveNotPausedException();
+			}
+			else if (Creator.GetPasterInstance().CriticalFilesBeingCopied && saveToResume.IsWaitingForCriticalFiles)
+			{
+				NotificationHelper.CreateNotifcation(title: "Fichier prioritaire",
+													 content: "Impossible de reprendre la sauvegarde, elle attend la copie de fichier prioritaire.",
+													 type: 0);
+
+				throw new CriticalFilesCopyException();
+			}
+			else
+			{
+				saveToResume.Resume();
+				SaveResumed?.Invoke(this, GetSave(id));
 			}
 		}
 

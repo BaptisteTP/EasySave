@@ -51,6 +51,11 @@ namespace EasySave2._0
         {
             NavigationService.Navigate(new SettingPage());
         }
+
+        private void PasswordButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new PasswordPage());
+        }
     }
 }
 
